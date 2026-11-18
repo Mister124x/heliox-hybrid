@@ -203,7 +203,7 @@ export default function StormsPage() {
                   {geomag.map((g, i) => (
                     <StormAlert
                       key={i}
-                      type="GEOMAGNETICA"
+                      type="TORMENTA"
                       intensity={`Kp ${g.kp || 5} (${g.scale || 'G1'})`}
                       time={g.start_time}
                       location="Magnetósfera Terrestre"

@@ -4,169 +4,242 @@
  * Author: JESÚS BARRIOS
  *
  * Implements seamless on-device inference (Gemini Nano via Chrome Prompt API)
- * with automatic fallback to Cloud Gemini via Firebase AI Logic.
+ * with automatic fallback to Cloud Gemini via Firebase AI Logic SDK.
+ *
+ * Key Design:
+ *  - On-Device: Chrome Prompt API (window.ai.languageModel) → Gemini Nano local NPU
+ *  - Cloud Fallback: Firebase AI Logic SDK (getAI + getGenerativeModel) → Gemini 2.0 Flash
+ *  - Offline Last Resort: Deterministic rule-based heuristic assessment
  */
 
-import { initializeApp, getApps, getApp } from "firebase/app";
+import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
+import { getAI, getGenerativeModel, GoogleAIBackend } from "firebase/ai";
 
-// Firebase configuration (uses environment variables with safe defaults for development)
+// ── Firebase Configuration ──────────────────────────────────────────────────
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyDemoKeyForHackathonSubmissionOnly",
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "heliox-solar-monitor.firebaseapp.com",
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "heliox-solar-monitor",
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "heliox-solar-monitor.appspot.com",
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "1234567890",
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:1234567890:web:abcdef123456",
+  apiKey:            process.env.NEXT_PUBLIC_FIREBASE_API_KEY            || "AIzaSyDnp7lYFnyFxx8f-NgzdztBxknviweaeFs",
+  authDomain:        process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN        || "heliox-solar-monitor.firebaseapp.com",
+  projectId:         process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID         || "heliox-solar-monitor",
+  storageBucket:     process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET     || "heliox-solar-monitor.firebasestorage.app",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "874577585107",
+  appId:             process.env.NEXT_PUBLIC_FIREBASE_APP_ID             || "1:874577585107:web:865100237a013ee1840526",
 };
 
-export const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+// Singleton Firebase App
+export const firebaseApp: FirebaseApp =
+  getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 
+// ── Type Definitions ────────────────────────────────────────────────────────
 export interface HybridAnalysisResult {
   analysis: string;
-  mode: 'ON-DEVICE (Gemini Nano)' | 'CLOUD (Gemini 2.0 Flash)';
+  mode: "ON-DEVICE (Gemini Nano)" | "CLOUD (Gemini 2.0 Flash)" | "OFFLINE (Heuristic)";
   latencyMs: number;
   timestamp: string;
   source: string;
+  sdkUsed: string;
 }
 
+// ── On-Device Availability Check ───────────────────────────────────────────
 /**
- * Checks if Chrome's on-device Gemini Nano (Prompt API) is available in the current browser.
+ * Checks if Chrome Prompt API (Gemini Nano) is available.
+ * Requires Chrome with #prompt-api-for-gemini-nano flag enabled.
  */
 export async function checkOnDeviceAIAvailability(): Promise<boolean> {
   if (typeof window === "undefined") return false;
   try {
-    // Chrome Canary / Dev or Chrome with #prompt-api-for-gemini-nano enabled
-    // @ts-ignore
+    // @ts-ignore — Chrome Prompt API is not in TS types yet
     if (window.ai?.languageModel) {
       // @ts-ignore
       const capabilities = await window.ai.languageModel.capabilities();
-      return capabilities?.available === "readily" || capabilities?.available === "after-download";
+      return (
+        capabilities?.available === "readily" ||
+        capabilities?.available === "after-download"
+      );
     }
     return false;
   } catch (err) {
-    console.warn("[HybridAI] On-device check failed:", err);
+    console.warn("[HybridAI] On-device availability check failed:", err);
     return false;
   }
 }
 
-/**
- * Executes on-device inference using local Gemini Nano.
- */
-async function runOnDeviceInference(systemPrompt: string, userPrompt: string): Promise<string> {
+// ── On-Device Inference (Chrome Prompt API → Gemini Nano) ──────────────────
+async function runOnDeviceInference(
+  systemPrompt: string,
+  userPrompt: string
+): Promise<string> {
   // @ts-ignore
-  if (typeof window !== "undefined" && window.ai?.languageModel) {
-    // @ts-ignore
-    const session = await window.ai.languageModel.create({
-      systemPrompt,
-    });
-    const response = await session.prompt(userPrompt);
-    session.destroy();
-    return response;
+  if (typeof window === "undefined" || !window.ai?.languageModel) {
+    throw new Error("Chrome Prompt API (Gemini Nano) not available.");
   }
-  throw new Error("Local Gemini Nano is not available in this environment.");
+  // @ts-ignore
+  const session = await window.ai.languageModel.create({ systemPrompt });
+  const response = await session.prompt(userPrompt);
+  session.destroy();
+  return response;
 }
 
+// ── Cloud Inference (Firebase AI Logic SDK → Gemini 2.0 Flash) ────────────
 /**
- * Fallback cloud inference using Google Cloud / Gemini API endpoint.
+ * Uses the official Firebase AI Logic SDK (getAI + getGenerativeModel)
+ * to call Gemini 2.0 Flash in the cloud.
  */
-async function runCloudInference(systemPrompt: string, userPrompt: string): Promise<string> {
+async function runFirebaseCloudInference(
+  systemPrompt: string,
+  userPrompt: string
+): Promise<string> {
+  try {
+    // Initialize Firebase AI Logic with GoogleAIBackend (Gemini Developer API)
+    const ai = getAI(firebaseApp, { backend: new GoogleAIBackend() });
+
+    const model = getGenerativeModel(ai, {
+      model: "gemini-2.0-flash",
+      systemInstruction: systemPrompt,
+    });
+
+    const result = await model.generateContent(userPrompt);
+    const response = result.response;
+    return response.text();
+  } catch (sdkError) {
+    console.warn("[HybridAI] Firebase SDK cloud call failed, using API fallback:", sdkError);
+    // Secondary fallback: direct API route (handles CORS/key issues gracefully)
+    return await runApiRouteInference(systemPrompt, userPrompt);
+  }
+}
+
+// ── API Route Fallback ────────────────────────────────────────────────────
+async function runApiRouteInference(
+  systemPrompt: string,
+  userPrompt: string
+): Promise<string> {
   const res = await fetch("/api/ai/analyze-cloud", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: jsonStringify({ systemPrompt, userPrompt }),
+    body: JSON.stringify({ systemPrompt, userPrompt }),
   });
-
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`Cloud inference failed (${res.status}): ${errorText}`);
-  }
-
+  if (!res.ok) throw new Error(`API route failed: ${res.status}`);
   const data = await res.json();
-  return data.text || data.analysis || "Cloud analysis complete.";
+  return data.analysis || data.text || "Analysis complete.";
 }
 
-function jsonStringify(obj: any): string {
-  return JSON.stringify(obj);
-}
-
+// ── Main Hybrid Dispatcher ────────────────────────────────────────────────
 /**
- * Main Hybrid Inference Dispatcher:
- * Automatically routes prompts to On-Device (Gemini Nano) when available,
- * and gracefully falls back to Cloud Gemini when offline or unavailable.
+ * Routes solar event data through the hybrid inference pipeline:
+ *
+ *  auto / prefer-device:
+ *    1. Try Chrome Prompt API (Gemini Nano local) → instant, offline, private
+ *    2. Fall back to Firebase AI Logic SDK (Gemini 2.0 Flash cloud)
+ *    3. Last resort: deterministic heuristic model
+ *
+ *  prefer-cloud:
+ *    1. Firebase AI Logic SDK (Gemini 2.0 Flash)
+ *    2. Last resort: deterministic heuristic model
  */
 export async function analyzeSolarEventHybrid(
   solarEventData: any,
-  modePreference: 'auto' | 'prefer-device' | 'prefer-cloud' = 'auto'
+  modePreference: "auto" | "prefer-device" | "prefer-cloud" = "auto"
 ): Promise<HybridAnalysisResult> {
   const startTime = performance.now();
   const timestamp = new Date().toISOString();
 
-  const systemPrompt = `You are HELIOX AI, an elite space weather and solar astrophysics advisory system built by Jesús Barrios.
-Analyze real-time solar events (Coronal Mass Ejections, Solar Flares, Geomagnetic Storms, Kp Index) and output an executive impact assessment for power grids, satellites, GPS, aviation, and aurora visibility.`;
+  const systemPrompt = `You are HELIOX AI, an elite space weather intelligence system built for the #BuildHybridAI 2026 Google Firebase hackathon by Jesús Barrios.
 
-  const userPrompt = `Real-time Solar Data:
+Analyze real-time solar telemetry (CMEs, Flares, Geomagnetic Storms, Kp Index, Solar Wind) and produce a concise executive impact assessment for:
+- Power grid operators (GIC risks)
+- Satellite operators (LEO drag, charging)
+- Aviation (HF radio blackouts, polar routing)
+- GPS/GNSS positioning errors
+- Aurora visibility forecast
+
+Be direct, data-driven, and professional. Use Markdown formatting.`;
+
+  const userPrompt = `Real-time Solar Telemetry Data:
 ${JSON.stringify(solarEventData, null, 2)}
 
-Provide an urgent analysis with:
-1. Threat Level (Green / Yellow / Red)
-2. Immediate Terrestrial & Orbital Impact (GPS, High-Frequency Radio, Power Grids)
-3. Aurora Borealis / Australis Viewing Probability
-4. Tactical Recommendation.`;
+Provide:
+1. **Threat Level**: GREEN / YELLOW / RED
+2. **Immediate Impact**: GPS, HF Radio, Power Grids, Satellites
+3. **Aurora Forecast**: Visibility zones and probability
+4. **Tactical Directive**: Priority actions for operators
+5. **Confidence**: Data quality and certainty assessment`;
 
-  // 1. Try On-Device if preferred or in auto mode
-  if (modePreference !== 'prefer-cloud') {
-    const isDeviceAvailable = await checkOnDeviceAIAvailability();
-    if (isDeviceAvailable) {
+  // ── Path 1: On-Device (Gemini Nano via Chrome Prompt API) ────────────────
+  if (modePreference !== "prefer-cloud") {
+    const isOnDeviceAvailable = await checkOnDeviceAIAvailability();
+    if (isOnDeviceAvailable) {
       try {
-        const localResponse = await runOnDeviceInference(systemPrompt, userPrompt);
-        const latencyMs = Math.round(performance.now() - startTime);
+        const response = await runOnDeviceInference(systemPrompt, userPrompt);
         return {
-          analysis: localResponse,
-          mode: 'ON-DEVICE (Gemini Nano)',
-          latencyMs,
+          analysis: response,
+          mode: "ON-DEVICE (Gemini Nano)",
+          latencyMs: Math.round(performance.now() - startTime),
           timestamp,
-          source: 'Chrome Prompt API / Local NPU',
+          source: "Chrome Prompt API · Local NPU",
+          sdkUsed: "Chrome Built-in AI (Gemini Nano 4)",
         };
       } catch (deviceError) {
-        console.warn("[HybridAI] Local execution error, falling back to cloud:", deviceError);
+        console.warn("[HybridAI] On-device failed, routing to Firebase cloud:", deviceError);
       }
     }
   }
 
-  // 2. Cloud Fallback via Firebase AI Logic / Gemini Cloud
+  // ── Path 2: Firebase AI Logic SDK → Gemini 2.0 Flash Cloud ──────────────
   try {
-    const cloudResponse = await runCloudInference(systemPrompt, userPrompt);
-    const latencyMs = Math.round(performance.now() - startTime);
+    const response = await runFirebaseCloudInference(systemPrompt, userPrompt);
     return {
-      analysis: cloudResponse,
-      mode: 'CLOUD (Gemini 2.0 Flash)',
-      latencyMs,
+      analysis: response,
+      mode: "CLOUD (Gemini 2.0 Flash)",
+      latencyMs: Math.round(performance.now() - startTime),
       timestamp,
-      source: 'Firebase AI Logic / Cloud Gemini 2.0',
+      source: "Firebase AI Logic SDK · GoogleAIBackend",
+      sdkUsed: "firebase/ai · getGenerativeModel(gemini-2.0-flash)",
     };
   } catch (cloudError) {
-    const latencyMs = Math.round(performance.now() - startTime);
-    // Offline resilience: if both fail or network is down, return deterministic heuristic assessment
-    return {
-      analysis: generateLocalDeterministicAssessment(solarEventData),
-      mode: 'ON-DEVICE (Gemini Nano)',
-      latencyMs,
-      timestamp,
-      source: 'On-Device Emergency Heuristics (Offline Safe)',
-    };
+    console.warn("[HybridAI] Cloud inference failed, using offline heuristics:", cloudError);
   }
+
+  // ── Path 3: Offline Deterministic Heuristic (zero-dependency) ────────────
+  return {
+    analysis: generateOfflineAssessment(solarEventData),
+    mode: "OFFLINE (Heuristic)",
+    latencyMs: Math.round(performance.now() - startTime),
+    timestamp,
+    source: "On-Device Emergency Rules Engine",
+    sdkUsed: "Local Heuristic (No network required)",
+  };
 }
 
-/**
- * Deterministic offline rule-based fallback if no network and Nano model not downloaded
- */
-function generateLocalDeterministicAssessment(data: any): string {
-  const kp = data?.kpIndex || data?.kp || 3;
-  const level = kp >= 7 ? "RED (Severe Storm)" : kp >= 5 ? "YELLOW (Moderate Activity)" : "GREEN (Quiet / Nominal)";
-  return `### [HELIOX OFFLINE RESILIENCE REPORT]
-- **Threat Level:** ${level}
-- **Current Planetary K-Index:** ${kp}
-- **Radio & Satellite Risk:** ${kp >= 5 ? "High-frequency radio fading observed across polar routes." : "Nominal operational status for low-Earth orbit satellites."}
-- **Aurora Forecast:** ${kp >= 6 ? "Aurora sightings probable down to mid-latitudes (50°N)." : "Aurora restricted to typical auroral zones (Alaska, Northern Canada, Scandinavia)."}
-- **Status:** Processed locally on-device. Local cache validated.`;
+// ── Offline Heuristic Fallback ────────────────────────────────────────────
+function generateOfflineAssessment(data: any): string {
+  const kp = data?.kpIndex ?? data?.kp ?? 3;
+  const speed = data?.solarWindSpeedKmS ?? data?.speed_km_s ?? 450;
+  const xray = data?.xRayClass ?? "C2.0";
+
+  const threat =
+    kp >= 8 ? "🔴 RED — SEVERE (G4–G5)" :
+    kp >= 6 ? "🟠 ORANGE — STRONG (G2–G3)" :
+    kp >= 5 ? "🟡 YELLOW — MODERATE (G1–G2)" :
+    "🟢 GREEN — QUIET (Nominal)";
+
+  const aurora =
+    kp >= 7 ? "High probability at mid-latitudes (45°N+). Visible in Northern US, Central Europe." :
+    kp >= 5 ? "Enhanced probability at high latitudes (55°N+). Alaska, Canada, Northern Europe." :
+    "Restricted to auroral zones. Alaska, Northern Canada, Scandinavia, Iceland.";
+
+  return `### HELIOX OFFLINE INTELLIGENCE REPORT
+*Processed locally on-device — no cloud connectivity required*
+
+**1. Threat Level:** ${threat}
+
+**2. Immediate Impact Assessment:**
+- **GPS/GNSS:** ${kp >= 6 ? "⚠️ Degraded precision expected. Differential GPS errors 2–8m." : "✅ Nominal positioning accuracy."}
+- **HF Radio:** ${xray.startsWith("X") || xray.startsWith("M") ? "⚠️ Radio blackout possible on sunlit hemisphere." : "✅ Clear HF propagation conditions."}
+- **Power Grids:** ${kp >= 7 ? "⚠️ GIC risk elevated. Monitor harmonic distortions on transmission lines." : "✅ Grid stability within normal parameters."}
+- **Satellites:** ${speed > 600 ? "⚠️ Elevated LEO atmospheric drag. Orbit adjustments may be needed." : "✅ Orbital environment nominal."}
+
+**3. Aurora Forecast:** ${aurora}
+
+**4. Tactical Directive:** ${kp >= 6 ? "Alert relevant grid operators and satellite teams. Consider polar aviation route adjustments." : "Continue standard monitoring. No immediate action required."}
+
+**5. Confidence:** ⚡ Medium — Offline heuristic model based on Kp=${kp.toFixed(1)}, V_sw=${speed} km/s, X-ray Class=${xray}`;
 }

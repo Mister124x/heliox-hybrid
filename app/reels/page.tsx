@@ -76,6 +76,8 @@ export default function ReelsMediaPage() {
   const [loading, setLoading] = useState(true)
   const [copiedType, setCopiedType] = useState<'full' | 'voice' | 'slide' | null>(null)
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
+  const [downloaded, setDownloaded] = useState(false)
+  const [copiedSlideIdx, setCopiedSlideIdx] = useState<number | null>(null)
 
   // Estados del Reproductor y Teleprompter
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
@@ -218,13 +220,15 @@ export default function ReelsMediaPage() {
         setTeleprompterSeconds(0)
         setCurrentSlideIndex(0)
       }
-      `🎬 TÍTULO: ${scriptData.title}\n⏱️ DURACIÓN: ${scriptData.duration_seconds}s\n\n` +
-      scriptData.slides.map((s: any) => `[${s.second}s]\n🗣️ VOZ: ${s.voz}\n🖼️ VISUAL: ${s.visual}\n`).join('\n') +
-      `\n🏷️ HASHTAGS:\n${scriptData.hashtags}\n\n📌 INVESTIGADOR: JESÚS BARRIOS · HELIOX Solar Observatory`
+      setIsTeleprompterRunning(true)
+    }
+  }
 
-    navigator.clipboard.writeText(text)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2500)
+  const handleFeedVideoSelect = (video: any) => {
+    if (video?.topicKey && TOPIC_OPTIONS.some((t) => t.id === video.topicKey)) {
+      setTopic(video.topicKey as ReelTopicKey)
+      fetchScript(platform, video.topicKey as ReelTopicKey)
+    }
   }
 
   const downloadScriptFile = () => {
@@ -737,5 +741,4 @@ export default function ReelsMediaPage() {
       </footer>
     </div>
   )
-}
 }
