@@ -88,11 +88,11 @@ export default function DashboardPage() {
       />
 
       {/* ─── Ticker de Alertas en Vivo ───────────────────────────────────── */}
-      <div className="fixed top-16 left-0 right-0 z-40">
+      <div className="pt-16">
         <AlertTicker alerts={summary?.alertas_noaa ?? []} kp={kp} />
       </div>
 
-      <main className="max-w-7xl mx-auto px-4 pt-32">
+      <main className="max-w-7xl mx-auto px-4 pt-6">
         {/* Encabezado Mission Control */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>

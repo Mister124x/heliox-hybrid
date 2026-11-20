@@ -130,7 +130,7 @@ export default function Navbar({
         {/* ── NAVEGACIÓN CENTRAL: CÁPSULA BLANCA MODERNA (Google Style) ─ */}
         <nav
           aria-label="Main Navigation"
-          className="hidden md:flex items-center gap-1 bg-white/10 border border-white/20 p-1.5 rounded-full backdrop-blur-md shadow-md"
+          className="flex items-center gap-1 bg-white/10 border border-white/20 p-1 sm:p-1.5 rounded-full backdrop-blur-md shadow-md overflow-x-auto max-w-[calc(100vw-180px)] sm:max-w-none no-scrollbar shrink"
         >
           {NAV_ITEMS.map((item) => {
             const isActive = pathname === item.href || (item.href !== '/' && pathname?.startsWith(item.href))
@@ -145,9 +145,9 @@ export default function Navbar({
                   setWaffleOpen(false)
                   setMobileOpen(false)
                 }}
-                className={`relative px-4 py-1.5 rounded-full text-[13px] font-bold transition-all duration-200 flex items-center gap-1.5 select-none cursor-pointer ${
+                className={`relative px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full text-[12px] sm:text-[13px] font-bold transition-all duration-200 flex items-center gap-1 sm:gap-1.5 select-none cursor-pointer shrink-0 ${
                   isActive
-                    ? 'bg-white text-slate-950 shadow-lg shadow-white/30 scale-[1.03]'
+                    ? 'bg-white text-slate-950 shadow-lg shadow-white/30 scale-[1.02]'
                     : 'text-slate-200 hover:text-white hover:bg-white/15'
                 }`}
               >

@@ -83,11 +83,11 @@ export default function HomePage() {
       />
 
       {/* ─── Ticker de Alertas de Clima Espacial ─────────────────────────── */}
-      <div className="fixed top-16 left-0 right-0 z-40">
+      <div className="pt-16">
         <AlertTicker alerts={summary?.alertas_noaa ?? []} kp={kp} />
       </div>
 
-      <main className="pt-28 pb-20 px-4 sm:px-6 max-w-7xl mx-auto space-y-16">
+      <main className="pt-6 pb-20 px-4 sm:px-6 max-w-7xl mx-auto space-y-16">
         {/* ─── HERO SECTION (Estilo Antigravity / Deep Space Minimalist) ──── */}
         <section className="pt-8 sm:pt-12 pb-6 text-center max-w-4xl mx-auto space-y-6">
           {/* Hackathon Badge - aparece ANTES del badge de ciclo solar */}
