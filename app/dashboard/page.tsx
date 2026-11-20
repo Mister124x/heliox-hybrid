@@ -12,8 +12,7 @@ import HackerPolymathMatrix from '../../components/HackerPolymathMatrix'
 import KpGauge from '../../components/KpGauge'
 import StormAlert from '../../components/StormAlert'
 import AlertTicker from '../../components/AlertTicker'
-import AdBanner from '../../components/AdBanner'
-import ViralShareBar from '../../components/ViralShareBar'
+
 import { fetchLiveSolarData, SolarSummary } from '../../lib/solarClient'
 import { useI18n } from '../../lib/i18n'
 
@@ -119,7 +118,7 @@ export default function DashboardPage() {
         </div>
 
         {/* AdSense Superior */}
-        <AdBanner format="horizontal" />
+
 
         {/* ─── 4 Tarjetas HUD de Telemetría Aeroespacial ───────────────────── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 my-8">
@@ -264,13 +263,6 @@ export default function DashboardPage() {
 
         {/* ─── Banner Oficial de Pico Máximo Ciclo 25 ────────────────────── */}
         <SolarPeakAlert />
-
-        <ViralShareBar />
-
-        {/* AdSense Inferior */}
-        <div className="my-8">
-          <AdBanner format="auto" />
-        </div>
       </main>
 
       {/* Footer Oficial */}

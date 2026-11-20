@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useI18n, LanguageSelector } from '../lib/i18n'
 
 interface NavbarProps {
@@ -12,198 +13,272 @@ interface NavbarProps {
   isStormy?: boolean
 }
 
+const NAV_ITEMS = [
+  { href: '/',          labelEs: 'Inicio',      labelEn: 'Home' },
+  { href: '/dashboard', labelEs: 'Dashboard',   labelEn: 'Dashboard' },
+  { href: '/storms',    labelEs: 'Tormentas',   labelEn: 'Storms' },
+  { href: '/reels',     labelEs: 'Media 4K',    labelEn: 'Media 4K' },
+  { href: '/analysis',  labelEs: 'Análisis IA', labelEn: 'AI Analysis' },
+]
+
+/* ─── Waffle icon (apps grid igual al de Google) ─────────────────── */
+function WaffleIcon() {
+  return (
+    <svg focusable="false" viewBox="0 0 24 24" width="20" height="20">
+      <path
+        fill="currentColor"
+        d="M6 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM6 14c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM6 20c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"
+      />
+    </svg>
+  )
+}
+
+/* ─── Waffle dropdown panel ──────────────────────────────────────── */
+const GOOGLE_APPS = [
+  { label: 'Firebase', href: 'https://console.firebase.google.com', emoji: '🔥' },
+  { label: 'AI Studio', href: 'https://aistudio.google.com', emoji: '✨' },
+  { label: 'NASA SDO', href: 'https://sdo.gsfc.nasa.gov', emoji: '☀️' },
+  { label: 'NOAA SWPC', href: 'https://www.swpc.noaa.gov', emoji: '🌍' },
+  { label: 'NASA DONKI', href: 'https://kauai.ccmc.gsfc.nasa.gov/DONKI/', emoji: '🛰️' },
+  { label: 'SOHO', href: 'https://soho.nascom.nasa.gov', emoji: '🔭' },
+  { label: 'Dashboard', href: '/dashboard', emoji: '📡' },
+  { label: 'Tormentas', href: '/storms', emoji: '🌪️' },
+  { label: 'Análisis IA', href: '/analysis', emoji: '🤖' },
+]
+
 export default function Navbar({
   countdown,
   refreshing,
   onRefresh,
   isStormy = false,
 }: NavbarProps) {
-  const { t, lang } = useI18n()
+  const { lang } = useI18n()
   const pathname = usePathname()
   const router = useRouter()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [internalRefreshing, setInternalRefreshing] = useState(false)
   const isEn = lang === 'en'
 
-  // Cerrar menú móvil al navegar
+  const [mobileOpen, setMobileOpen]   = useState(false)
+  const [waffleOpen, setWaffleOpen]   = useState(false)
+  const [scrolled, setScrolled]       = useState(false)
+  const [spinning, setSpinning]       = useState(false)
+
+  useEffect(() => { setMobileOpen(false); setWaffleOpen(false) }, [pathname])
+
   useEffect(() => {
-    setMobileMenuOpen(false)
-  }, [pathname])
+    const fn = () => setScrolled(window.scrollY > 10)
+    window.addEventListener('scroll', fn, { passive: true })
+    return () => window.removeEventListener('scroll', fn)
+  }, [])
 
   const handleRefresh = () => {
-    if (onRefresh) {
-      onRefresh()
-      return
-    }
-    setInternalRefreshing(true)
-    try {
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('heliox-refresh'))
-      }
-      router.refresh()
-    } finally {
-      setTimeout(() => {
-        setInternalRefreshing(false)
-      }, 1000)
-    }
+    if (onRefresh) { onRefresh(); return }
+    setSpinning(true)
+    if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('heliox-refresh'))
+    router.refresh()
+    setTimeout(() => setSpinning(false), 1200)
   }
 
-  const isSpinning = refreshing || internalRefreshing
+  const isSpinning = refreshing || spinning
 
-  const navLinks = [
-    { href: '/', label: isEn ? 'Home' : 'Inicio' },
-    { href: '/dashboard', label: t.nav_dashboard || 'Dashboard' },
-    { href: '/storms', label: t.nav_storms || 'Tormentas' },
-    { href: '/reels', label: t.nav_reels || 'Reels & Media' },
-    { href: '/analysis', label: t.nav_analysis || 'Análisis' },
-  ]
-
+  /* ── RENDER ──────────────────────────────────────────────────── */
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 aurora-header">
-      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-        {/* Logo e Identidad */}
-        <Link href="/" className="flex items-center gap-2.5 group select-none">
-          <div className="w-9 h-9 rounded-xl overflow-hidden border border-orange-500/40 p-0.5 bg-orange-950/50 shadow-lg shadow-orange-500/20 group-hover:scale-110 group-active:scale-95 transition-all duration-300">
-            <img src="/favicon.svg" alt="HELIOX Logo" className="w-full h-full object-contain animate-float" />
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? 'bg-[#030014]/90 backdrop-blur-2xl border-b border-white/[0.07]'
+          : 'bg-transparent'
+      }`}
+    >
+      {/*
+        ══════════════════════════════════════════════════════════════
+        ESTRUCTURA EXACTA DE GOOGLE:
+        [Logo]  ←─── espacio ───→  [nav links texto]  [waffle] [live btn]
+        ══════════════════════════════════════════════════════════════
+      */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-[60px] flex items-center justify-between gap-2">
+
+        {/* ── LOGO — igual a cómo Google pone su logo a la izquierda ── */}
+        <Link href="/" className="flex items-center gap-2 group select-none shrink-0">
+          <div className="w-8 h-8 rounded-lg overflow-hidden border border-orange-500/30 bg-orange-950/40 p-0.5 group-hover:scale-105 transition-transform duration-200">
+            <img src="/favicon.svg" alt="HELIOX" className="w-full h-full object-contain" />
           </div>
-          <div className="flex flex-col">
-            <div className="flex items-center gap-1.5">
-              <span className="text-xl font-black tracking-tight bg-gradient-to-r from-orange-400 via-yellow-200 to-white bg-clip-text text-transparent group-hover:from-white group-hover:to-orange-400 transition-all duration-500">
-                HELIOX
-              </span>
-              <span className="text-[10px] bg-red-500/20 text-red-300 px-1.5 py-0.5 rounded border border-red-500/30 font-mono font-bold animate-pulse">
-                PICO MÁXIMO SC25
-              </span>
-            </div>
-            <span className="text-[10px] text-white/40 leading-none">
-              {t.by || 'por'} <strong className="text-white/70">JESÚS BARRIOS</strong>
-            </span>
-          </div>
+          {/* Letras multicolor al estilo Google */}
+          <span className="text-[20px] font-black tracking-tight leading-none select-none">
+            <span style={{ color: '#4285F4' }}>H</span>
+            <span style={{ color: '#EA4335' }}>E</span>
+            <span style={{ color: '#FBBC05' }}>L</span>
+            <span style={{ color: '#4285F4' }}>I</span>
+            <span style={{ color: '#34A853' }}>O</span>
+            <span style={{ color: '#EA4335' }}>X</span>
+          </span>
         </Link>
 
-        {/* Menú Desktop */}
-        <div className="hidden md:flex items-center gap-6">
-          {navLinks.map((link) => {
-            const isActive = pathname === link.href
+        {/* ── LINKS DE TEXTO CENTRALES (desktop) — idéntico a Google ─ */}
+        <div className="hidden md:flex items-center gap-1 ml-auto">
+          {NAV_ITEMS.map((item) => {
+            const isActive = pathname === item.href
             return (
               <Link
-                key={link.href}
-                href={link.href}
-                className={`text-sm transition-all font-medium relative py-1 hover:-translate-y-0.5 ${
+                key={item.href}
+                href={item.href}
+                className={`relative px-3 py-1.5 rounded-full text-[13px] font-medium transition-all duration-150 ${
                   isActive
-                    ? 'text-orange-400 font-bold drop-shadow-[0_0_8px_rgba(247,135,8,0.6)]'
-                    : 'text-white/70 hover:text-white'
+                    ? 'text-white bg-white/10'
+                    : 'text-white/70 hover:text-white hover:bg-white/[0.07]'
                 }`}
               >
-                {link.label}
+                {isEn ? item.labelEn : item.labelEs}
+                {/* Subrayado activo al estilo Google underline */}
                 {isActive && (
-                  <span className="absolute -bottom-1 left-0 right-0 h-[2px] bg-gradient-to-r from-orange-400 to-amber-300 rounded-full" />
+                  <span className="absolute bottom-0.5 left-3 right-3 h-[2px] bg-[#4285F4] rounded-full" />
                 )}
               </Link>
             )
           })}
+        </div>
 
-          {/* Selector de 12 Idiomas */}
-          <LanguageSelector />
+        {/* ── CONTROLES DERECHA — igual a Google: waffle + botón ────── */}
+        <div className="hidden md:flex items-center gap-1 ml-2 shrink-0">
 
-          {/* Botón de Telemetría en Vivo (Siempre Funcional) */}
+          {/* Selector idioma */}
+          <div className="text-white/60">
+            <LanguageSelector />
+          </div>
+
+          {/* Botón LIVE — idéntico al botón azul "Iniciar sesión" de Google */}
           <button
             onClick={handleRefresh}
-            title={isEn ? 'Click to refresh satellite telemetry' : 'Click para actualizar telemetría satelital'}
-            className="flex items-center gap-2 bg-white/5 hover:bg-white/15 active:scale-95 px-3.5 py-1.5 rounded-full border border-white/20 transition-all duration-300 text-xs hover:shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:-translate-y-0.5"
+            title={isEn ? 'Refresh satellite telemetry' : 'Actualizar telemetría'}
+            className={`flex items-center gap-1.5 h-9 px-4 rounded-full text-[13px] font-medium transition-all duration-200 ${
+              isStormy
+                ? 'bg-[#EA4335] hover:bg-[#D33828] text-white shadow-lg shadow-red-600/30'
+                : 'bg-[#1a73e8] hover:bg-[#1b66c9] text-white shadow-lg shadow-blue-700/20 hover:shadow-blue-700/40'
+            }`}
           >
-            <div className={`w-2 h-2 rounded-full ${isStormy ? 'bg-red-500 animate-ping alert-glow' : 'bg-emerald-400 emerald-glow'}`} />
-            <span className="text-white/90 font-mono font-semibold">
-              {isStormy ? (isEn ? 'ALERT' : 'ALERTA') : (t.nav_live || 'EN VIVO')}
+            <span className={`w-1.5 h-1.5 rounded-full bg-white/70 ${isStormy ? 'animate-ping' : 'animate-pulse'}`} />
+            <span>
+              {isStormy
+                ? (isEn ? 'ALERT' : 'ALERTA')
+                : (isEn ? 'LIVE' : 'EN VIVO')}
             </span>
-            {typeof countdown === 'number' ? (
-              <span className={`text-[10px] font-mono text-orange-400 ${isSpinning ? 'animate-spin' : ''}`}>
-                🔄 {countdown}s
-              </span>
-            ) : (
-              <span className={`text-[10px] font-mono text-orange-400 ${isSpinning ? 'animate-spin' : ''}`}>
-                🔄
+            {typeof countdown === 'number' && (
+              <span className={`text-[11px] opacity-70 font-mono ${isSpinning ? 'animate-spin' : ''}`}>
+                {countdown}s
               </span>
             )}
           </button>
+
+          {/* Waffle icon — exactamente como Google apps grid ─────────── */}
+          <div className="relative">
+            <button
+              onClick={() => setWaffleOpen(!waffleOpen)}
+              className="w-10 h-10 rounded-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/[0.08] transition-all duration-150"
+              aria-label="Aplicaciones"
+            >
+              <WaffleIcon />
+            </button>
+
+            <AnimatePresence>
+              {waffleOpen && (
+                <>
+                  {/* Overlay cierre */}
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setWaffleOpen(false)}
+                  />
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: -8 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: -8 }}
+                    transition={{ duration: 0.15, ease: 'easeOut' }}
+                    className="absolute right-0 top-full mt-2 w-[280px] bg-[#1c1c1e]/95 backdrop-blur-2xl border border-white/[0.1] rounded-2xl shadow-2xl shadow-black/60 z-50 p-3 overflow-hidden"
+                  >
+                    {/* Título panel */}
+                    <div className="px-2 pb-2 mb-1 border-b border-white/[0.07]">
+                      <span className="text-[11px] font-mono text-white/40 uppercase tracking-widest">Aplicaciones HELIOX</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                      {GOOGLE_APPS.map((app) => (
+                        <a
+                          key={app.label}
+                          href={app.href}
+                          target={app.href.startsWith('http') ? '_blank' : undefined}
+                          rel="noopener noreferrer"
+                          onClick={() => setWaffleOpen(false)}
+                          className="flex flex-col items-center gap-1.5 p-3 rounded-xl hover:bg-white/[0.08] transition-all duration-150 group"
+                        >
+                          <span className="text-2xl group-hover:scale-110 transition-transform duration-200">
+                            {app.emoji}
+                          </span>
+                          <span className="text-[11px] text-white/60 group-hover:text-white text-center leading-tight transition-colors">
+                            {app.label}
+                          </span>
+                        </a>
+                      ))}
+                    </div>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
-        {/* Acciones Móvil */}
-        <div className="flex md:hidden items-center gap-1.5">
-          {/* Botón de Refresco Móvil */}
+        {/* ── CONTROLES MÓVIL ────────────────────────────────────────── */}
+        <div className="flex md:hidden items-center gap-1 ml-auto">
+          <LanguageSelector />
           <button
             onClick={handleRefresh}
-            title={isEn ? 'Refresh live telemetry' : 'Actualizar telemetría en vivo'}
-            className="flex items-center gap-1.5 bg-white/5 hover:bg-white/15 active:scale-95 px-2.5 py-1.5 rounded-full border border-white/20 text-xs font-mono transition-all"
-            aria-label={isEn ? 'Refresh live data' : 'Actualizar telemetría'}
+            className={`w-8 h-8 rounded-full flex items-center justify-center text-xs transition-all ${
+              isStormy ? 'bg-[#EA4335] text-white' : 'bg-white/[0.08] text-white/70 hover:text-white'
+            }`}
           >
-            <div className={`w-2 h-2 rounded-full ${isStormy ? 'bg-red-500 animate-ping' : 'bg-emerald-400'}`} />
-            <span className={`text-[11px] ${isSpinning ? 'animate-spin' : ''}`}>🔄</span>
+            <span className={isSpinning ? 'animate-spin' : ''}>🔄</span>
           </button>
-
-          <LanguageSelector />
-
-          {/* Menú Hamburguesa */}
           <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-95 transition-all"
-            aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú de navegación'}
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="w-10 h-10 flex items-center justify-center rounded-full text-white/60 hover:text-white hover:bg-white/[0.08] transition-all"
+            aria-label="Menú"
           >
-            {mobileMenuOpen ? '✕' : '☰'}
+            {mobileOpen
+              ? <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M1 1L17 17M17 1L1 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+              : <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M1 4H17M1 9H17M1 14H17" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+            }
           </button>
         </div>
       </div>
 
-      {/* Drawer Menú Móvil */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-black/95 border-b border-white/10 px-4 py-5 space-y-3 backdrop-blur-2xl animate-fadeIn">
-          {/* Refresco Rápido en Drawer Móvil */}
-          <button
-            onClick={() => {
-              handleRefresh()
-              setMobileMenuOpen(false)
-            }}
-            className="w-full flex items-center justify-between p-3 rounded-2xl bg-white/5 border border-white/10 text-xs font-mono hover:bg-white/10 active:scale-98 transition-all mb-2"
+      {/* ── MENÚ MÓVIL ─────────────────────────────────────────────── */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden overflow-hidden bg-[#030014]/98 border-b border-white/[0.07] backdrop-blur-2xl"
           >
-            <div className="flex items-center gap-2">
-              <div className={`w-2.5 h-2.5 rounded-full ${isStormy ? 'bg-red-500 animate-ping' : 'bg-emerald-400'}`} />
-              <span className="font-bold text-white">
-                {isStormy ? (isEn ? 'SPACE WEATHER ALERT' : 'ALERTA ESPACIAL') : (t.nav_live || 'TELEMETRÍA EN VIVO')}
-              </span>
+            <div className="px-4 py-3 space-y-1">
+              {NAV_ITEMS.map((item) => {
+                const isActive = pathname === item.href
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={`block px-4 py-2.5 rounded-full text-[14px] font-medium transition-all ${
+                      isActive
+                        ? 'bg-white/10 text-white'
+                        : 'text-white/60 hover:text-white hover:bg-white/[0.06]'
+                    }`}
+                  >
+                    {isEn ? item.labelEn : item.labelEs}
+                  </Link>
+                )
+              })}
             </div>
-            <span className={`text-orange-400 font-bold ${isSpinning ? 'animate-spin' : ''}`}>
-              🔄 {typeof countdown === 'number' ? `${countdown}s` : (isEn ? 'Sync' : 'Sincronizar')}
-            </span>
-          </button>
-
-          {navLinks.map((link) => {
-            const isActive = pathname === link.href
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block text-base py-2 px-3 rounded-xl transition-all ${
-                  isActive
-                    ? 'text-orange-400 font-bold bg-orange-500/10 border border-orange-500/20'
-                    : 'text-white/80 hover:text-white hover:bg-white/5'
-                }`}
-              >
-                {link.label}
-              </Link>
-            )
-          })}
-          
-          <div className="pt-3 border-t border-white/10 flex flex-wrap gap-4 text-xs text-white/50 px-3">
-            <Link href="/privacy" onClick={() => setMobileMenuOpen(false)} className="hover:text-orange-400 transition-colors">
-              Política de Privacidad
-            </Link>
-            <Link href="/terms" onClick={() => setMobileMenuOpen(false)} className="hover:text-orange-400 transition-colors">
-              Términos de Uso
-            </Link>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   )
 }

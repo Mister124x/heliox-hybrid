@@ -11,8 +11,7 @@ import AlertTicker from '../components/AlertTicker'
 import KpGauge from '../components/KpGauge'
 import StormAlert from '../components/StormAlert'
 import HybridAIConsole from '../components/HybridAIConsole'
-import SocialVideoFeed from '../components/SocialVideoFeed'
-import ServicesBentoSection from '../components/ServicesBentoSection'
+import SolarPeakAlert from '../components/SolarPeakAlert'
 import { fetchLiveSolarData, SolarSummary } from '../lib/solarClient'
 import { useI18n } from '../lib/i18n'
 
@@ -424,32 +423,8 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ─── DIVIDER ──────────────────────────────────────────────────────── */}
-        <div className="flex items-center gap-4">
-          <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/[0.10]" />
-          <span className="text-white/20 text-lg">🎬</span>
-          <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/[0.10]" />
-        </div>
-
-        {/* ─── HUB MULTIMEDIA Y REELS 4K (Curaduría Satelital NASA/ESA) ───── */}
-        <section className="space-y-4">
-          <div className="border-b border-white/[0.08] pb-4">
-            <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2">
-              <span>🎬</span>
-              <span>{isEn ? 'Viral Solar Footage & High-Definition Replays' : 'Registros Satelitales y Footage Solar 4K'}</span>
-            </h2>
-            <p className="text-xs text-white/40 mt-0.5">
-              {isEn
-                ? 'Ultra-high-definition scientific observations from NASA Heliophysics, Parker Solar Probe, and SOHO.'
-                : 'Observaciones científicas en ultra alta definición de NASA Heliofísica, Parker Solar Probe y SOHO.'}
-            </p>
-          </div>
-
-          <SocialVideoFeed />
-        </section>
-
-        {/* ─── SERVICIOS PROFESIONALES Y PORTAFOLIO DE JESÚS BARRIOS ───────── */}
-        <ServicesBentoSection />
+        {/* ─── ALERTA PICO MÁXIMO SC25 ─────────────────────────────────────── */}
+        <SolarPeakAlert />
       </main>
 
       {/* ─── FOOTER INSTITUCIONAL MODERNO (Estilo Antigravity / Vercel) ─── */}

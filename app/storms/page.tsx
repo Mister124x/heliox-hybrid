@@ -10,8 +10,7 @@ import SolarStormSimulator from '../../components/SolarStormSimulator'
 import StormAlert from '../../components/StormAlert'
 import DeclassifiedDossier from '../../components/DeclassifiedDossier'
 import HackerPolymathMatrix from '../../components/HackerPolymathMatrix'
-import ViralShareBar from '../../components/ViralShareBar'
-import AdBanner from '../../components/AdBanner'
+
 import { useI18n } from '../../lib/i18n'
 
 export default function StormsPage() {
@@ -78,8 +77,7 @@ export default function StormsPage() {
           </p>
         </div>
 
-        {/* AdSense Superior */}
-        <AdBanner format="horizontal" />
+
 
         {/* ─── Escalas Oficiales NOAA (R - S - G) ─────────────────────────── */}
         <div className="grid sm:grid-cols-3 gap-4 my-8">
@@ -228,15 +226,6 @@ export default function StormsPage() {
 
         {/* ─── Simulador Interactivo de Impacto en tu Ciudad ──────────────── */}
         <SolarStormSimulator />
-
-        <div className="my-8">
-          <ViralShareBar />
-        </div>
-
-        {/* AdSense Inferior */}
-        <div className="my-8">
-          <AdBanner format="auto" />
-        </div>
       </main>
 
       {/* Footer Oficial */}

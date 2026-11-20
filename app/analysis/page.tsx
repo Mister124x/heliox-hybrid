@@ -9,8 +9,7 @@ import SolarPeakAlert from '../../components/SolarPeakAlert'
 import SolarGlobe3D from '../../components/SolarGlobe3D'
 import HackerPolymathMatrix from '../../components/HackerPolymathMatrix'
 import DeclassifiedDossier from '../../components/DeclassifiedDossier'
-import AdBanner from '../../components/AdBanner'
-import ViralShareBar from '../../components/ViralShareBar'
+
 import HybridAIConsole from '../../components/HybridAIConsole'
 import { useI18n } from '../../lib/i18n'
 import { fetchLiveSolarData, SolarSummary } from '../../lib/solarClient'
@@ -262,7 +261,7 @@ export default function AnalysisPage() {
 
       {/* ════════════════ CONTENIDO PRINCIPAL ════════════════ */}
       <main className="max-w-7xl mx-auto px-4 pb-24">
-        <AdBanner format="horizontal" />
+
 
         <div className="mt-8 flex flex-col lg:flex-row gap-6">
 
@@ -1004,10 +1003,6 @@ export default function AnalysisPage() {
 
         {/* ─── Banner Oficial de Pico Máximo Ciclo 25 ────────────────────── */}
         <SolarPeakAlert />
-
-        {/* Compartir + Ads */}
-        <ViralShareBar />
-        <div className="my-8"><AdBanner format="auto" /></div>
       </main>
 
       {/* Footer Oficial */}
