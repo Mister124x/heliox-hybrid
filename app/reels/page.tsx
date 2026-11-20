@@ -6,8 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Navbar from '../../components/Navbar'
 import SolarPeakAlert from '../../components/SolarPeakAlert'
 import SocialVideoFeed, { VIRAL_SOLAR_VIDEOS, VideoItem } from '../../components/SocialVideoFeed'
-import AdBanner from '../../components/AdBanner'
-import ViralShareBar from '../../components/ViralShareBar'
+
 import { useI18n } from '../../lib/i18n'
 
 export type ScriptPlatform = 'tiktok' | 'reels' | 'shorts'
@@ -68,7 +67,13 @@ const TOPIC_OPTIONS: TopicOption[] = [
 
 export default function ReelsMediaPage() {
   const { lang } = useI18n()
-  const isEn = lang === 'en'
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const isEn = mounted ? lang === 'en' : false
 
   const [platform, setPlatform] = useState<ScriptPlatform>('tiktok')
   const [topic, setTopic] = useState<ReelTopicKey>('flare')
@@ -263,8 +268,7 @@ export default function ReelsMediaPage() {
       <Navbar />
 
       <main className="max-w-7xl mx-auto px-4 pt-32">
-        {/* Banner AdSense Superior */}
-        <AdBanner format="horizontal" />
+
 
         {/* ─── Cabecera Estudio Viral ─────────────────────────────────────── */}
         <div className="my-8 text-center max-w-3xl mx-auto">
@@ -708,14 +712,7 @@ export default function ReelsMediaPage() {
         {/* ─── Banner Oficial de Pico Máximo Ciclo 25 ────────────────────── */}
         <SolarPeakAlert />
 
-        <div className="my-8">
-          <ViralShareBar />
-        </div>
 
-        {/* AdSense Inferior */}
-        <div className="my-8">
-          <AdBanner format="auto" />
-        </div>
       </main>
 
       {/* Footer Oficial */}

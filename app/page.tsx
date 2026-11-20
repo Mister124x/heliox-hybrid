@@ -17,7 +17,13 @@ import { useI18n } from '../lib/i18n'
 
 export default function HomePage() {
   const { t, lang } = useI18n()
-  const isEn = lang === 'en'
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const isEn = mounted ? lang === 'en' : false
 
   const [summary, setSummary] = useState<SolarSummary | null>(null)
   const [loading, setLoading] = useState(true)

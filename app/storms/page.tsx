@@ -15,8 +15,14 @@ import { useI18n } from '../../lib/i18n'
 
 export default function StormsPage() {
   const { t, lang } = useI18n()
-  const isEn = lang === 'en'
-  const isPt = lang === 'pt'
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const isEn = mounted ? lang === 'en' : false
+  const isPt = mounted ? lang === 'pt' : false
 
   const [cmes, setCmes] = useState<any[]>([])
   const [flares, setFlares] = useState<any[]>([])

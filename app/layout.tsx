@@ -213,7 +213,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   ]
 
   return (
-    <html lang="es" className="dark">
+    <html lang="es" className="dark" suppressHydrationWarning>
       <head>
         {/* Favicon & Web Icons */}
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -248,29 +248,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
 
-        {/* Google AdSense Script Oficial de Jesús Barrios */}
-        <script
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`}
-          crossOrigin="anonymous"
-        />
-
-        {/* Wompi Checkout Widget para Pagos con Tarjeta / PSE en Colombia */}
-        <script
-          type="text/javascript"
-          src="https://checkout.wompi.co/widget.js"
-          async
-        />
-
-        {/* Google Fonts */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
-          rel="stylesheet"
-        />
       </head>
-      <body className="bg-[#030014] text-white font-space antialiased selection:bg-orange-500/30 selection:text-white relative">
+      <body className="bg-[#030014] text-white font-space antialiased selection:bg-orange-500/30 selection:text-white relative" suppressHydrationWarning>
         <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-overlay pointer-events-none z-[-1]" />
         <I18nProvider>
           {children}

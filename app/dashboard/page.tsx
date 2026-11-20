@@ -18,8 +18,14 @@ import { useI18n } from '../../lib/i18n'
 
 export default function DashboardPage() {
   const { t, lang } = useI18n()
-  const isEn = lang === 'en'
-  const isPt = lang === 'pt'
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const isEn = mounted ? lang === 'en' : false
+  const isPt = mounted ? lang === 'pt' : false
 
   const [summary, setSummary] = useState<SolarSummary | null>(null)
   const [loading, setLoading] = useState(true)

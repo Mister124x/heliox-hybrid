@@ -90,6 +90,12 @@ interface AnalysisHistoryItem {
 
 export default function AnalysisPage() {
   const { t, lang } = useI18n()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   const [activeTab, setActiveTab] = useState<ChapterId>('fundacional')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [copiedCitation, setCopiedCitation] = useState(false)
@@ -111,8 +117,8 @@ export default function AnalysisPage() {
     return () => clearInterval(interval)
   }, [])
 
-  const isEn = lang === 'en'
-  const isPt = lang === 'pt'
+  const isEn = mounted ? lang === 'en' : false
+  const isPt = mounted ? lang === 'pt' : false
 
   const copyCitation = () => {
     navigator.clipboard.writeText(

@@ -985,9 +985,10 @@ export function LanguageSelector({ className = '' }: { className?: string }) {
         aria-label={t.lang_select}
         aria-expanded={open}
         aria-haspopup="true"
+        suppressHydrationWarning
       >
-        <span>{LANG_FLAGS[lang]}</span>
-        <span className="hidden sm:inline font-medium">{LANG_LABELS[lang]}</span>
+        <span suppressHydrationWarning>{LANG_FLAGS[lang]}</span>
+        <span className="hidden sm:inline font-medium" suppressHydrationWarning>{LANG_LABELS[lang]}</span>
         <span className="text-white/30 text-[10px] ml-0.5">▾</span>
       </button>
 

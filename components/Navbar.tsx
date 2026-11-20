@@ -14,17 +14,17 @@ interface NavbarProps {
 }
 
 const NAV_ITEMS = [
-  { href: '/',          labelEs: 'Inicio',      labelEn: 'Home' },
-  { href: '/dashboard', labelEs: 'Dashboard',   labelEn: 'Dashboard' },
-  { href: '/storms',    labelEs: 'Tormentas',   labelEn: 'Storms' },
-  { href: '/reels',     labelEs: 'Media 4K',    labelEn: 'Media 4K' },
-  { href: '/analysis',  labelEs: 'Análisis IA', labelEn: 'AI Analysis' },
+  { href: '/',          labelEs: 'Inicio',      labelEn: 'Home',        icon: '🪐' },
+  { href: '/dashboard', labelEs: 'Dashboard',   labelEn: 'Dashboard',   icon: '📡' },
+  { href: '/storms',    labelEs: 'Tormentas',   labelEn: 'Storms',      icon: '⚡' },
+  { href: '/reels',     labelEs: 'Media 4K',    labelEn: 'Media 4K',    icon: '🎬' },
+  { href: '/analysis',  labelEs: 'Análisis IA', labelEn: 'AI Analysis', icon: '🤖' },
 ]
 
-/* ─── Waffle icon (apps grid igual al de Google) ─────────────────── */
+/* ─── Google 3x3 Apps Grid (Waffle Icon) ────────────────────────── */
 function WaffleIcon() {
   return (
-    <svg focusable="false" viewBox="0 0 24 24" width="20" height="20">
+    <svg focusable="false" viewBox="0 0 24 24" width="20" height="20" className="transition-transform group-hover:scale-110">
       <path
         fill="currentColor"
         d="M6 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM6 14c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM6 20c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"
@@ -33,17 +33,17 @@ function WaffleIcon() {
   )
 }
 
-/* ─── Waffle dropdown panel ──────────────────────────────────────── */
+/* ─── Apps satelitales y científicas del Waffle ──────────────────── */
 const GOOGLE_APPS = [
   { label: 'Firebase', href: 'https://console.firebase.google.com', emoji: '🔥' },
   { label: 'AI Studio', href: 'https://aistudio.google.com', emoji: '✨' },
   { label: 'NASA SDO', href: 'https://sdo.gsfc.nasa.gov', emoji: '☀️' },
   { label: 'NOAA SWPC', href: 'https://www.swpc.noaa.gov', emoji: '🌍' },
   { label: 'NASA DONKI', href: 'https://kauai.ccmc.gsfc.nasa.gov/DONKI/', emoji: '🛰️' },
-  { label: 'SOHO', href: 'https://soho.nascom.nasa.gov', emoji: '🔭' },
+  { label: 'SOHO LASCO', href: 'https://soho.nascom.nasa.gov', emoji: '🔭' },
   { label: 'Dashboard', href: '/dashboard', emoji: '📡' },
   { label: 'Tormentas', href: '/storms', emoji: '🌪️' },
-  { label: 'Análisis IA', href: '/analysis', emoji: '🤖' },
+  { label: 'Análisis IA', href: '/analysis', emoji: '🧠' },
 ]
 
 export default function Navbar({
@@ -57,123 +57,149 @@ export default function Navbar({
   const router = useRouter()
   const isEn = lang === 'en'
 
-  const [mobileOpen, setMobileOpen]   = useState(false)
-  const [waffleOpen, setWaffleOpen]   = useState(false)
-  const [scrolled, setScrolled]       = useState(false)
-  const [spinning, setSpinning]       = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [waffleOpen, setWaffleOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  const [spinning, setSpinning] = useState(false)
 
-  useEffect(() => { setMobileOpen(false); setWaffleOpen(false) }, [pathname])
+  // Hydration safety: ensure client-side mounts cleanly
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 10)
+    setMobileOpen(false)
+    setWaffleOpen(false)
+  }, [pathname])
+
+  useEffect(() => {
+    const fn = () => setScrolled(window.scrollY > 8)
     window.addEventListener('scroll', fn, { passive: true })
     return () => window.removeEventListener('scroll', fn)
   }, [])
 
   const handleRefresh = () => {
-    if (onRefresh) { onRefresh(); return }
+    if (onRefresh) {
+      onRefresh()
+      return
+    }
     setSpinning(true)
-    if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('heliox-refresh'))
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('heliox-refresh'))
+    }
     router.refresh()
     setTimeout(() => setSpinning(false), 1200)
   }
 
   const isSpinning = refreshing || spinning
 
-  /* ── RENDER ──────────────────────────────────────────────────── */
   return (
-    <nav
+    <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-[#030014]/90 backdrop-blur-2xl border-b border-white/[0.07]'
-          : 'bg-transparent'
+          ? 'bg-[#05050f]/85 backdrop-blur-2xl border-b border-white/[0.12] shadow-2xl shadow-black/80'
+          : 'bg-[#030014]/60 backdrop-blur-xl border-b border-white/[0.08]'
       }`}
     >
-      {/*
-        ══════════════════════════════════════════════════════════════
-        ESTRUCTURA EXACTA DE GOOGLE:
-        [Logo]  ←─── espacio ───→  [nav links texto]  [waffle] [live btn]
-        ══════════════════════════════════════════════════════════════
-      */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-[60px] flex items-center justify-between gap-2">
+      {/* Sutil línea de brillo blanco superior estilo Google / Antigravity */}
+      <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />
 
-        {/* ── LOGO — igual a cómo Google pone su logo a la izquierda ── */}
-        <Link href="/" className="flex items-center gap-2 group select-none shrink-0">
-          <div className="w-8 h-8 rounded-lg overflow-hidden border border-orange-500/30 bg-orange-950/40 p-0.5 group-hover:scale-105 transition-transform duration-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-[64px] flex items-center justify-between gap-3">
+
+        {/* ── LOGO GOOGLE + HELIOX A LA IZQUIERDA ─────────────────────── */}
+        <Link href="/" prefetch={true} className="flex items-center gap-2.5 group select-none shrink-0">
+          <div className="relative w-8 h-8 rounded-lg overflow-hidden border border-white/20 bg-white/[0.06] p-0.5 group-hover:border-white/50 group-hover:scale-105 transition-all duration-200 shadow-md shadow-white/5">
             <img src="/favicon.svg" alt="HELIOX" className="w-full h-full object-contain" />
           </div>
-          {/* Letras multicolor al estilo Google */}
-          <span className="text-[20px] font-black tracking-tight leading-none select-none">
-            <span style={{ color: '#4285F4' }}>H</span>
-            <span style={{ color: '#EA4335' }}>E</span>
-            <span style={{ color: '#FBBC05' }}>L</span>
-            <span style={{ color: '#4285F4' }}>I</span>
-            <span style={{ color: '#34A853' }}>O</span>
-            <span style={{ color: '#EA4335' }}>X</span>
-          </span>
+          <div className="flex flex-col leading-tight">
+            <span className="text-[20px] font-black tracking-tight select-none">
+              <span style={{ color: '#4285F4' }}>H</span>
+              <span style={{ color: '#EA4335' }}>E</span>
+              <span style={{ color: '#FBBC05' }}>L</span>
+              <span style={{ color: '#4285F4' }}>I</span>
+              <span style={{ color: '#34A853' }}>O</span>
+              <span style={{ color: '#EA4335' }}>X</span>
+            </span>
+            <span className="text-[9px] font-mono tracking-widest text-white/50 uppercase group-hover:text-white/80 transition-colors">
+              Observatory
+            </span>
+          </div>
         </Link>
 
-        {/* ── LINKS DE TEXTO CENTRALES (desktop) — idéntico a Google ─ */}
-        <div className="hidden md:flex items-center gap-1 ml-auto">
+        {/* ── NAVEGACIÓN CENTRAL: CÁPSULA BLANCA MODERNA (Google Style) ─ */}
+        <nav
+          aria-label="Main Navigation"
+          className="hidden md:flex items-center gap-1 bg-white/[0.05] border border-white/[0.10] p-1 rounded-full backdrop-blur-md shadow-inner"
+        >
           {NAV_ITEMS.map((item) => {
             const isActive = pathname === item.href
+            const label = mounted ? (isEn ? item.labelEn : item.labelEs) : item.labelEs
+
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`relative px-3 py-1.5 rounded-full text-[13px] font-medium transition-all duration-150 ${
+                prefetch={true}
+                className={`relative px-4 py-1.5 rounded-full text-[13px] font-semibold transition-all duration-200 flex items-center gap-1.5 select-none ${
                   isActive
-                    ? 'text-white bg-white/10'
-                    : 'text-white/70 hover:text-white hover:bg-white/[0.07]'
+                    ? 'bg-white text-black shadow-md shadow-white/20 scale-[1.02]'
+                    : 'text-white/70 hover:text-white hover:bg-white/[0.08]'
                 }`}
               >
-                {isEn ? item.labelEn : item.labelEs}
-                {/* Subrayado activo al estilo Google underline */}
-                {isActive && (
-                  <span className="absolute bottom-0.5 left-3 right-3 h-[2px] bg-[#4285F4] rounded-full" />
-                )}
+                <span className="text-xs">{item.icon}</span>
+                <span suppressHydrationWarning>{label}</span>
               </Link>
             )
           })}
-        </div>
+        </nav>
 
-        {/* ── CONTROLES DERECHA — igual a Google: waffle + botón ────── */}
-        <div className="hidden md:flex items-center gap-1 ml-2 shrink-0">
+        {/* ── ACCIONES DERECHA: Idioma, Botón LIVE, Waffle ───────────── */}
+        <div className="hidden md:flex items-center gap-2 shrink-0">
 
-          {/* Selector idioma */}
-          <div className="text-white/60">
+          {/* Selector de idioma estilizado */}
+          <div className="text-white">
             <LanguageSelector />
           </div>
 
-          {/* Botón LIVE — idéntico al botón azul "Iniciar sesión" de Google */}
+          {/* Botón de Telemetría EN VIVO con estética Google */}
           <button
             onClick={handleRefresh}
-            title={isEn ? 'Refresh satellite telemetry' : 'Actualizar telemetría'}
-            className={`flex items-center gap-1.5 h-9 px-4 rounded-full text-[13px] font-medium transition-all duration-200 ${
+            title={mounted && isEn ? 'Refresh satellite telemetry' : 'Actualizar telemetría satelital'}
+            className={`flex items-center gap-2 h-9 px-4 rounded-full text-[13px] font-bold transition-all duration-200 cursor-pointer ${
               isStormy
-                ? 'bg-[#EA4335] hover:bg-[#D33828] text-white shadow-lg shadow-red-600/30'
-                : 'bg-[#1a73e8] hover:bg-[#1b66c9] text-white shadow-lg shadow-blue-700/20 hover:shadow-blue-700/40'
+                ? 'bg-[#EA4335] hover:bg-[#D33828] text-white shadow-lg shadow-red-600/30 border border-red-400/40'
+                : 'bg-white text-black hover:bg-zinc-100 shadow-md shadow-white/20 border border-white/60 active:scale-95'
             }`}
           >
-            <span className={`w-1.5 h-1.5 rounded-full bg-white/70 ${isStormy ? 'animate-ping' : 'animate-pulse'}`} />
-            <span>
+            <span
+              className={`w-2 h-2 rounded-full ${
+                isStormy ? 'bg-white animate-ping' : 'bg-emerald-500 animate-pulse'
+              }`}
+            />
+            <span suppressHydrationWarning>
               {isStormy
-                ? (isEn ? 'ALERT' : 'ALERTA')
-                : (isEn ? 'LIVE' : 'EN VIVO')}
+                ? (mounted && isEn ? 'ALERT' : 'ALERTA')
+                : (mounted && isEn ? 'LIVE' : 'EN VIVO')}
             </span>
             {typeof countdown === 'number' && (
-              <span className={`text-[11px] opacity-70 font-mono ${isSpinning ? 'animate-spin' : ''}`}>
+              <span
+                suppressHydrationWarning
+                className={`text-[11px] font-mono ${isStormy ? 'text-white/80' : 'text-zinc-600'} ${
+                  isSpinning ? 'animate-spin' : ''
+                }`}
+              >
                 {countdown}s
               </span>
             )}
           </button>
 
-          {/* Waffle icon — exactamente como Google apps grid ─────────── */}
+          {/* Google Apps 3x3 Waffle Grid ───────────────────────────────── */}
           <div className="relative">
             <button
               onClick={() => setWaffleOpen(!waffleOpen)}
-              className="w-10 h-10 rounded-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/[0.08] transition-all duration-150"
-              aria-label="Aplicaciones"
+              className="w-9 h-9 rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white/[0.10] border border-transparent hover:border-white/10 transition-all cursor-pointer group"
+              aria-label="Google Apps & Observatorios"
             >
               <WaffleIcon />
             </button>
@@ -181,23 +207,23 @@ export default function Navbar({
             <AnimatePresence>
               {waffleOpen && (
                 <>
-                  {/* Overlay cierre */}
                   <div
                     className="fixed inset-0 z-40"
                     onClick={() => setWaffleOpen(false)}
                   />
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.95, y: -8 }}
+                    initial={{ opacity: 0, scale: 0.95, y: -6 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95, y: -8 }}
+                    exit={{ opacity: 0, scale: 0.95, y: -6 }}
                     transition={{ duration: 0.15, ease: 'easeOut' }}
-                    className="absolute right-0 top-full mt-2 w-[280px] bg-[#1c1c1e]/95 backdrop-blur-2xl border border-white/[0.1] rounded-2xl shadow-2xl shadow-black/60 z-50 p-3 overflow-hidden"
+                    className="absolute right-0 top-full mt-2 w-[290px] bg-[#0c0c16]/95 backdrop-blur-2xl border border-white/[0.15] rounded-2xl shadow-2xl shadow-black/80 z-50 p-3.5 overflow-hidden"
                   >
-                    {/* Título panel */}
-                    <div className="px-2 pb-2 mb-1 border-b border-white/[0.07]">
-                      <span className="text-[11px] font-mono text-white/40 uppercase tracking-widest">Aplicaciones HELIOX</span>
+                    <div className="px-2 pb-2 mb-1.5 border-b border-white/[0.10] flex items-center justify-between">
+                      <span className="text-[11px] font-mono text-white/50 uppercase tracking-wider">Ecosistema HELIOX</span>
+                      <span className="text-[10px] font-mono text-blue-400 bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20">Google Cloud</span>
                     </div>
-                    <div className="grid grid-cols-3 gap-1">
+
+                    <div className="grid grid-cols-3 gap-1.5">
                       {GOOGLE_APPS.map((app) => (
                         <a
                           key={app.label}
@@ -205,12 +231,12 @@ export default function Navbar({
                           target={app.href.startsWith('http') ? '_blank' : undefined}
                           rel="noopener noreferrer"
                           onClick={() => setWaffleOpen(false)}
-                          className="flex flex-col items-center gap-1.5 p-3 rounded-xl hover:bg-white/[0.08] transition-all duration-150 group"
+                          className="flex flex-col items-center gap-1.5 p-2.5 rounded-xl hover:bg-white/[0.10] border border-transparent hover:border-white/10 transition-all group"
                         >
-                          <span className="text-2xl group-hover:scale-110 transition-transform duration-200">
+                          <span className="text-2xl group-hover:scale-115 transition-transform duration-200">
                             {app.emoji}
                           </span>
-                          <span className="text-[11px] text-white/60 group-hover:text-white text-center leading-tight transition-colors">
+                          <span className="text-[11px] text-white/70 group-hover:text-white font-medium text-center leading-tight">
                             {app.label}
                           </span>
                         </a>
@@ -224,30 +250,31 @@ export default function Navbar({
         </div>
 
         {/* ── CONTROLES MÓVIL ────────────────────────────────────────── */}
-        <div className="flex md:hidden items-center gap-1 ml-auto">
+        <div className="flex md:hidden items-center gap-1.5 ml-auto">
           <LanguageSelector />
           <button
             onClick={handleRefresh}
             className={`w-8 h-8 rounded-full flex items-center justify-center text-xs transition-all ${
-              isStormy ? 'bg-[#EA4335] text-white' : 'bg-white/[0.08] text-white/70 hover:text-white'
+              isStormy ? 'bg-[#EA4335] text-white' : 'bg-white text-black shadow-sm'
             }`}
           >
             <span className={isSpinning ? 'animate-spin' : ''}>🔄</span>
           </button>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="w-10 h-10 flex items-center justify-center rounded-full text-white/60 hover:text-white hover:bg-white/[0.08] transition-all"
-            aria-label="Menú"
+            className="w-9 h-9 flex items-center justify-center rounded-full text-white/80 hover:text-white bg-white/[0.06] border border-white/10 active:scale-95 transition-all"
+            aria-label="Abrir Menú"
           >
-            {mobileOpen
-              ? <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M1 1L17 17M17 1L1 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
-              : <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M1 4H17M1 9H17M1 14H17" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
-            }
+            {mobileOpen ? (
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 1L15 15M15 1L1 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+            ) : (
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 4H15M1 8H15M1 12H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+            )}
           </button>
         </div>
       </div>
 
-      {/* ── MENÚ MÓVIL ─────────────────────────────────────────────── */}
+      {/* ── MENÚ MÓVIL (DRAWER) ─────────────────────────────────────── */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -255,23 +282,28 @@ export default function Navbar({
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden overflow-hidden bg-[#030014]/98 border-b border-white/[0.07] backdrop-blur-2xl"
+            className="md:hidden overflow-hidden bg-[#050510]/98 border-b border-white/[0.12] backdrop-blur-2xl"
           >
-            <div className="px-4 py-3 space-y-1">
+            <div className="px-4 py-3 space-y-1.5">
               {NAV_ITEMS.map((item) => {
                 const isActive = pathname === item.href
+                const label = mounted ? (isEn ? item.labelEn : item.labelEs) : item.labelEs
+
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
+                    prefetch={true}
                     onClick={() => setMobileOpen(false)}
-                    className={`block px-4 py-2.5 rounded-full text-[14px] font-medium transition-all ${
+                    className={`flex items-center gap-2.5 px-4 py-2.5 rounded-full text-[14px] font-semibold transition-all ${
                       isActive
-                        ? 'bg-white/10 text-white'
-                        : 'text-white/60 hover:text-white hover:bg-white/[0.06]'
+                        ? 'bg-white text-black shadow-md shadow-white/20'
+                        : 'text-white/80 hover:text-white hover:bg-white/[0.08]'
                     }`}
                   >
-                    {isEn ? item.labelEn : item.labelEs}
+                    <span>{item.icon}</span>
+                    <span suppressHydrationWarning>{label}</span>
+                    {isActive && <span className="ml-auto text-xs">●</span>}
                   </Link>
                 )
               })}
@@ -279,6 +311,6 @@ export default function Navbar({
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </header>
   )
 }
