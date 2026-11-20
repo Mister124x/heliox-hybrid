@@ -190,6 +190,22 @@ export default function SolarViewer({ compact = false }: SolarViewerProps) {
               </div>
             )}
 
+            {/* Retícula Táctica y Anillos de Calibración del Observatorio */}
+            <div className="observatory-reticle" />
+            <div className="reticle-ring reticle-ring-inner" />
+            <div className="reticle-ring reticle-ring-limb" />
+            <div className="reticle-ring reticle-ring-outer" />
+            <div className="hud-corner hud-corner-tl" />
+            <div className="hud-corner hud-corner-tr" />
+            <div className="hud-corner hud-corner-bl" />
+            <div className="hud-corner hud-corner-br" />
+
+            {/* Badge de Telemetría Táctica en Esquina Superior Derecha */}
+            <div className="hud-corner-badge top-14 right-3 text-[10px]">
+              <div>FOV: <span className="text-orange-400 font-bold">41.5 arcmin</span></div>
+              <div>RES: <span className="text-white font-bold">0.6&quot;/px</span> · CAL: <span className="text-emerald-400 font-bold">1.0 R☉</span></div>
+            </div>
+
             {/* Overlay superior: Estado y Refresco */}
             <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
               <div className="flex items-center gap-1.5 bg-black/80 backdrop-blur-md rounded-full px-3 py-1 border border-white/15">
