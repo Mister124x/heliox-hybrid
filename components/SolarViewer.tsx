@@ -104,8 +104,8 @@ interface SolarViewerProps {
 
 export default function SolarViewer({ compact = false }: SolarViewerProps) {
   const { t, lang } = useI18n()
-  const isEn = lang === 'en'
-  const isPt = lang === 'pt'
+  const isEn = mounted ? lang === 'en' : false
+  const isPt = mounted ? lang === 'pt' : false
 
   const [mounted, setMounted] = useState(false)
   const [selectedSource, setSelectedSource] = useState('aia_304')
