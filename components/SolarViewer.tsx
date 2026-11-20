@@ -107,12 +107,17 @@ export default function SolarViewer({ compact = false }: SolarViewerProps) {
   const isEn = lang === 'en'
   const isPt = lang === 'pt'
 
+  const [mounted, setMounted] = useState(false)
   const [selectedSource, setSelectedSource] = useState('aia_304')
   const [currentUrl, setCurrentUrl] = useState('')
   const [lastFetchTime, setLastFetchTime] = useState<Date>(new Date())
   const [loading, setLoading] = useState(true)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [countdown, setCountdown] = useState(60)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const activeWL = WAVELENGTHS.find((w) => w.key === selectedSource) || WAVELENGTHS[0]
 
@@ -155,7 +160,7 @@ export default function SolarViewer({ compact = false }: SolarViewerProps) {
       <div className="relative rounded-3xl overflow-hidden bg-black solar-glow border border-solar-500/30">
         <AnimatePresence mode="wait">
           <motion.div
-            key={`${selectedSource}-${lastFetchTime.getTime()}`}
+            key={`${selectedSource}-${mounted ? lastFetchTime.getTime() : 'init'}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -220,7 +225,7 @@ export default function SolarViewer({ compact = false }: SolarViewerProps) {
                 aria-label="Recargar imagen SDO en tiempo real"
               >
                 <span className={isRefreshing ? 'animate-spin inline-block' : 'inline-block'}>🔄</span>
-                <span>{isRefreshing ? (isEn ? 'Syncing...' : 'Sincronizando...') : `${countdown}s`}</span>
+                <span suppressHydrationWarning>{isRefreshing ? (isEn ? 'Syncing...' : 'Sincronizando...') : `${countdown}s`}</span>
               </button>
             </div>
 
@@ -244,8 +249,8 @@ export default function SolarViewer({ compact = false }: SolarViewerProps) {
                   </div>
                 </div>
                 <div className="text-right shrink-0">
-                  <div className="text-[10px] text-white/40 font-mono">
-                    {lastFetchTime.toLocaleTimeString()}
+                  <div className="text-[10px] text-white/40 font-mono" suppressHydrationWarning>
+                    {mounted ? lastFetchTime.toLocaleTimeString() : 'NASA SDO'}
                   </div>
                   <div className="text-[10px] text-solar-400/80 font-mono">
                     NASA / SDO Oficial

@@ -98,18 +98,18 @@ export default function Navbar({
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-[#05050f]/85 backdrop-blur-2xl border-b border-white/[0.12] shadow-2xl shadow-black/80'
-          : 'bg-[#030014]/60 backdrop-blur-xl border-b border-white/[0.08]'
+          ? 'bg-[#0d122e]/92 backdrop-blur-2xl border-b border-white/20 shadow-2xl shadow-black/60'
+          : 'bg-[#0a0e26]/85 backdrop-blur-xl border-b border-white/15'
       }`}
     >
       {/* Sutil línea de brillo blanco superior estilo Google / Antigravity */}
-      <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-[64px] flex items-center justify-between gap-3">
 
         {/* ── LOGO GOOGLE + HELIOX A LA IZQUIERDA ─────────────────────── */}
-        <Link href="/" prefetch={true} className="flex items-center gap-2.5 group select-none shrink-0">
-          <div className="relative w-8 h-8 rounded-lg overflow-hidden border border-white/20 bg-white/[0.06] p-0.5 group-hover:border-white/50 group-hover:scale-105 transition-all duration-200 shadow-md shadow-white/5">
+        <Link href="/" prefetch={true} className="flex items-center gap-2.5 group select-none shrink-0 cursor-pointer">
+          <div className="relative w-8 h-8 rounded-lg overflow-hidden border border-white/30 bg-white/10 p-0.5 group-hover:border-white/70 group-hover:scale-105 transition-all duration-200 shadow-md shadow-white/10">
             <img src="/favicon.svg" alt="HELIOX" className="w-full h-full object-contain" />
           </div>
           <div className="flex flex-col leading-tight">
@@ -121,7 +121,7 @@ export default function Navbar({
               <span style={{ color: '#34A853' }}>O</span>
               <span style={{ color: '#EA4335' }}>X</span>
             </span>
-            <span className="text-[9px] font-mono tracking-widest text-white/50 uppercase group-hover:text-white/80 transition-colors">
+            <span className="text-[9px] font-mono tracking-widest text-white/60 uppercase group-hover:text-white transition-colors">
               Observatory
             </span>
           </div>
@@ -130,10 +130,10 @@ export default function Navbar({
         {/* ── NAVEGACIÓN CENTRAL: CÁPSULA BLANCA MODERNA (Google Style) ─ */}
         <nav
           aria-label="Main Navigation"
-          className="hidden md:flex items-center gap-1 bg-white/[0.05] border border-white/[0.10] p-1 rounded-full backdrop-blur-md shadow-inner"
+          className="hidden md:flex items-center gap-1 bg-white/10 border border-white/20 p-1.5 rounded-full backdrop-blur-md shadow-md"
         >
           {NAV_ITEMS.map((item) => {
-            const isActive = pathname === item.href
+            const isActive = pathname === item.href || (item.href !== '/' && pathname?.startsWith(item.href))
             const label = mounted ? (isEn ? item.labelEn : item.labelEs) : item.labelEs
 
             return (
@@ -141,10 +141,14 @@ export default function Navbar({
                 key={item.href}
                 href={item.href}
                 prefetch={true}
-                className={`relative px-4 py-1.5 rounded-full text-[13px] font-semibold transition-all duration-200 flex items-center gap-1.5 select-none ${
+                onClick={() => {
+                  setWaffleOpen(false)
+                  setMobileOpen(false)
+                }}
+                className={`relative px-4 py-1.5 rounded-full text-[13px] font-bold transition-all duration-200 flex items-center gap-1.5 select-none cursor-pointer ${
                   isActive
-                    ? 'bg-white text-black shadow-md shadow-white/20 scale-[1.02]'
-                    : 'text-white/70 hover:text-white hover:bg-white/[0.08]'
+                    ? 'bg-white text-slate-950 shadow-lg shadow-white/30 scale-[1.03]'
+                    : 'text-slate-200 hover:text-white hover:bg-white/15'
                 }`}
               >
                 <span className="text-xs">{item.icon}</span>
@@ -282,11 +286,11 @@ export default function Navbar({
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden overflow-hidden bg-[#050510]/98 border-b border-white/[0.12] backdrop-blur-2xl"
+            className="md:hidden overflow-hidden bg-[#0a0e26]/98 border-b border-white/20 backdrop-blur-2xl"
           >
             <div className="px-4 py-3 space-y-1.5">
               {NAV_ITEMS.map((item) => {
-                const isActive = pathname === item.href
+                const isActive = pathname === item.href || (item.href !== '/' && pathname?.startsWith(item.href))
                 const label = mounted ? (isEn ? item.labelEn : item.labelEs) : item.labelEs
 
                 return (
@@ -295,15 +299,15 @@ export default function Navbar({
                     href={item.href}
                     prefetch={true}
                     onClick={() => setMobileOpen(false)}
-                    className={`flex items-center gap-2.5 px-4 py-2.5 rounded-full text-[14px] font-semibold transition-all ${
+                    className={`flex items-center gap-2.5 px-4 py-3 rounded-full text-[14px] font-bold transition-all cursor-pointer ${
                       isActive
-                        ? 'bg-white text-black shadow-md shadow-white/20'
-                        : 'text-white/80 hover:text-white hover:bg-white/[0.08]'
+                        ? 'bg-white text-slate-950 shadow-md shadow-white/30'
+                        : 'text-slate-200 hover:text-white hover:bg-white/10'
                     }`}
                   >
                     <span>{item.icon}</span>
                     <span suppressHydrationWarning>{label}</span>
-                    {isActive && <span className="ml-auto text-xs">●</span>}
+                    {isActive && <span className="ml-auto text-xs font-bold">●</span>}
                   </Link>
                 )
               })}

@@ -576,7 +576,7 @@ export default function HybridAIConsole({ currentStormData }: HybridAIConsolePro
           <span className="font-mono">
             🔥 Firebase AI Logic SDK · #BuildHybridAI 2026 · Google Firebase Hackathon
           </span>
-          <span className="text-slate-600">
+          <span className="text-slate-600" suppressHydrationWarning>
             {result
               ? `Last analysis: ${new Date(result.timestamp).toLocaleTimeString()}`
               : "No analysis yet"}

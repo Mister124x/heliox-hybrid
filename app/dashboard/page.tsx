@@ -77,7 +77,7 @@ export default function DashboardPage() {
   const magnetopause_Re = (Math.pow(1.8 / Math.max(Number(ramPressure_nPa), 0.5), 1 / 6) * 10.2).toFixed(1)
 
   return (
-    <div className="min-h-screen bg-black text-white pb-24 selection:bg-orange-500/30 selection:text-white">
+    <div className="min-h-screen bg-transparent text-white pb-24 selection:bg-orange-500/30 selection:text-white">
 
       {/* ─── Navbar Unificado con Glassmorphism ──────────────────────────── */}
       <Navbar
@@ -118,7 +118,7 @@ export default function DashboardPage() {
             </button>
             <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-3.5 py-2 rounded-xl text-xs font-mono text-emerald-400">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>{lastPing ? lastPing.toLocaleTimeString() : 'Online'}</span>
+              <span suppressHydrationWarning>{mounted && lastPing ? lastPing.toLocaleTimeString() : 'Online'}</span>
             </div>
           </div>
         </div>

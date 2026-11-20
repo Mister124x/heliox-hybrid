@@ -77,7 +77,7 @@ export default function StormAlert({ type, intensity, time, location }: StormAle
           </div>
 
           <div className="mt-2 space-y-1">
-            <div className="text-xs text-white/50">
+            <div className="text-xs text-white/50" suppressHydrationWarning>
               🕐 {formatTime(time, lang)}
             </div>
             {location && (

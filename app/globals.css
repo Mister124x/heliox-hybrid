@@ -7,10 +7,10 @@
   --solar-orange: #f78708;
   --solar-gold: #fda921;
   --corona-blue: #60a5fa;
-  --space-dark: #030014;
-  --space-darker: #0a0a1a;
+  --space-dark: #0a0e24;
+  --space-darker: #0f1535;
   --emerald-glow: #10b981;
-  --plasma-purple: #a855f7;
+  --plasma-purple: #818cf8;
   --warning-red: #ef4444;
 }
 
@@ -25,14 +25,15 @@ html, body {
 }
 
 body {
-  background-color: var(--space-dark);
+  background-color: #090d22;
   background-image:
-    radial-gradient(ellipse at 15% 50%, rgba(247, 135, 8, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 85% 20%, rgba(96, 165, 250, 0.06) 0%, transparent 40%),
-    radial-gradient(ellipse at 50% 80%, rgba(168, 85, 247, 0.04) 0%, transparent 45%);
+    radial-gradient(ellipse 90% 45% at 50% -5%, rgba(66, 133, 244, 0.28) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 35% at 90% 25%, rgba(247, 135, 8, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 40% at 10% 65%, rgba(129, 140, 248, 0.20) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 40% at 50% 95%, rgba(14, 165, 233, 0.16) 0%, transparent 60%);
   min-height: 100vh;
   position: relative;
-  color: white;
+  color: #f8fafc;
 }
 
 /* ─── Starfield animado inmersivo ────────────────────────────────────────── */
