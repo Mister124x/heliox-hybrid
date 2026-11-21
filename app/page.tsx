@@ -195,24 +195,8 @@ export default function HomePage() {
           </motion.div>
 
           {/* ─── FIREBASE HYBRID AI CONSOLE (#BuildHybridAI Hackathon) ────── */}
-          <div className="pt-4 text-left space-y-0">
-            {/* Header prominente para la sección de Hybrid AI */}
-            <div className="relative overflow-hidden rounded-t-2xl bg-gradient-to-r from-orange-600/15 via-amber-500/10 to-blue-600/15 border border-b-0 border-white/[0.10] px-6 py-5">
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 to-blue-600/5 pointer-events-none" />
-              <div className="relative">
-                <h2 className="text-lg sm:text-xl font-black text-white tracking-tight flex items-center gap-2">
-                  🤖 Firebase AI Logic — Hybrid Inference Engine
-                </h2>
-                <p className="text-xs text-white/50 font-mono mt-1">
-                  On-Device Gemini Nano + Cloud Gemini 2.0 Flash — La columna vertebral de HELIOX
-                </p>
-              </div>
-            </div>
-            {/* Franja de color naranja/azul */}
-            <div className="h-1 bg-gradient-to-r from-orange-500 via-amber-400 to-blue-500 w-full" />
-            <div className="rounded-b-2xl overflow-hidden border border-t-0 border-white/[0.10]">
-              <HybridAIConsole currentStormData={summary} />
-            </div>
+          <div className="pt-6 text-left">
+            <HybridAIConsole currentStormData={summary} />
           </div>
 
           {/* HUD de Telemetría Rápida (Consola de Instrumentación) */}

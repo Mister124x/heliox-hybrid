@@ -46,14 +46,14 @@ function MarkdownLine({ line }: { line: string }) {
   // heading (###)
   if (line.startsWith("### ")) {
     return (
-      <h3 className="text-amber-400 font-bold text-sm mt-3 mb-1">
+      <h3 className="text-amber-400 font-bold text-sm sm:text-base mt-3 mb-1">
         {line.replace("### ", "")}
       </h3>
     );
   }
   if (line.startsWith("## ")) {
     return (
-      <h2 className="text-amber-300 font-bold text-base mt-4 mb-1">
+      <h2 className="text-amber-300 font-bold text-base sm:text-lg mt-4 mb-1">
         {line.replace("## ", "")}
       </h2>
     );
@@ -74,7 +74,7 @@ function MarkdownLine({ line }: { line: string }) {
   // bullet
   if (line.startsWith("- ")) {
     return (
-      <div className="flex gap-2 text-xs leading-relaxed text-slate-200">
+      <div className="flex gap-2 text-[13px] sm:text-sm leading-relaxed text-slate-200">
         <span className="text-amber-500 mt-0.5">▸</span>
         <span>{rendered.map((p, i) =>
           p.props?.children?.toString?.().startsWith("- ")
@@ -86,7 +86,7 @@ function MarkdownLine({ line }: { line: string }) {
   }
 
   return (
-    <p className="text-xs leading-relaxed text-slate-200">{rendered}</p>
+    <p className="text-[13px] sm:text-sm leading-relaxed text-slate-200">{rendered}</p>
   );
 }
 
@@ -407,7 +407,7 @@ export default function HybridAIConsole({ currentStormData }: HybridAIConsolePro
             <button
               onClick={handleRunAnalysis}
               disabled={loading}
-              className="relative flex items-center gap-2 px-5 py-2 font-bold rounded-xl text-xs tracking-wide shadow-lg transition-all active:scale-95 disabled:opacity-70 overflow-hidden"
+              className="relative flex items-center gap-2 px-5 py-2.5 font-bold rounded-xl text-xs sm:text-[13px] tracking-wide shadow-lg shadow-orange-500/20 hover:shadow-orange-500/40 hover:scale-[1.02] transition-all active:scale-95 disabled:opacity-70 overflow-hidden cursor-pointer"
               style={{
                 background: loading
                   ? "linear-gradient(90deg, #d97706, #ea580c)"
