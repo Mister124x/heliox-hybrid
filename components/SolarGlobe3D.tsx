@@ -382,6 +382,7 @@ export default function SolarGlobe3D() {
 
         <div
           ref={rotBadgeRef}
+          suppressHydrationWarning
           className="absolute bottom-3 right-3 bg-black/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 text-[11px] font-mono text-orange-400"
         >
           Rotación: 35° Y · 15° X
