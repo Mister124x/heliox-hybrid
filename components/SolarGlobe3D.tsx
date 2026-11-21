@@ -28,7 +28,7 @@ export default function SolarGlobe3D() {
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const rotationRef = useRef({ x: 15, y: 35 })
-  const [rotationDisplay, setRotationDisplay] = useState({ x: 15, y: 35 })
+  const rotBadgeRef = useRef<HTMLDivElement | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
   const [autoRotate, setAutoRotate] = useState(true)
@@ -183,21 +183,28 @@ export default function SolarGlobe3D() {
     })
   }, [spectralMode, zoom, selectedHotspot, currentTheme])
 
+  const updateBadge = useCallback((y: number, x: number) => {
+    if (rotBadgeRef.current) {
+      rotBadgeRef.current.textContent = `Rotación: ${y.toFixed(0)}° Y · ${x.toFixed(0)}° X`
+    }
+  }, [])
+
   // Loop de animación y auto-rotación suave (usando ref para evitar re-renders infinitos)
   useEffect(() => {
     let animationFrameId: number
     const render = () => {
       if (autoRotate && !isDragging) {
         rotationRef.current.y = (rotationRef.current.y + 0.3) % 360
+        updateBadge(rotationRef.current.y, rotationRef.current.x)
       }
       drawGlobe()
       animationFrameId = requestAnimationFrame(render)
     }
     animationFrameId = requestAnimationFrame(render)
     return () => cancelAnimationFrame(animationFrameId)
-  }, [autoRotate, isDragging, drawGlobe])
+  }, [autoRotate, isDragging, drawGlobe, updateBadge])
 
-  // Manejo de Interacción Mouse & Touch Drag
+  // Manejo de Interacción Mouse & Touch Drag (0 setState en movimiento continuo)
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true)
     setAutoRotate(false)
@@ -213,7 +220,7 @@ export default function SolarGlobe3D() {
       y: (rotationRef.current.y + dx * 0.4) % 360,
     }
     setDragStart({ x: e.clientX, y: e.clientY })
-    setRotationDisplay({ ...rotationRef.current })
+    updateBadge(rotationRef.current.y, rotationRef.current.x)
   }
 
   const handleMouseUp = () => {
@@ -237,13 +244,13 @@ export default function SolarGlobe3D() {
       y: (rotationRef.current.y + dx * 0.4) % 360,
     }
     setDragStart({ x: e.touches[0].clientX, y: e.touches[0].clientY })
-    setRotationDisplay({ ...rotationRef.current })
+    updateBadge(rotationRef.current.y, rotationRef.current.x)
   }
 
   // Reset de rotación y zoom a estado inicial
   const handleResetView = () => {
     rotationRef.current = { x: 15, y: 35 }
-    setRotationDisplay({ x: 15, y: 35 })
+    updateBadge(15, 35)
     setZoom(1.0)
     setSelectedHotspot(LIVE_HOTSPOTS[0])
     setAutoRotate(true)
@@ -253,11 +260,10 @@ export default function SolarGlobe3D() {
   const handleSelectHotspot = (hotspot: Hotspot) => {
     setSelectedHotspot(hotspot)
     setAutoRotate(false)
-    rotationRef.current = {
-      x: Math.max(-45, Math.min(45, -hotspot.lat * 0.4)),
-      y: ((360 - hotspot.lon) % 360 + 360) % 360,
-    }
-    setRotationDisplay({ ...rotationRef.current })
+    const newY = ((360 - hotspot.lon) % 360 + 360) % 360
+    const newX = Math.max(-45, Math.min(45, -hotspot.lat * 0.4))
+    rotationRef.current = { x: newX, y: newY }
+    updateBadge(newY, newX)
   }
 
   return (
@@ -374,8 +380,11 @@ export default function SolarGlobe3D() {
           <span>👆 Arrastra con el ratón o el dedo para girar el Sol en 360°</span>
         </div>
 
-        <div className="absolute bottom-3 right-3 bg-black/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 text-[11px] font-mono text-orange-400">
-          Rotación: {rotationDisplay.y.toFixed(0)}° Y · {rotationDisplay.x.toFixed(0)}° X
+        <div
+          ref={rotBadgeRef}
+          className="absolute bottom-3 right-3 bg-black/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 text-[11px] font-mono text-orange-400"
+        >
+          Rotación: 35° Y · 15° X
         </div>
       </div>
 
