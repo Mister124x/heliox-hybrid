@@ -100,24 +100,27 @@ export default function SolarGlobe3D() {
     ctx.strokeStyle = `${currentTheme.primary}40`
     ctx.lineWidth = 1.5
 
-    // Paralelos de latitud
+    // Paralelos de latitud (con radios garantizados positivos para evitar excepciones DOM de Canvas)
     for (let lat = -60; lat <= 60; lat += 30) {
       const latRad = (lat * Math.PI) / 180
-      const rLat = radius * Math.cos(latRad)
+      const rLat = Math.max(0.1, Math.abs(radius * Math.cos(latRad)))
       const yLat = centerY - radius * Math.sin(latRad) * Math.cos(rotRadX)
+      const rY = Math.max(0.1, Math.abs(rLat * Math.sin(rotRadX) * 0.4 + 1))
 
       ctx.beginPath()
-      ctx.ellipse(centerX, yLat, rLat, rLat * Math.sin(rotRadX) * 0.4 + 1, 0, 0, Math.PI * 2)
+      ctx.ellipse(centerX, yLat, rLat, rY, 0, 0, Math.PI * 2)
       ctx.stroke()
     }
 
-    // Meridianos de longitud rotatorios
+    // Meridianos de longitud rotatorios (con radios absolutos y normalización angular)
     for (let lon = 0; lon < 360; lon += 45) {
       const lonRad = ((lon + rot.y) * Math.PI) / 180
       const xOffset = Math.sin(lonRad) * radius * Math.cos(rotRadX * 0.3)
+      const rX = Math.max(0.1, Math.abs(xOffset) * 0.5)
+      const rY = Math.max(0.1, radius)
 
       ctx.beginPath()
-      ctx.ellipse(centerX + xOffset * 0.5, centerY, Math.abs(xOffset) * 0.5, radius, 0, 0, Math.PI * 2)
+      ctx.ellipse(centerX + xOffset * 0.5, centerY, rX, rY, 0, 0, Math.PI * 2)
       ctx.stroke()
     }
 
@@ -133,7 +136,7 @@ export default function SolarGlobe3D() {
       if (Math.sin(angle) > -0.2) {
         ctx.fillStyle = spectralMode === 'mag' ? (i % 2 === 0 ? '#ffffff' : '#000000') : '#1c0500'
         ctx.beginPath()
-        ctx.arc(spotX, spotY, 3 + (i % 4), 0, Math.PI * 2)
+        ctx.arc(spotX, spotY, Math.max(0.5, 3 + (i % 4)), 0, Math.PI * 2)
         ctx.fill()
 
         // Bucle de plasma / llamarada
@@ -141,7 +144,8 @@ export default function SolarGlobe3D() {
           ctx.strokeStyle = `${currentTheme.primary}aa`
           ctx.lineWidth = 2
           ctx.beginPath()
-          ctx.arc(spotX, spotY, 8 + Math.sin(time * 2 + i) * 4, 0, Math.PI * 2)
+          const flareRadius = Math.max(0.5, 8 + Math.sin(time * 2 + i) * 4)
+          ctx.arc(spotX, spotY, flareRadius, 0, Math.PI * 2)
           ctx.stroke()
         }
       }
