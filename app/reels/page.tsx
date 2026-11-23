@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Navbar from '../../components/Navbar'
-import JuryTribunalDock from '../../components/JuryTribunalDock'
 import { useI18n } from '../../lib/i18n'
 import {
   SpeakerIcon,
@@ -28,10 +27,10 @@ import {
   SearchIcon,
   RefreshCwIcon,
   ShieldIcon,
-  TrophyIcon,
 } from '../../components/ui/Icons'
 
 export type NewsCategory = 'all' | 'flares' | 'storms' | 'cmes' | 'missions'
+export type SpectralFilter = 'all' | '131' | '171' | '193' | '304' | 'lasco'
 
 export interface ScientificNote {
   author: string
@@ -44,6 +43,7 @@ export interface NewsItem {
   titleEs: string
   titleEn: string
   category: 'flares' | 'storms' | 'cmes' | 'missions'
+  spectralBand: '131' | '171' | '193' | '304' | 'lasco'
   source: string
   handle: string
   instrument: string
@@ -52,6 +52,7 @@ export interface NewsItem {
   severityColor: string
   severityBadgeBg: string
   metrics: string
+  sparklineData: number[]
   summaryEs: string
   summaryEn: string
   speechScriptEs: string
@@ -71,6 +72,7 @@ const INITIAL_INTEL_FEED: NewsItem[] = [
     titleEs: 'Detonación de Llamarada Solar Extrema Clase X8.7 en Región Activa AR3664',
     titleEn: 'Extreme Class X8.7 Solar Flare Detonation Observed in Active Region AR3664',
     category: 'flares',
+    spectralBand: '131',
     source: 'NASA SDO & NOAA SWPC',
     handle: '@NASA_Heliophysics',
     instrument: 'GOES-18 XRS & SDO AIA 131Å',
@@ -79,6 +81,7 @@ const INITIAL_INTEL_FEED: NewsItem[] = [
     severityColor: 'text-rose-400 border-rose-500/40 bg-rose-500/10',
     severityBadgeBg: 'bg-rose-500',
     metrics: 'Flujo: X8.7 · Rayos X: 8.7x10⁻⁴ W/m² · Ionización: R3 Fuerte · Absorción: 18 dB',
+    sparklineData: [12, 18, 25, 45, 95, 88, 70, 52, 40],
     summaryEs:
       'La región activa AR3664 liberó la llamarada más energética del Ciclo Solar 25. El pulso electromagnético ionizó la ionosfera superior provocando absorción en capa D con degradación en frecuencias aeronáuticas HF sobre el corredor atlántico.',
     summaryEn:
@@ -111,6 +114,7 @@ const INITIAL_INTEL_FEED: NewsItem[] = [
     titleEs: 'Eyección de Masa Coronal Halo Completa detectada con velocidad de 1,420 km/s',
     titleEn: 'Full Halo Coronal Mass Ejection Detected Traveling at 1,420 km/s Toward Earth',
     category: 'cmes',
+    spectralBand: 'lasco',
     source: 'NASA / ESA SOHO & STEREO',
     handle: '@SOHO_Coronagraph',
     instrument: 'LASCO C2 / C3 Coronagraph',
@@ -119,6 +123,7 @@ const INITIAL_INTEL_FEED: NewsItem[] = [
     severityColor: 'text-amber-400 border-amber-500/40 bg-amber-500/10',
     severityBadgeBg: 'bg-amber-500',
     metrics: 'Velocidad: 1,420 km/s · Densidad esperada: 38 p/cm³ · Tránsito: 31 horas · Choque: Frontal',
+    sparklineData: [20, 28, 42, 65, 80, 85, 82, 78, 75],
     summaryEs:
       'Coronógrafos espaciales confirmaron una eyección de masa coronal asimétrica tipo halo con vector de impacto frontal sobre la magnetosfera terrestre. Se proyecta compresión del choque de proa y tormentas G3-G4.',
     summaryEn:
@@ -146,6 +151,7 @@ const INITIAL_INTEL_FEED: NewsItem[] = [
     titleEs: 'Índice Planetario Kp alcanza 8.67: Auroras boreales documentadas en latitudes tropicales',
     titleEn: 'Planetary Kp Index Spikes to 8.67: Historic Auroral Displays in Tropical Latitudes',
     category: 'storms',
+    spectralBand: '304',
     source: 'NOAA SWPC & Intermagnet',
     handle: '@NOAA_SpaceWeather',
     instrument: 'DSCOVR Magnetometer & Ground Arrays',
@@ -154,6 +160,7 @@ const INITIAL_INTEL_FEED: NewsItem[] = [
     severityColor: 'text-purple-400 border-purple-500/40 bg-purple-500/10',
     severityBadgeBg: 'bg-purple-500',
     metrics: 'Kp Máximo: 8.67 · IMF Bz: -28.4 nT · Dst: -412 nT (G5 Extrema) · Velocidad: 780 km/s',
+    sparklineData: [30, 35, 55, 78, 92, 98, 94, 88, 80],
     summaryEs:
       'Reconexión magnética sur persistente (Bz menor a -25 nT) abrió grietas en el escudo protector de la Tierra, permitiendo la precipitación de partículas energéticas y auroras visibles en el Caribe, México y el sur de Europa.',
     summaryEn:
@@ -181,6 +188,7 @@ const INITIAL_INTEL_FEED: NewsItem[] = [
     titleEs: 'Sonda Parker Solar Probe completa perihelio récord a 6.1 millones de km del Sol',
     titleEn: 'Parker Solar Probe Executes Record Closest Perihelion at 6.1 Million km from the Sun',
     category: 'missions',
+    spectralBand: '171',
     source: 'NASA Goddard & Johns Hopkins APL',
     handle: '@ParkerProbe_APL',
     instrument: 'FIELDS & SWEAP Sensor Suites',
@@ -189,6 +197,7 @@ const INITIAL_INTEL_FEED: NewsItem[] = [
     severityColor: 'text-cyan-400 border-cyan-500/40 bg-cyan-500/10',
     severityBadgeBg: 'bg-cyan-500',
     metrics: 'Velocidad: 635,266 km/h · Escudo Térmico: 1,370 °C · Distancia: 0.04 UA · Switchbacks: 840+',
+    sparklineData: [40, 48, 62, 75, 88, 92, 85, 78, 65],
     summaryEs:
       'La nave espacial más veloz construida por la humanidad cruzó nuevamente la corona solar externa, midiendo directamente las fuentes de aceleración del viento solar y la física de las curvas en ese (switchbacks).',
     summaryEn:
@@ -216,6 +225,7 @@ const INITIAL_INTEL_FEED: NewsItem[] = [
     titleEs: 'Alerta R3 de Absorción en Capa D: Afectación en Enlaces Aeronáuticos HF y GNSS',
     titleEn: 'R3 D-Region Absorption Event: Severe HF Aviation Communications and GNSS Degradation',
     category: 'flares',
+    spectralBand: '193',
     source: 'NOAA Space Weather Prediction Center',
     handle: '@NOAA_SWPC_Ops',
     instrument: 'D-RAP Real-Time Model',
@@ -224,6 +234,7 @@ const INITIAL_INTEL_FEED: NewsItem[] = [
     severityColor: 'text-amber-400 border-amber-500/40 bg-amber-500/10',
     severityBadgeBg: 'bg-amber-500',
     metrics: 'Frecuencia Afectada: 5 – 25 MHz · Atenuación: 18 dB · Duración: 62 min · Corredor: Atlántico',
+    sparklineData: [15, 22, 38, 70, 85, 80, 65, 45, 30],
     summaryEs:
       'El modelo operativo D-RAP calculó una atenuación de 18 dB en frecuencias de radio HF entre 5 y 25 MHz, degradando enlaces de vuelo transoceánicos y aumentando la dispersión en receptores GNSS.',
     summaryEn:
@@ -260,7 +271,7 @@ export interface AnchorPersona {
 const ANCHOR_PERSONAS: AnchorPersona[] = [
   { id: 'aria', name: 'Dra. Aria Vance', role: 'Astrofísica en Jefe', pitch: 1.05, speed: 1.0, color: 'text-cyan-400' },
   { id: 'orion', name: 'Cmdte. Orion Vega', role: 'Defensa Satelital L1', pitch: 0.95, speed: 1.05, color: 'text-amber-400' },
-  { id: 'heliox', name: 'HELIOX Neural-7', role: 'Sintetizador Cuántico', pitch: 1.15, speed: 1.15, color: 'text-purple-400' },
+  { id: 'heliox', name: 'HELIOX Quantum-7', role: 'Sintetizador Cuántico', pitch: 1.15, speed: 1.15, color: 'text-purple-400' },
 ]
 
 export default function AINewsIntelligencePage() {
@@ -269,6 +280,7 @@ export default function AINewsIntelligencePage() {
   const isEn = mounted ? lang === 'en' : false
 
   const [activeCategory, setActiveCategory] = useState<NewsCategory>('all')
+  const [selectedSpectral, setSelectedSpectral] = useState<SpectralFilter>('all')
   const [feedItems, setFeedItems] = useState<NewsItem[]>(INITIAL_INTEL_FEED)
   const [selectedNews, setSelectedNews] = useState<NewsItem>(INITIAL_INTEL_FEED[0])
   const [searchQuery, setSearchQuery] = useState('')
@@ -282,19 +294,17 @@ export default function AINewsIntelligencePage() {
   const [bookmarked, setBookmarked] = useState<Record<string, boolean>>({})
   const [copiedId, setCopiedId] = useState<string | null>(null)
 
-  // Presenter 2.0 Engine
+  // Holographic Quantum Core Presenter Engine
   const [selectedPersona, setSelectedPersona] = useState<AnchorPersona>(ANCHOR_PERSONAS[0])
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
   const [speechRate, setSpeechRate] = useState<number>(1.0)
-  const [mouthShape, setMouthShape] = useState<number>(0)
-  const [eyeBlink, setEyeBlink] = useState<boolean>(false)
+  const [quantumEnergy, setQuantumEnergy] = useState<number>(1)
   const [speechProgress, setSpeechProgress] = useState<number>(0)
   const [spokenTextFragment, setSpokenTextFragment] = useState<string>('')
 
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null)
-  const gesticulationTimerRef = useRef<NodeJS.Timeout | null>(null)
-  const blinkTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const energyAnimationRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -305,40 +315,36 @@ export default function AINewsIntelligencePage() {
     setEndorsements(initEndorsements)
   }, [])
 
-  // Parpadeo automático de ojos para mayor realismo
-  useEffect(() => {
-    blinkTimerRef.current = setInterval(() => {
-      setEyeBlink(true)
-      setTimeout(() => setEyeBlink(false), 160)
-    }, 3800)
-    return () => {
-      if (blinkTimerRef.current) clearInterval(blinkTimerRef.current)
-    }
-  }, [])
-
   const filteredNews = feedItems.filter((item) => {
     const matchesCategory = activeCategory === 'all' || item.category === activeCategory
+    const matchesSpectral = selectedSpectral === 'all' || item.spectralBand === selectedSpectral
     const q = searchQuery.toLowerCase().trim()
     const title = isEn ? item.titleEn.toLowerCase() : item.titleEs.toLowerCase()
     const summary = isEn ? item.summaryEn.toLowerCase() : item.summaryEs.toLowerCase()
-    const matchesSearch = !q || title.includes(q) || summary.includes(q) || item.source.toLowerCase().includes(q) || item.handle.toLowerCase().includes(q)
-    return matchesCategory && matchesSearch
+    const matchesSearch =
+      !q ||
+      title.includes(q) ||
+      summary.includes(q) ||
+      item.source.toLowerCase().includes(q) ||
+      item.handle.toLowerCase().includes(q) ||
+      item.wavelength.toLowerCase().includes(q)
+    return matchesCategory && matchesSpectral && matchesSearch
   })
 
-  // Motor de gesticulación fonética
-  const startGesticulation = useCallback(() => {
-    if (gesticulationTimerRef.current) clearInterval(gesticulationTimerRef.current)
-    gesticulationTimerRef.current = setInterval(() => {
-      setMouthShape(Math.floor(Math.random() * 5))
-    }, 115)
+  // Animación del Quantum Core durante la vocalización
+  const startQuantumWave = useCallback(() => {
+    if (energyAnimationRef.current) clearInterval(energyAnimationRef.current)
+    energyAnimationRef.current = setInterval(() => {
+      setQuantumEnergy(Math.random() * 0.8 + 0.6)
+    }, 120)
   }, [])
 
-  const stopGesticulation = useCallback(() => {
-    if (gesticulationTimerRef.current) {
-      clearInterval(gesticulationTimerRef.current)
-      gesticulationTimerRef.current = null
+  const stopQuantumWave = useCallback(() => {
+    if (energyAnimationRef.current) {
+      clearInterval(energyAnimationRef.current)
+      energyAnimationRef.current = null
     }
-    setMouthShape(0)
+    setQuantumEnergy(1)
   }, [])
 
   // Síntesis de voz con manejo de excepciones y fallbacks seguros
@@ -353,7 +359,7 @@ export default function AINewsIntelligencePage() {
 
       try {
         window.speechSynthesis.cancel()
-        stopGesticulation()
+        stopQuantumWave()
 
         const textToSpeak = isEn ? item.speechScriptEn : item.speechScriptEs
         const utterance = new SpeechSynthesisUtterance(textToSpeak)
@@ -374,14 +380,14 @@ export default function AINewsIntelligencePage() {
         utterance.onstart = () => {
           setIsSpeaking(true)
           setIsPaused(false)
-          startGesticulation()
-          setSpokenTextFragment(textToSpeak.slice(0, 90) + '...')
+          startQuantumWave()
+          setSpokenTextFragment(textToSpeak.slice(0, 95) + '...')
         }
 
         utterance.onboundary = (e) => {
           if (e.charIndex !== undefined) {
             const sliceStart = Math.max(0, e.charIndex - 20)
-            const sliceEnd = Math.min(textToSpeak.length, e.charIndex + 90)
+            const sliceEnd = Math.min(textToSpeak.length, e.charIndex + 95)
             setSpokenTextFragment(textToSpeak.slice(sliceStart, sliceEnd))
             setSpeechProgress(Math.min(100, Math.round((e.charIndex / textToSpeak.length) * 100)))
           }
@@ -390,14 +396,14 @@ export default function AINewsIntelligencePage() {
         utterance.onend = () => {
           setIsSpeaking(false)
           setIsPaused(false)
-          stopGesticulation()
+          stopQuantumWave()
           setSpeechProgress(100)
         }
 
         utterance.onerror = () => {
           setIsSpeaking(false)
           setIsPaused(false)
-          stopGesticulation()
+          stopQuantumWave()
         }
 
         utteranceRef.current = utterance
@@ -405,10 +411,10 @@ export default function AINewsIntelligencePage() {
       } catch (e) {
         console.error('Error al iniciar speech synthesis:', e)
         setIsSpeaking(false)
-        stopGesticulation()
+        stopQuantumWave()
       }
     },
-    [isEn, speechRate, selectedPersona, startGesticulation, stopGesticulation]
+    [isEn, speechRate, selectedPersona, startQuantumWave, stopQuantumWave]
   )
 
   const handleTogglePlay = () => {
@@ -419,11 +425,11 @@ export default function AINewsIntelligencePage() {
     } else if (isPaused) {
       window.speechSynthesis.resume()
       setIsPaused(false)
-      startGesticulation()
+      startQuantumWave()
     } else {
       window.speechSynthesis.pause()
       setIsPaused(true)
-      stopGesticulation()
+      stopQuantumWave()
     }
   }
 
@@ -433,7 +439,7 @@ export default function AINewsIntelligencePage() {
     }
     setIsSpeaking(false)
     setIsPaused(false)
-    stopGesticulation()
+    stopQuantumWave()
     setSpeechProgress(0)
   }
 
@@ -442,7 +448,6 @@ export default function AINewsIntelligencePage() {
     speakArticle(item)
   }
 
-  // Interacción social: Validar / Endosar publicación
   const handleToggleEndorse = (itemId: string) => {
     const current = endorsements[itemId] || 0
     const already = userEndorsed[itemId]
@@ -479,22 +484,23 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
     }
   }
 
-  // BÚSQUEDA EN LA WEB Y SINCRONIZACIÓN DE NOTICIAS CON IA EN TIEMPO REAL
+  // INGESTA EN VIVO CON IA DESDE LA WEB SATELITAL
   const handleLiveWebSync = async () => {
     setIsSearchingWeb(true)
-    setSearchStatus('Consultando satélites NASA SDO, NOAA SWPC y feeds de espacio profundo...')
+    setSearchStatus('Consultando satélites NASA SDO, NOAA SWPC y telescopios espaciales...')
 
     setTimeout(() => {
-      setSearchStatus('Procesando telemetría con Gemini 2.0 Flash y normalizando datos...')
-    }, 1200)
+      setSearchStatus('Normalizando matrices espectrales y aplicando inferencia híbrida...')
+    }, 1100)
 
     setTimeout(() => {
       const now = new Date()
       const newItem: NewsItem = {
         id: `news-live-${Date.now()}`,
-        titleEs: `Alerta Telemetría en Vivo: Región Activa AR3698 detecta reorganización de líneas magnéticas`,
-        titleEn: `Live Telemetry Bulletin: Active Region AR3698 Shows Rapid Magnetic Flux Emergence`,
+        titleEs: `Alerta Satelital SDO: Emergencia de flujo magnético dipolar inverso en AR3698`,
+        titleEn: `Live SDO Telemetry Alert: Reversed Polarity Dipolar Flux Emergence in AR3698`,
         category: 'flares',
+        spectralBand: '131',
         source: 'NASA SDO AIA & GOES Primary',
         handle: '@NASA_SDO_LiveFeed',
         instrument: 'AIA 131Å / 171Å & HMI Magnetogram',
@@ -503,6 +509,7 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
         severityColor: 'text-cyan-400 border-cyan-500/40 bg-cyan-500/10',
         severityBadgeBg: 'bg-cyan-500',
         metrics: `Flujo Magnético: +1,840 Gauss · Rayos X: C8.4 en ascenso · Tránsito L1: 420 km/s`,
+        sparklineData: [15, 25, 38, 55, 78, 88, 82, 79, 74],
         summaryEs:
           'Ingesta satelital en tiempo real verificada por HELIOX. El sensor magnetográfico HMI registró emergencia de flujo dipolar invertido, elevando la probabilidad de eventos M en las próximas 12 horas.',
         summaryEn:
@@ -516,7 +523,7 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
         wavelength: '131Å (Fe XXI)',
         latencyMode: 'NANO_ON_DEVICE',
         nanoBenchmark: '62ms On-Device (Gemini Nano)',
-        initialEndorsements: 89,
+        initialEndorsements: 94,
         scientificNotes: [
           {
             author: 'HELIOX AI Ingest Engine',
@@ -530,7 +537,7 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
       setSelectedNews(newItem)
       setIsSearchingWeb(false)
       setSearchStatus(null)
-    }, 2400)
+    }, 2200)
   }
 
   useEffect(() => {
@@ -538,19 +545,16 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
       if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
         window.speechSynthesis.cancel()
       }
-      stopGesticulation()
+      stopQuantumWave()
     }
-  }, [stopGesticulation])
+  }, [stopQuantumWave])
 
   return (
-    <div className="min-h-screen bg-[#02040b] text-slate-100 selection:bg-cyan-500 selection:text-black">
+    <div className="min-h-screen bg-[#010309] text-slate-100 selection:bg-cyan-500 selection:text-black">
       <Navbar />
 
-      {/* DOCK FLOTANTE DE JUECES */}
-      <JuryTribunalDock />
-
-      {/* ─── LIVE TICKER TAPE / MARQUEE DE TELEMETRÍA ──────────────────────── */}
-      <div className="fixed top-16 left-0 right-0 z-40 h-7 bg-[#050818]/95 backdrop-blur-md border-b border-cyan-500/20 overflow-hidden flex items-center text-[11px] font-mono">
+      {/* ─── LIVE TICKER TAPE / MARQUEE DE TELEMETRÍA ESPACIAL ─────────────── */}
+      <div className="fixed top-16 left-0 right-0 z-40 h-7 bg-[#030614]/95 backdrop-blur-md border-b border-cyan-500/20 overflow-hidden flex items-center text-[11px] font-mono">
         <div className="shrink-0 px-3 py-0.5 bg-cyan-500/20 border-r border-cyan-500/30 text-cyan-300 font-bold flex items-center gap-1.5 uppercase">
           <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
           <span>SATELLITE INTEL WIRE</span>
@@ -571,48 +575,46 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
       </div>
 
       <main className="relative pt-28 pb-24 px-4 sm:px-6 max-w-7xl mx-auto space-y-8">
-        {/* ─── HEADER DE INTELIGENCIA HELIOFÍSICA SOCIAL ───────────────────── */}
+        {/* ─── COMMAND BAR: BUSCADOR & FILTROS ESPECTRALES INTERACTIVOS ────── */}
         <section className="space-y-4">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/[0.08] pb-6">
-            <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-mono">
-                <BroadcastIcon size={13} className="text-cyan-400" />
-                <span>HELIOX SCIENTIFIC DISPATCH WIRE · NASA / NOAA LIVE DATA</span>
+          <div className="p-4 sm:p-5 rounded-3xl bg-[#040817] border border-cyan-500/30 backdrop-blur-xl shadow-[0_0_40px_rgba(6,182,212,0.1)] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 shrink-0">
+                <BroadcastIcon size={18} />
               </div>
-              <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
-                {isEn ? 'Space Weather Social Wire &' : 'Red Social Heliofísica &'}
-                <br />
-                <span className="bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">
-                  {isEn ? 'Holographic AI Presenter' : 'Presentador Holográfico de IA'}
-                </span>
-              </h1>
-              <p className="text-xs sm:text-sm text-slate-400 max-w-2xl leading-relaxed">
-                {isEn
-                  ? 'Open scientific intelligence stream on Solar Cycle 25. High-retention space weather dispatches articulated live with phonetic visemes and physical accuracy.'
-                  : 'Stream de inteligencia científica abierta sobre el Ciclo Solar 25. Despachos espaciales de alto rigor articulados en vivo con gesticulación fonética y física validada.'}
-              </p>
+              <div>
+                <h1 className="text-lg sm:text-xl font-black text-white flex items-center gap-2">
+                  <span>HELIOX Scientific Intelligence Feed</span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                    NASA & NOAA LIVE
+                  </span>
+                </h1>
+                <p className="text-xs text-slate-400">
+                  Despachos heliofísicos verificados y articulación vocal con Quantum Core HUD
+                </p>
+              </div>
             </div>
 
-            {/* Barra de Acciones: Sincronización Web con IA + Buscador */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full md:w-auto">
+            {/* Ingesta Web + Buscador */}
+            <div className="flex items-center gap-2">
               <button
                 onClick={handleLiveWebSync}
                 disabled={isSearchingWeb}
-                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-400 hover:to-sky-400 text-black font-mono font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg shadow-cyan-500/20 disabled:opacity-60"
+                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-400 hover:to-sky-400 text-black font-mono font-bold text-xs flex items-center gap-2 transition-all cursor-pointer shadow-lg shadow-cyan-500/20 disabled:opacity-60 shrink-0"
               >
                 <RefreshCwIcon size={14} className={isSearchingWeb ? 'animate-spin' : ''} />
-                <span>{isSearchingWeb ? 'SINCRONIZANDO CON LA WEB...' : 'ACTUALIZAR CON IA & WEB'}</span>
+                <span>{isSearchingWeb ? 'INGESTANDO...' : 'ACTUALIZAR CON IA & WEB'}</span>
               </button>
 
-              <div className="relative w-full sm:w-64">
+              <div className="relative w-full sm:w-60">
                 <input
                   type="text"
-                  placeholder={isEn ? 'Filter by satellite or region...' : 'Filtrar por evento o región...'}
+                  placeholder={isEn ? 'Search active region or band...' : 'Filtrar por región o banda...'}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/10 hover:border-white/20 focus:border-cyan-400 focus:bg-white/[0.06] text-xs font-mono text-white placeholder-slate-500 outline-none transition-all shadow-inner"
+                  className="w-full pl-8 pr-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 hover:border-white/20 focus:border-cyan-400 text-xs font-mono text-white placeholder-slate-500 outline-none transition-all"
                 />
-                <SearchIcon size={14} className="absolute left-3 top-3 text-slate-500 pointer-events-none" />
+                <SearchIcon size={13} className="absolute left-2.5 top-2.5 text-slate-500 pointer-events-none" />
               </div>
             </div>
           </div>
@@ -632,40 +634,39 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
             )}
           </AnimatePresence>
 
-          {/* Categorías estilo Linear Pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+          {/* LENTE ESPECTRAL INTERACTIVO (SELECTOR DE LONGITUDES DE ONDA NASA) */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar text-xs font-mono">
+            <span className="text-slate-500 text-[11px] uppercase tracking-wider shrink-0 mr-1 font-bold">
+              Banda Espectral SDO:
+            </span>
             {[
-              { id: 'all', labelEs: 'Todo el Feed Social', labelEn: 'All Social Wire', count: feedItems.length },
-              { id: 'flares', labelEs: 'Llamaradas X', labelEn: 'X-Flares', count: 2 },
-              { id: 'cmes', labelEs: 'CMEs & Plasma', labelEn: 'CMEs', count: 1 },
-              { id: 'storms', labelEs: 'Tormentas Geomagnéticas', labelEn: 'Storms', count: 1 },
-              { id: 'missions', labelEs: 'Misiones Deep Space', labelEn: 'Missions', count: 1 },
-            ].map((cat) => {
-              const isSelected = activeCategory === cat.id
+              { id: 'all', label: 'Todas las Bandas', color: 'border-white/20 text-white' },
+              { id: '131', label: '131Å (Fe XXI - Flares X)', color: 'border-cyan-500/50 text-cyan-300 bg-cyan-500/10' },
+              { id: '171', label: '171Å (Fe IX - Corona)', color: 'border-amber-500/50 text-amber-300 bg-amber-500/10' },
+              { id: '193', label: '193Å (Fe XII - Agujeros)', color: 'border-orange-500/50 text-orange-300 bg-orange-500/10' },
+              { id: '304', label: '304Å (He II - Cromosfera)', color: 'border-rose-500/50 text-rose-300 bg-rose-500/10' },
+              { id: 'lasco', label: 'LASCO C2/C3 (CMEs)', color: 'border-blue-500/50 text-blue-300 bg-blue-500/10' },
+            ].map((b) => {
+              const isSelected = selectedSpectral === b.id
               return (
                 <button
-                  key={cat.id}
-                  onClick={() => setActiveCategory(cat.id as NewsCategory)}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-all shrink-0 flex items-center gap-2 cursor-pointer ${
-                    isSelected
-                      ? 'bg-white text-slate-950 font-bold shadow-md shadow-white/10'
-                      : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
+                  key={b.id}
+                  onClick={() => setSelectedSpectral(b.id as SpectralFilter)}
+                  className={`px-3 py-1.5 rounded-xl border transition-all shrink-0 cursor-pointer ${
+                    isSelected ? 'bg-white text-black font-bold shadow-md' : `${b.color} hover:bg-white/5`
                   }`}
                 >
-                  <span>{isEn ? cat.labelEn : cat.labelEs}</span>
-                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${isSelected ? 'bg-black/20 text-slate-900' : 'bg-white/10 text-slate-400'}`}>
-                    {cat.count}
-                  </span>
+                  {b.label}
                 </button>
               )
             })}
           </div>
         </section>
 
-        {/* ─── WORKSPACE DUAL: FEED SOCIAL (7 COLS) + COCKPIT PRESENTADOR IA (5 COLS) */}
+        {/* ─── WORKSPACE DUAL: STREAM HELIOFÍSICO (7 COLS) + QUANTUM CORE HUD (5 COLS) */}
         <div className="grid lg:grid-cols-12 gap-8 items-start">
           {/* ════════════════════════════════════════════════════════════════════
-               COLUMNA IZQUIERDA: FEED SOCIAL HELIOFÍSICO (ESTILO RED CIENTÍFICA)
+               COLUMNA IZQUIERDA: FEED SOCIAL CIENTÍFICO (STREAM CONTINUO)
               ════════════════════════════════════════════════════════════════════ */}
           <div className="lg:col-span-7 space-y-6">
             <div className="flex items-center justify-between pb-2 border-b border-white/[0.08] text-xs font-mono text-slate-400">
@@ -673,7 +674,7 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
                 <NewspaperIcon size={14} />
                 <span>DESPACHOS CIENTÍFICOS VERIFICADOS</span>
               </span>
-              <span>{filteredNews.length} publicaciones activas</span>
+              <span>{filteredNews.length} despachos activos</span>
             </div>
 
             <div className="space-y-6">
@@ -690,11 +691,11 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
                     onClick={() => setSelectedNews(item)}
                     className={`rounded-3xl border transition-all duration-300 overflow-hidden cursor-pointer ${
                       isSelected
-                        ? 'bg-[#060b1e] border-cyan-400/80 shadow-[0_0_35px_rgba(6,182,212,0.18)]'
+                        ? 'bg-[#050a1c] border-cyan-400 shadow-[0_0_35px_rgba(6,182,212,0.18)]'
                         : 'bg-white/[0.015] hover:bg-white/[0.035] border-white/[0.08] hover:border-white/20'
                     }`}
                   >
-                    {/* Header del Post: Perfil Social de la Agencia / Observatorio */}
+                    {/* Header del Despacho: Perfil y Metadatos */}
                     <div className="p-5 pb-3 flex items-start justify-between gap-3">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-2xl bg-cyan-950/60 border border-cyan-500/40 flex items-center justify-center text-cyan-300 font-bold font-mono text-xs shadow-inner shrink-0">
@@ -728,7 +729,7 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
                       </div>
                     </div>
 
-                    {/* Contenido Principal */}
+                    {/* Contenido Editorial */}
                     <div className="px-5 space-y-3">
                       <h3 className="text-base sm:text-lg font-bold text-white leading-snug group-hover:text-cyan-300">
                         {isEn ? item.titleEn : item.titleEs}
@@ -738,19 +739,34 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
                         {isEn ? item.summaryEn : item.summaryEs}
                       </p>
 
-                      {/* Tira de Métricas de Telemetría Físicas */}
+                      {/* Tira de Métricas con Sparkline Reactivo */}
                       <div className="p-3 rounded-2xl bg-black/60 border border-white/5 flex items-center justify-between gap-3 text-xs font-mono text-cyan-200">
                         <div className="flex items-center gap-2 truncate">
                           <CrosshairIcon size={13} className="text-cyan-400 shrink-0" />
                           <span className="truncate">{item.metrics}</span>
                         </div>
-                        <span className="shrink-0 text-[10px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
-                          {item.coordinates}
-                        </span>
+
+                        {/* Sparkline SVG */}
+                        <div className="flex items-center gap-2 shrink-0">
+                          <svg width="60" height="18" className="overflow-visible">
+                            <polyline
+                              fill="none"
+                              stroke="#00f3ff"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              points={item.sparklineData
+                                .map((val, idx) => `${idx * 7},${18 - (val / 100) * 16}`)
+                                .join(' ')}
+                            />
+                          </svg>
+                          <span className="text-[10px] text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
+                            {item.coordinates}
+                          </span>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Imagen Satelital 16:9 Oficial con Filtro Espectral */}
+                    {/* Imagen Satelital Oficial en Tiempo Real */}
                     <div className="px-5 pt-3">
                       <div className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden border border-white/10 bg-black group">
                         <img
@@ -772,10 +788,9 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
                       </div>
                     </div>
 
-                    {/* Barra de Acciones Sociales: Endosos, Discusión, Transmitir con IA, Copiar */}
+                    {/* Barra de Acciones Sociales */}
                     <div className="p-5 pt-4 flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.06] mt-4">
                       <div className="flex items-center gap-1">
-                        {/* Botón de Endoso Científico */}
                         <button
                           onClick={(e) => {
                             e.stopPropagation()
@@ -791,7 +806,6 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
                           <span>{endorseCount}</span>
                         </button>
 
-                        {/* Botón de Discusión Científica */}
                         <button
                           onClick={(e) => {
                             e.stopPropagation()
@@ -807,7 +821,6 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
                           <span>{item.scientificNotes.length} Notas</span>
                         </button>
 
-                        {/* Bookmark */}
                         <button
                           onClick={(e) => {
                             e.stopPropagation()
@@ -824,7 +837,7 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
                         </button>
                       </div>
 
-                      {/* Botón de Transmisión con Presentador IA */}
+                      {/* Transmitir y Copiar */}
                       <div className="flex items-center gap-2">
                         <button
                           onClick={(e) => {
@@ -838,7 +851,7 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
                           }`}
                         >
                           <SpeakerIcon size={13} />
-                          <span>{isSelected && isSpeaking ? 'GESTICULANDO...' : 'GESTICULAR CON IA'}</span>
+                          <span>{isSelected && isSpeaking ? 'VOCALIZANDO...' : 'ARTICULAR CON IA'}</span>
                         </button>
 
                         <button
@@ -867,7 +880,7 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
                           className="px-5 pb-5 border-t border-white/5 pt-3 space-y-2 bg-black/40"
                         >
                           <div className="text-[11px] font-mono text-cyan-400 font-bold uppercase">
-                            Comentarios de Pares Científicos & Asesores:
+                            Notas Científicas de Pares Acreditados:
                           </div>
                           {item.scientificNotes.map((note, idx) => (
                             <div key={idx} className="p-3 rounded-xl bg-white/[0.02] border border-white/5 space-y-1">
@@ -888,22 +901,25 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
           </div>
 
           {/* ════════════════════════════════════════════════════════════════════
-               COLUMNA DERECHA: COCKPIT DEL PRESENTADOR HOLOGRÁFICO DE IA (STICKY)
+               COLUMNA DERECHA: HOLOGRAPHIC QUANTUM CORE HUD (JARVIS/GEMINI LIVE)
               ════════════════════════════════════════════════════════════════════ */}
           <div className="lg:col-span-5 sticky top-24 space-y-4">
-            <div className="rounded-3xl bg-[#060a1a]/95 border-2 border-cyan-500/40 p-6 backdrop-blur-xl shadow-[0_0_40px_rgba(6,182,212,0.15)] relative overflow-hidden space-y-5">
-              {/* Luces Ambientales */}
-              <div className="absolute -top-20 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-              <div className="absolute -bottom-20 left-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="rounded-3xl bg-[#040817]/95 border-2 border-cyan-500/40 p-6 backdrop-blur-xl shadow-[0_0_50px_rgba(6,182,212,0.18)] relative overflow-hidden space-y-5">
+              {/* Luces Ambientales Reactivas */}
+              <div className="absolute -top-24 right-0 w-72 h-72 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute -bottom-24 left-0 w-72 h-72 bg-purple-500/15 rounded-full blur-3xl pointer-events-none" />
 
-              {/* Selector de Persona del Presentador */}
+              {/* Selector de Persona */}
               <div className="space-y-2 relative z-10">
                 <div className="flex items-center justify-between text-xs font-mono text-slate-400 pb-2 border-b border-white/10">
                   <span className="flex items-center gap-1.5 text-cyan-300 font-bold">
-                    <BrainChipIcon size={13} />
-                    <span>ESTUDIO HOLOGRÁFICO DE IA</span>
+                    <BrainChipIcon size={14} />
+                    <span>QUANTUM SYNTHESIZER 2.0</span>
                   </span>
-                  <span className="text-emerald-400">ENLACE NEURAL ACTIVO</span>
+                  <span className="text-emerald-400 font-bold flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                    LIVE
+                  </span>
                 </div>
 
                 <div className="grid grid-cols-3 gap-1.5 pt-1">
@@ -927,69 +943,72 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
                 </div>
               </div>
 
-              {/* HUD HOLOGRÁFICO CON AVATAR GESTICULANTE VECTORIAL */}
-              <div className="relative w-full aspect-square max-w-[280px] mx-auto rounded-3xl bg-black/90 border border-cyan-500/40 p-4 shadow-[0_0_30px_rgba(6,182,212,0.2)] flex flex-col items-center justify-center overflow-hidden">
-                {/* Cuadrícula de escaneo */}
+              {/* ─── NÚCLEO CUÁNTICO HOLOGRÁFICO (REEMPLAZO TOTAL DEL AVATAR PLANO) ─── */}
+              <div className="relative w-full aspect-square max-w-[280px] mx-auto rounded-3xl bg-black/90 border border-cyan-500/40 p-4 shadow-[0_0_35px_rgba(6,182,212,0.25)] flex flex-col items-center justify-center overflow-hidden">
+                {/* Cuadrícula de Escaneo Espacial */}
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.06)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
 
+                {/* Línea Láser de Escaneo Vertical */}
+                {isSpeaking && !isPaused && (
+                  <motion.div
+                    animate={{ top: ['0%', '100%', '0%'] }}
+                    transition={{ repeat: Infinity, duration: 2.4, ease: 'linear' }}
+                    className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent pointer-events-none shadow-[0_0_12px_#00f3ff]"
+                  />
+                )}
+
                 {/* Telemetría en Esquinas */}
-                <div className="absolute top-2 left-2 text-[9px] font-mono text-cyan-400">TRK_FACIAL: 99.8%</div>
-                <div className="absolute top-2 right-2 text-[9px] font-mono text-purple-400">VISEME: {mouthShape}</div>
+                <div className="absolute top-2 left-2 text-[9px] font-mono text-cyan-400">FREQ_RESONANCE: 99.4%</div>
+                <div className="absolute top-2 right-2 text-[9px] font-mono text-purple-400">SPECTRAL_BAND: {selectedNews.spectralBand.toUpperCase()}</div>
                 <div className="absolute bottom-2 left-2 text-[9px] font-mono text-emerald-400">{selectedPersona.role}</div>
                 <div className="absolute bottom-2 right-2 text-[9px] font-mono text-amber-400">{selectedNews.coordinates}</div>
 
-                {/* Anillo de Calibración Orbital */}
-                <div className="absolute w-52 h-52 rounded-full border border-cyan-500/20 animate-spin" style={{ animationDuration: '24s' }} />
-                <div className="absolute w-44 h-44 rounded-full border border-purple-500/20 animate-spin" style={{ animationDuration: '16s', animationDirection: 'reverse' }} />
+                {/* Anillos Giroscópicos Cuánticos 3D */}
+                <div className="relative w-48 h-48 flex items-center justify-center">
+                  {/* Anillo Exterior */}
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 20, ease: 'linear' }}
+                    className="absolute inset-0 rounded-full border border-cyan-500/30 border-dashed"
+                  />
 
-                {/* Rostro Vectorial con Gesticulación Fluida */}
-                <svg viewBox="0 0 120 120" className="w-36 h-36 drop-shadow-[0_0_15px_rgba(6,182,212,0.6)] relative z-10">
-                  {/* Contorno Craneal */}
-                  <rect x="25" y="20" width="70" height="75" rx="20" fill="none" stroke="#00f3ff" strokeWidth="2" strokeDasharray="4 2" opacity="0.6" />
-                  <path d="M35 15 L85 15" stroke="#a855f7" strokeWidth="2" />
-                  <circle cx="60" cy="15" r="3" fill="#a855f7" />
+                  {/* Anillo Intermedio Elíptico */}
+                  <motion.div
+                    animate={{ rotate: -360 }}
+                    transition={{ repeat: Infinity, duration: 14, ease: 'linear' }}
+                    className="absolute inset-3 rounded-full border-2 border-purple-500/30"
+                    style={{ transform: 'rotateX(60deg)' }}
+                  />
 
-                  {/* Cejas Dinámicas */}
-                  <path d={selectedNews.severity === 'CRÍTICA' ? 'M35 44 L50 48' : 'M35 46 L50 46'} stroke="#00f3ff" strokeWidth="2.5" strokeLinecap="round" />
-                  <path d={selectedNews.severity === 'CRÍTICA' ? 'M70 48 L85 44' : 'M70 46 L85 46'} stroke="#00f3ff" strokeWidth="2.5" strokeLinecap="round" />
+                  {/* Esfera de Energía Cuántica Central */}
+                  <motion.div
+                    animate={{
+                      scale: isSpeaking && !isPaused ? [1, quantumEnergy * 1.25, 1] : [1, 1.05, 1],
+                      boxShadow:
+                        isSpeaking && !isPaused
+                          ? '0 0 45px rgba(0,243,255,0.8), inset 0 0 25px rgba(168,85,247,0.7)'
+                          : '0 0 25px rgba(0,243,255,0.4)',
+                    }}
+                    transition={{ repeat: Infinity, duration: isSpeaking && !isPaused ? 0.35 : 2.5, ease: 'easeInOut' }}
+                    className="w-24 h-24 rounded-full bg-gradient-to-tr from-cyan-500 via-sky-400 to-indigo-600 flex items-center justify-center relative cursor-pointer"
+                  >
+                    <div className="w-16 h-16 rounded-full bg-[#030718] border border-cyan-300/60 flex items-center justify-center">
+                      <AtomIcon size={28} className="text-cyan-300 animate-spin" style={{ animationDuration: '10s' }} />
+                    </div>
+                  </motion.div>
+                </div>
 
-                  {/* Ojos con Parpadeo */}
-                  {eyeBlink ? (
-                    <>
-                      <line x1="38" y1="54" x2="48" y2="54" stroke="#00f3ff" strokeWidth="2.5" strokeLinecap="round" />
-                      <line x1="72" y1="54" x2="82" y2="54" stroke="#00f3ff" strokeWidth="2.5" strokeLinecap="round" />
-                    </>
-                  ) : (
-                    <>
-                      <circle cx="43" cy="54" r="5" fill="#00f3ff" className="animate-pulse" />
-                      <circle cx="77" cy="54" r="5" fill="#00f3ff" className="animate-pulse" />
-                      <circle cx="43" cy="54" r="2" fill="#ffffff" />
-                      <circle cx="77" cy="54" r="2" fill="#ffffff" />
-                    </>
-                  )}
-
-                  {/* Nariz */}
-                  <path d="M60 55 L60 67 L56 69" fill="none" stroke="#00f3ff" strokeWidth="1.5" opacity="0.7" />
-
-                  {/* Boca Dinámica Gesticulante con Visemas Fonéticos */}
-                  {mouthShape === 0 && <path d="M48 80 Q60 81 72 80" fill="none" stroke="#00f3ff" strokeWidth="2.5" strokeLinecap="round" />}
-                  {mouthShape === 1 && <ellipse cx="60" cy="80" rx="7" ry="9" fill="#00f3ff" fillOpacity="0.3" stroke="#00f3ff" strokeWidth="2" />}
-                  {mouthShape === 2 && <ellipse cx="60" cy="82" rx="11" ry="8" fill="#00f3ff" fillOpacity="0.35" stroke="#00f3ff" strokeWidth="2.5" />}
-                  {mouthShape === 3 && <path d="M44 80 Q60 88 76 80 Q60 76 44 80" fill="#00f3ff" fillOpacity="0.3" stroke="#00f3ff" strokeWidth="2" />}
-                  {mouthShape === 4 && <line x1="46" y1="80" x2="74" y2="80" stroke="#00f3ff" strokeWidth="3" strokeLinecap="round" />}
-                </svg>
-
-                {/* Ecualizador Dinámico de 20 Bandas */}
-                <div className="flex items-end justify-center gap-1 w-full h-7 px-4 mt-2 relative z-10">
-                  {[...Array(20)].map((_, i) => (
+                {/* Espectro de Frecuencia Vocal de 24 Bandas */}
+                <div className="flex items-end justify-center gap-1 w-full h-8 px-4 mt-2 relative z-10">
+                  {[...Array(24)].map((_, i) => (
                     <motion.div
                       key={i}
                       animate={{
-                        height: isSpeaking && !isPaused ? [3, Math.random() * 24 + 4, 3] : 3,
+                        height: isSpeaking && !isPaused ? [4, Math.random() * 26 + 4, 4] : 4,
                       }}
                       transition={{
                         repeat: Infinity,
-                        duration: 0.16 + (i % 6) * 0.03,
+                        duration: 0.14 + (i % 6) * 0.03,
                         ease: 'easeInOut',
                       }}
                       className="w-1 rounded-full bg-gradient-to-t from-cyan-400 via-sky-300 to-purple-400"
@@ -1017,7 +1036,7 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
                     ) : (
                       <>
                         <SpeakerIcon size={14} />
-                        <span>{isPaused ? 'REANUDAR GESTICULACIÓN' : 'TRANSMITIR ESTE BOLETÍN'}</span>
+                        <span>{isPaused ? 'REANUDAR ARTICULACIÓN' : 'TRANSMITIR ESTE BOLETÍN'}</span>
                       </>
                     )}
                   </button>
@@ -1032,9 +1051,9 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
                   </button>
                 </div>
 
-                {/* Selector de Velocidad */}
+                {/* Selector de Cadencia */}
                 <div className="flex items-center justify-between text-xs font-mono text-slate-400 px-1">
-                  <span>Cadencia de Voz:</span>
+                  <span>Cadencia de Vocalización:</span>
                   <div className="flex items-center gap-1">
                     {[0.9, 1.0, 1.2].map((rate) => (
                       <button
@@ -1053,10 +1072,10 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
                 </div>
               </div>
 
-              {/* TELEPROMPTER EN VIVO */}
+              {/* TELEPROMPTER EN VIVO CON SEGUIMIENTO DE LECTURA */}
               <div className="p-4 rounded-2xl bg-black/70 border border-white/10 space-y-2">
                 <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 pb-1 border-b border-white/5">
-                  <span className="text-cyan-300 font-bold">TELEPROMPTER SINCRONIZADO</span>
+                  <span className="text-cyan-300 font-bold">TELEPROMPTER CUÁNTICO</span>
                   <span>{speechProgress}% TRANSMITIDO</span>
                 </div>
 

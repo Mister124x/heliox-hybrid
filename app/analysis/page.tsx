@@ -9,7 +9,6 @@ import SolarGlobe3D from '../../components/SolarGlobe3D'
 import HackerPolymathMatrix from '../../components/HackerPolymathMatrix'
 import DeclassifiedDossier from '../../components/DeclassifiedDossier'
 import HybridAIConsole from '../../components/HybridAIConsole'
-import JuryTribunalDock from '../../components/JuryTribunalDock'
 import { useI18n } from '../../lib/i18n'
 import { fetchLiveSolarData, SolarSummary } from '../../lib/solarClient'
 import {
@@ -132,6 +131,14 @@ export default function AnalysisPage() {
     return () => clearInterval(interval)
   }, [])
 
+  const [simWindSpeed, setSimWindSpeed] = useState<number>(680)
+  const [simBz, setSimBz] = useState<number>(-18)
+  const standoffDistance = Math.max(
+    4.6,
+    Number(((10 * Math.pow(450 / simWindSpeed, 1 / 6)) * (simBz < 0 ? 1 + simBz / 120 : 1.05)).toFixed(1))
+  )
+  const gicVoltage = Math.round(Math.abs(Math.min(0, simBz)) * (simWindSpeed / 280) * 1.6)
+
   const isEn = mounted ? lang === 'en' : false
   const isPt = mounted ? lang === 'pt' : false
 
@@ -196,9 +203,6 @@ export default function AnalysisPage() {
     <div className="min-h-screen bg-[#02040b] text-white selection:bg-cyan-500/30 selection:text-white">
       <Navbar />
 
-      {/* ─── DOCK FLOTANTE DE JUECES GOOGLE FIREBASE ───────────────────────── */}
-      <JuryTribunalDock />
-
       {/* ─── HERO HEADER: INVESTIGACIÓN CIENTÍFICA DE IMPACTO REAL ─────────── */}
       <div className="relative pt-24 overflow-hidden border-b border-white/[0.08]">
         {/* Glow de Fondo */}
@@ -218,13 +222,13 @@ export default function AnalysisPage() {
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 py-16 sm:py-20">
-          {/* Badge de Validación Google Firebase */}
+          {/* Badge de Proyecto */}
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex justify-center mb-6">
             <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-cyan-950/40 border border-cyan-500/40 text-cyan-300 text-xs font-mono font-bold tracking-wide shadow-lg shadow-cyan-500/10">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Google Firebase #BuildHybridAI 2026 · Technical Research Dossier</span>
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+              <span>Google Firebase #BuildHybridAI 2026 · Applied Heliophysics Architecture</span>
               <span className="text-white/30">│</span>
-              <span className="text-emerald-400">Score 100/100 Validado</span>
+              <span className="text-emerald-400">On-Device & Cloud Engine</span>
             </div>
           </motion.div>
 
@@ -307,6 +311,140 @@ export default function AnalysisPage() {
 
       {/* ─── CONTENIDO PRINCIPAL: DOSSIERS DE INVESTIGACIÓN ───────────────── */}
       <main className="max-w-7xl mx-auto px-4 py-12 space-y-16">
+        {/* ─── LABORATORIO INTERACTIVO: COMPRESIÓN DE LA MAGNETOPAUSA (MHD LAB) ─── */}
+        <section className="rounded-3xl bg-[#040818] border border-cyan-500/40 p-6 sm:p-8 backdrop-blur-xl shadow-[0_0_50px_rgba(6,182,212,0.15)] space-y-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/10">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-bold">
+                <AtomIcon size={14} className="text-cyan-400" />
+                <span>LABORATORIO MAGNETOHIDRODINÁMICO INTERACTIVO</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-black text-white">
+                Simulador de Compresión de la Magnetopausa & Inducción GIC
+              </h3>
+              <p className="text-xs text-slate-400 max-w-2xl">
+                Ajusta la velocidad del choque solar y la polaridad Bz para observar la contracción del escudo magnético terrestre y el voltaje inducido en redes de transmisión eléctrica.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 font-mono text-xs">
+              <div className="p-3 rounded-2xl bg-black/60 border border-white/10 text-center">
+                <div className="text-[10px] text-slate-400">Distancia Choque</div>
+                <div className={`text-lg font-black ${standoffDistance < 6.5 ? 'text-rose-400' : 'text-cyan-300'}`}>
+                  {standoffDistance} R_E
+                </div>
+              </div>
+              <div className="p-3 rounded-2xl bg-black/60 border border-white/10 text-center">
+                <div className="text-[10px] text-slate-400">Inducción Red EHV</div>
+                <div className={`text-lg font-black ${gicVoltage > 80 ? 'text-rose-400' : 'text-amber-400'}`}>
+                  {gicVoltage} V/km
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Gráfico SVG de la Magnetopausa Reactiva */}
+          <div className="relative w-full h-44 sm:h-52 rounded-2xl bg-black/90 border border-white/10 overflow-hidden flex items-center justify-center">
+            {/* Viento solar entrante */}
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-center font-mono text-[11px] text-cyan-400 space-y-1">
+              <div className="w-12 h-12 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 mx-auto animate-pulse">
+                <SunIcon size={22} />
+              </div>
+              <div>VIENTO SOLAR</div>
+              <div className="text-slate-400">{simWindSpeed} km/s</div>
+            </div>
+
+            <svg viewBox="0 0 600 200" className="w-full h-full">
+              {/* Líneas de flujo del viento solar */}
+              {[...Array(6)].map((_, i) => (
+                <line
+                  key={i}
+                  x1="80"
+                  y1={25 + i * 30}
+                  x2={360 - (10 - standoffDistance) * 14}
+                  y2={25 + i * 30}
+                  stroke="#00f3ff"
+                  strokeWidth="1.5"
+                  strokeDasharray="6 4"
+                  opacity="0.4"
+                />
+              ))}
+
+              {/* Choque de Proa (Bow Shock) - Curva hiperbólica que se comprime */}
+              <path
+                d={`M ${390 - (10 - standoffDistance) * 16} 20 Q ${350 - (10 - standoffDistance) * 18} 100 ${390 - (10 - standoffDistance) * 16} 180`}
+                fill="none"
+                stroke={standoffDistance < 6.5 ? '#f43f5e' : '#00f3ff'}
+                strokeWidth="3.5"
+                className="transition-all duration-300"
+              />
+
+              {/* Magnetopausa Terrestre */}
+              <path
+                d={`M ${420 - (10 - standoffDistance) * 12} 35 Q ${390 - (10 - standoffDistance) * 14} 100 ${420 - (10 - standoffDistance) * 12} 165`}
+                fill="rgba(6, 182, 212, 0.12)"
+                stroke="#a855f7"
+                strokeWidth="2.5"
+                className="transition-all duration-300"
+              />
+
+              {/* Planeta Tierra */}
+              <circle cx="480" cy="100" r="16" fill="#0284c7" stroke="#38bdf8" strokeWidth="2" />
+              <circle cx="480" cy="100" r="6" fill="#22c55e" opacity="0.6" />
+              <text x="480" y="130" fill="#94a3b8" fontSize="10" fontFamily="monospace" textAnchor="middle">
+                TIERRA (1.0 R_E)
+              </text>
+            </svg>
+          </div>
+
+          {/* Sliders Interactivos */}
+          <div className="grid sm:grid-cols-2 gap-6 pt-2 font-mono text-xs">
+            <div className="space-y-2 p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+              <div className="flex justify-between">
+                <span className="text-slate-300">Velocidad Choque Solar CME (v_sw):</span>
+                <span className="text-cyan-400 font-bold">{simWindSpeed} km/s</span>
+              </div>
+              <input
+                type="range"
+                min="400"
+                max="2200"
+                step="20"
+                value={simWindSpeed}
+                onChange={(e) => setSimWindSpeed(Number(e.target.value))}
+                className="w-full accent-cyan-400 cursor-pointer"
+              />
+              <div className="flex justify-between text-[10px] text-slate-500">
+                <span>400 km/s (Nominal)</span>
+                <span>1,200 km/s (Rápida)</span>
+                <span>2,200 km/s (Extrema)</span>
+              </div>
+            </div>
+
+            <div className="space-y-2 p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+              <div className="flex justify-between">
+                <span className="text-slate-300">Polaridad Vector IMF Bz:</span>
+                <span className={simBz < 0 ? 'text-rose-400 font-bold' : 'text-emerald-400 font-bold'}>
+                  {simBz} nT ({simBz < 0 ? 'Sur / Reconexión Activa' : 'Norte / Escudo Estable'})
+                </span>
+              </div>
+              <input
+                type="range"
+                min="-40"
+                max="15"
+                step="1"
+                value={simBz}
+                onChange={(e) => setSimBz(Number(e.target.value))}
+                className="w-full accent-purple-400 cursor-pointer"
+              />
+              <div className="flex justify-between text-[10px] text-slate-500">
+                <span>-40 nT (Reconexión Máxima)</span>
+                <span>0 nT</span>
+                <span>+15 nT (Repulsión)</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <div className="flex flex-col lg:flex-row gap-8">
           {/* SIDEBAR DE NAVEGACIÓN CIENTÍFICA */}
           <aside className="lg:w-80 shrink-0 space-y-3">
