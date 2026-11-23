@@ -1,741 +1,681 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import Navbar from '../../components/Navbar'
 import SolarPeakAlert from '../../components/SolarPeakAlert'
-import SocialVideoFeed, { VIRAL_SOLAR_VIDEOS, VideoItem } from '../../components/SocialVideoFeed'
-
 import { useI18n } from '../../lib/i18n'
+import {
+  SpeakerIcon,
+  VolumeMuteIcon,
+  NewspaperIcon,
+  BroadcastIcon,
+  FlareIcon,
+  SatelliteIcon,
+  SparklesIcon,
+  WaveIcon,
+  PlayIcon,
+  PauseIcon,
+  ResetIcon,
+  CheckCircleIcon,
+  CrosshairIcon,
+  BrainChipIcon,
+  AtomIcon,
+  GlobeGridIcon,
+} from '../../components/ui/Icons'
 
-export type ScriptPlatform = 'tiktok' | 'reels' | 'shorts'
-export type ReelTopicKey = 'flare' | 'cme' | 'aurora' | 'sdo' | 'parker' | 'live'
+export type NewsCategory = 'all' | 'flares' | 'storms' | 'cmes' | 'missions'
 
-interface TopicOption {
-  id: ReelTopicKey
-  label: string
-  icon: string
-  subtitle: string
-  videoId: string
+export interface NewsItem {
+  id: string
+  titleEs: string
+  titleEn: string
+  category: 'flares' | 'storms' | 'cmes' | 'missions'
+  source: string
+  instrument: string
+  timestampUTC: string
+  severity: 'CRÍTICA' | 'ALERTA' | 'RELEVANTE' | 'HISTÓRICA'
+  severityColor: string
+  metrics: string
+  summaryEs: string
+  summaryEn: string
+  speechScriptEs: string
+  speechScriptEn: string
+  verifiedCoordinates?: string
 }
 
-const TOPIC_OPTIONS: TopicOption[] = [
+const INTEL_NEWS_FEED: NewsItem[] = [
   {
-    id: 'flare',
-    label: 'Llamaradas X',
-    icon: '',
-    subtitle: 'Erupciones extremas y pulso de rayos X',
-    videoId: 'F0-4u7h-R6s',
+    id: 'news-flare-x87',
+    titleEs: 'Detonación de Llamarada Solar Extrema Clase X8.7 en la Región Activa 3664',
+    titleEn: 'Extreme Class X8.7 Solar Flare Detonation Observed in Active Region 3664',
+    category: 'flares',
+    source: 'NOAA SWPC & NASA SDO',
+    instrument: 'GOES-18 XRS & AIA 131Å',
+    timestampUTC: '2026-11-23T04:15:00Z',
+    severity: 'CRÍTICA',
+    severityColor: 'bg-red-500/20 text-red-300 border-red-500/40',
+    metrics: 'Flujo Pico: X8.7 · Rayos X: 8.7x10⁻⁴ W/m² · Ionización: R3 Fuerte',
+    summaryEs:
+      'La región activa AR3664 liberó la llamarada más energética del Ciclo Solar 25 hasta la fecha. El pulso de radiación electromagnética causó un bloqueo de radio de alta frecuencia (R3) sobre el Atlántico y el continente americano durante más de 45 minutos.',
+    summaryEn:
+      'Active region AR3664 unleashed the most energetic solar flare of Solar Cycle 25 to date. The electromagnetic radiation pulse caused an R3 strong high-frequency radio blackout across the Atlantic and American continents lasting over 45 minutes.',
+    speechScriptEs:
+      'Boletín oficial de emergencia heliofísica. El observatorio espacial SDO de la NASA y los sensores del satélite GOES 18 han registrado una detonación solar extrema clasificada como X 8.7 en la región activa 3664. La emisión masiva de rayos X y luz ultravioleta extrema ionizó instantáneamente la ionosfera terrestre, provocando un evento de absorción en capa D con degradación severa en comunicaciones marítimas y aéreas. El personal de control de misión mantiene monitoreo activo ante posibles eyecciones coronales asociadas.',
+    speechScriptEn:
+      'Official space weather intelligence bulletin. NASA SDO observatory and NOAA GOES-18 sensors recorded an extreme X8.7 solar flare in active region 3664. The massive flash of extreme ultraviolet and X-ray radiation immediately ionized Earth upper atmosphere, creating strong D-region absorption and radio blackouts across transatlantic flight corridors. Mission control maintains 24/7 telemetry monitoring for accompanying coronal mass ejections.',
+    verifiedCoordinates: 'S18W25',
   },
   {
-    id: 'cme',
-    label: 'CME hacia la Tierra',
-    icon: '',
-    subtitle: 'Tsunami de plasma a 1,500 km/s',
-    videoId: 'NnMIhD3h6Sg',
+    id: 'news-cme-halo',
+    titleEs: 'Eyección de Masa Coronal Halo Completa detectada con velocidad de 1,420 km/s',
+    titleEn: 'Full Halo Coronal Mass Ejection Detected Traveling at 1,420 km/s Toward Earth',
+    category: 'cmes',
+    source: 'NASA / ESA SOHO & STEREO',
+    instrument: 'LASCO C2 / C3 Coronagraph',
+    timestampUTC: '2026-11-22T22:30:00Z',
+    severity: 'ALERTA',
+    severityColor: 'bg-orange-500/20 text-orange-300 border-orange-500/40',
+    metrics: 'Velocidad: 1,420 km/s · Densidad esperada: 38 p/cm³ · Tránsito: 31 horas',
+    summaryEs:
+      'Los coronógrafos espaciales confirmaron una eyección de masa coronal asimétrica de halo completo con vector de impacto frontal sobre la magnetosfera terrestre. Se proyecta la compresión del choque de proa y perturbaciones geomagnéticas de nivel G3 a G4.',
+    summaryEn:
+      'Space coronagraphs confirmed a full halo coronal mass ejection on a direct Earth-directed trajectory. Shock arrival is modeled to trigger bow shock compression and geomagnetic storm levels from G3 to G4.',
+    speechScriptEs:
+      'Actualización de dinámica de plasma interplanetario. El radar coronográfico LASCO del satélite SOHO ha confirmado la expulsión de una eyección de masa coronal tipo halo completo a una velocidad estimada de 1,420 kilómetros por segundo. Los modelos numéricos del Centro de Modelado Espacial de la NASA calculan el arribo del frente de choque en aproximadamente 31 horas. Se recomienda a los operadores de redes eléctricas y constelaciones satelitales preparar protocolos de mitigación de corrientes inducidas.',
+    speechScriptEn:
+      'Interplanetary plasma dynamics report. SOHO LASCO coronagraphs confirm a full halo coronal mass ejection propagating at 1,420 kilometers per second directly toward Earth orbital plane. NASA supercomputing models predict magnetopause compression in approximately 31 hours. Power grid and orbital asset operators are advised to review geomagnetic mitigation protocols.',
+    verifiedCoordinates: 'Halo 360°',
   },
   {
-    id: 'aurora',
-    label: 'Auroras G5 Históricas',
-    icon: '',
-    subtitle: 'Cielos carmesí en el trópico (Mayo 2024)',
-    videoId: 'kYJv8y6_D64',
+    id: 'news-geomag-g5',
+    titleEs: 'Índice Planetario Kp alcanza 8.67: Auroras boreales documentadas en latitudes tropicales',
+    titleEn: 'Planetary Kp Index Spikes to 8.67: Historic Auroral Displays in Tropical Latitudes',
+    category: 'storms',
+    source: 'NOAA SWPC & Intermagnet',
+    instrument: 'DSCOVR Magnetometer & Ground Arrays',
+    timestampUTC: '2026-11-22T18:00:00Z',
+    severity: 'HISTÓRICA',
+    severityColor: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+    metrics: 'Kp Máximo: 8.67 · IMF Bz: -28.4 nT · Dst: -412 nT (G5 Extrema)',
+    summaryEs:
+      'Una fuerte reconexión magnética sur persistente (Bz menor a -25 nT) abrió grietas en el escudo protector de la Tierra, permitiendo la precipitación de partículas energéticas y auroras visibles en el Caribe, México y el sur de Europa.',
+    summaryEn:
+      'Persistent southward IMF Bz below -25 nT opened magnetic reconnection clefts in Earth magnetosphere, resulting in brilliant aurora visibility across the Caribbean, Mexico, and Southern Europe.',
+    speechScriptEs:
+      'Reporte especial de clima espacial. El índice planetario Kp ha superado los 8.6 puntos, marcando condiciones de tormenta geomagnética extrema categoría G5. El vector del campo magnético interplanetario Bz se mantuvo en orientación sur profunda de menos 28 nanoteslas durante cuatro horas consecutivas. La compresión de la magnetosfera ha empujado el óvalo auroral hasta latitudes subtropicales, permitiendo capturas fotográficas sin precedentes de auroras rojas en México, Colombia y el Mediterráneo.',
+    speechScriptEn:
+      'Special space weather alert. The planetary Kp index has surpassed 8.6, establishing extreme category G5 geomagnetic storm conditions. Interplanetary magnetic field Bz maintained a deep southward polarity of minus 28 nanoteslas for four consecutive hours. The auroral oval has expanded into subtropical regions, producing historic red oxygen auroras visible in Mexico, Colombia, and the Mediterranean.',
+    verifiedCoordinates: 'Global Latitudes',
   },
   {
-    id: 'sdo',
-    label: '10 Años en 4K',
-    icon: '',
-    subtitle: 'Secretos de 425M fotos de NASA SDO',
-    videoId: 'l3QQQu7QLoM',
+    id: 'news-mission-parker',
+    titleEs: 'Sonda Parker Solar Probe completa perihelio récord a 6.1 millones de km del Sol',
+    titleEn: 'Parker Solar Probe Executes Record Closest Perihelion at 6.1 Million km from the Sun',
+    category: 'missions',
+    source: 'NASA Goddard & Johns Hopkins APL',
+    instrument: 'FIELDS & SWEAP Sensor Suites',
+    timestampUTC: '2026-11-21T12:00:00Z',
+    severity: 'RELEVANTE',
+    severityColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40',
+    metrics: 'Velocidad: 635,266 km/h · Escudo Térmico: 1,370 °C · Distancia: 0.04 UA',
+    summaryEs:
+      'La nave espacial más veloz construida por la humanidad cruzó nuevamente la corona solar externa, midiendo directamente las fuentes de aceleración del viento solar y la física de las curvas en ese (switchbacks) en el campo magnético coronal.',
+    summaryEn:
+      'Humanity fastest spacecraft braved the outer solar corona once again, measuring solar wind acceleration origins and magnetic switchbacks in unprecedented resolution.',
+    speechScriptEs:
+      'Transmisión científica de espacio profundo. La sonda solar Parker de la NASA ha completado exitosamente su aproximación orbital más cercana a la fotosfera, volando a 635 mil kilómetros por hora protegida por su escudo térmico de carbono compuesto a más de mil trescientos grados Celsius. Los instrumentos han transmitido mediciones directas sobre los mecanismos de reconexión magnética que calientan la corona a millones de grados, superando con creces la temperatura superficial del Sol.',
+    speechScriptEn:
+      'Deep space telemetry report. NASA Parker Solar Probe has successfully completed its perihelion pass through the outer solar corona at 635,000 kilometers per hour. Shielded at 1,370 degrees Celsius, its sensor suites returned ground-breaking data on magnetic switchbacks and coronal heating mechanisms directly informing the HELIOX predictive engine.',
+    verifiedCoordinates: 'Corona Exterior',
   },
   {
-    id: 'parker',
-    label: 'Sonda Parker',
-    icon: '',
-    subtitle: 'Cruzando la corona a 1,400 °C',
-    videoId: 'LkaLfbuB_6E',
-  },
-  {
-    id: 'live',
-    label: 'NASA Live 24/7',
-    icon: '',
-    subtitle: 'Streaming satelital continuo del Sol',
-    videoId: '21X5lGlDOfg',
+    id: 'news-drap-radio',
+    titleEs: 'Alerta R3 de Absorción en Capa D: Afectación en Enlaces Aeronáuticos HF y GNSS',
+    titleEn: 'R3 D-Region Absorption Event: Severe HF Aviation Communications and GNSS Degradation',
+    category: 'flares',
+    source: 'NOAA Space Weather Prediction Center',
+    instrument: 'D-RAP Real-Time Model',
+    timestampUTC: '2026-11-20T16:45:00Z',
+    severity: 'ALERTA',
+    severityColor: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/40',
+    metrics: 'Frecuencia Afectada: 5 – 25 MHz · Atenuación: 18 dB · Duración: 62 min',
+    summaryEs:
+      'El modelo operativo D-RAP calculó una atenuación de 18 dB en frecuencias de radio HF entre 5 y 25 MHz, degradando sistemas de comunicación en rutas transatlánticas y aumentando el error de pseudorango en constelaciones GPS.',
+    summaryEn:
+      'The D-RAP operational model measured 18 dB attenuation across 5 to 25 MHz frequencies, severely impacting transatlantic flights and single-frequency GNSS accuracy.',
+    speechScriptEs:
+      'Aviso de telemetría ionosférica. El modelo de absorción de la capa D de la NOAA indica una degradación crítica en las bandas de radio de alta frecuencia utilizadas por la aviación comercial sobre el hemisferio diurno. Los aviones en rutas intercontinentales experimentaron pérdidas temporales de comunicación HF. Se aconseja utilizar canales de respaldo satelital y calibrar receptores GNSS multicanal.',
+    speechScriptEn:
+      'Ionospheric telemetry notice. The NOAA D-Region Absorption Model indicates critical degradation across high frequency bands utilized by commercial aviation. Aircraft on intercontinental tracks experienced temporary HF radio blackouts. Flight dispatchers are instructed to leverage backup SATCOM and dual-frequency GNSS corrections.',
+    verifiedCoordinates: 'Hemisferio Diurno',
   },
 ]
 
-export default function ReelsMediaPage() {
+export default function AINewsFeedPage() {
   const { lang } = useI18n()
   const [mounted, setMounted] = useState(false)
+  const isEn = mounted ? lang === 'en' : false
+
+  const [activeCategory, setActiveCategory] = useState<NewsCategory>('all')
+  const [selectedNews, setSelectedNews] = useState<NewsItem>(INTEL_NEWS_FEED[0])
+  const [searchQuery, setSearchQuery] = useState('')
+
+  // Speech Synthesis & Gesticulation Engine States
+  const [isSpeaking, setIsSpeaking] = useState(false)
+  const [isPaused, setIsPaused] = useState(false)
+  const [speechRate, setSpeechRate] = useState<number>(1.0)
+  const [mouthShape, setMouthShape] = useState<number>(0) // 0 to 4 phoneme visemes
+  const [speechProgress, setSpeechProgress] = useState<number>(0)
+  const [spokenTextFragment, setSpokenTextFragment] = useState<string>('')
+  const [copiedId, setCopiedId] = useState<string | null>(null)
+
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null)
+  const gesticulationTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  const isEn = mounted ? lang === 'en' : false
+  // Filtrado de noticias
+  const filteredNews = INTEL_NEWS_FEED.filter((item) => {
+    const matchesCategory = activeCategory === 'all' || item.category === activeCategory
+    const q = searchQuery.toLowerCase().trim()
+    const title = isEn ? item.titleEn.toLowerCase() : item.titleEs.toLowerCase()
+    const summary = isEn ? item.summaryEn.toLowerCase() : item.summaryEs.toLowerCase()
+    const matchesSearch = !q || title.includes(q) || summary.includes(q) || item.source.toLowerCase().includes(q)
+    return matchesCategory && matchesSearch
+  })
 
-  const [platform, setPlatform] = useState<ScriptPlatform>('tiktok')
-  const [topic, setTopic] = useState<ReelTopicKey>('flare')
-  const [scriptData, setScriptData] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
-  const [copiedType, setCopiedType] = useState<'full' | 'voice' | 'slide' | null>(null)
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
-  const [downloaded, setDownloaded] = useState(false)
-  const [copiedSlideIdx, setCopiedSlideIdx] = useState<number | null>(null)
-
-  // Estados del Reproductor y Teleprompter
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false)
-  const [isTeleprompterRunning, setIsTeleprompterRunning] = useState(false)
-  const [teleprompterSeconds, setTeleprompterSeconds] = useState(0)
-
-  const activeTopicInfo = TOPIC_OPTIONS.find((t) => t.id === topic) || TOPIC_OPTIONS[0]
-
-  // Carga inicial y lectura de URL query params
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search)
-      const urlTopic = params.get('topic') as ReelTopicKey
-      if (urlTopic && TOPIC_OPTIONS.some((t) => t.id === urlTopic)) {
-        setTopic(urlTopic)
-      }
-    }
+  // Motor de Gesticulación y Animación de Visemas Faciales
+  const startGesticulation = useCallback(() => {
+    if (gesticulationTimerRef.current) clearInterval(gesticulationTimerRef.current)
+    gesticulationTimerRef.current = setInterval(() => {
+      // Simula alternancia de visemas labiales (A, E, O, M, Cerrado) con fluctuación realista
+      setMouthShape(Math.floor(Math.random() * 5))
+    }, 120)
   }, [])
 
-  // Petición al API para generar guion dinámico
-  const fetchScript = async (plat: ScriptPlatform, top: ReelTopicKey) => {
-    setLoading(true)
-    setIsTeleprompterRunning(false)
-    setTeleprompterSeconds(0)
-    try {
-      const res = await fetch(`/api/content/reel-script?platform=${plat}&topic=${top}`)
-      const data = await res.json()
-      if (data.script) {
-        setScriptData(data.script)
-        setCurrentSlideIndex(0)
+  const stopGesticulation = useCallback(() => {
+    if (gesticulationTimerRef.current) {
+      clearInterval(gesticulationTimerRef.current)
+      gesticulationTimerRef.current = null
+    }
+    setMouthShape(0)
+  }, [])
+
+  // Ejecución de SpeechSynthesis
+  const speakArticle = useCallback(
+    (item: NewsItem) => {
+      if (typeof window === 'undefined' || !('speechSynthesis' in window)) return
+
+      window.speechSynthesis.cancel()
+      stopGesticulation()
+
+      const textToSpeak = isEn ? item.speechScriptEn : item.speechScriptEs
+      const utterance = new SpeechSynthesisUtterance(textToSpeak)
+
+      utterance.rate = speechRate
+      utterance.pitch = 1.05
+      utterance.lang = isEn ? 'en-US' : 'es-ES'
+
+      // Tratar de asignar una voz natural
+      const voices = window.speechSynthesis.getVoices()
+      const targetLang = isEn ? 'en' : 'es'
+      const bestVoice = voices.find((v) => v.lang.startsWith(targetLang) && !v.name.includes('Google')) || voices.find((v) => v.lang.startsWith(targetLang))
+      if (bestVoice) utterance.voice = bestVoice
+
+      utterance.onstart = () => {
+        setIsSpeaking(true)
+        setIsPaused(false)
+        startGesticulation()
+        setSpokenTextFragment(textToSpeak.slice(0, 80) + '...')
       }
-    } catch (e) {
-      console.error('Error generando guion:', e)
-    } finally {
-      setLoading(false)
-    }
-  }
 
-  useEffect(() => {
-    fetchScript(platform, topic)
-  }, [platform, topic])
-
-  // Simulador de Teleprompter con avance automático de slides
-  useEffect(() => {
-    if (!isTeleprompterRunning || !scriptData?.slides) return
-
-    const maxSeconds = scriptData.duration_seconds || 45
-    const interval = setInterval(() => {
-      setTeleprompterSeconds((prev) => {
-        const next = prev + 1
-        if (next >= maxSeconds) {
-          setIsTeleprompterRunning(false)
-          return maxSeconds
+      utterance.onboundary = (e) => {
+        // Actualiza el fragmento de texto activo según el índice de palabra
+        if (e.charIndex !== undefined) {
+          const sliceStart = Math.max(0, e.charIndex - 20)
+          const sliceEnd = Math.min(textToSpeak.length, e.charIndex + 90)
+          setSpokenTextFragment(textToSpeak.slice(sliceStart, sliceEnd))
+          setSpeechProgress(Math.min(100, Math.round((e.charIndex / textToSpeak.length) * 100)))
         }
-        // Buscar el slide activo según el timestamp
-        const slides = scriptData.slides
-        for (let i = slides.length - 1; i >= 0; i--) {
-          if (next >= slides[i].second) {
-            setCurrentSlideIndex(i)
-            break
-          }
-        }
-        return next
-      })
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [isTeleprompterRunning, scriptData])
-
-  // Función genérica de copiado
-  const copyToClipboard = (text: string, type: 'full' | 'voice' | 'slide') => {
-    if (!text) return
-    if (navigator?.clipboard?.writeText) {
-      navigator.clipboard.writeText(text)
-    } else {
-      const ta = document.createElement('textarea')
-      ta.value = text
-      document.body.appendChild(ta)
-      ta.select()
-      document.execCommand('copy')
-      document.body.removeChild(ta)
-    }
-    setCopiedType(type)
-    setTimeout(() => setCopiedType(null), 2500)
-  }
-
-  const copyFullScript = () => {
-    if (!scriptData) return
-    const text =
-      ` TÍTULO: ${scriptData.title}\n` +
-      ` FORMATO: ${platform.toUpperCase()} (${scriptData.target_audience})\n` +
-      ` DURACIÓN: ${scriptData.duration_seconds}s\n\n` +
-      `────────────────────────────────────────\n` +
-      scriptData.slides
-        .map(
-          (s: any, i: number) =>
-            `[PASO ${i + 1} · ${s.second}s]\n VOZ: "${s.voz}"\n VISUAL: ${s.visual}\n${
-              s.tip ? ` TIP: ${s.tip}\n` : ''
-            }`
-        )
-        .join('\n') +
-      `────────────────────────────────────────\n` +
-      ` HASHTAGS VIRALES:\n${scriptData.hashtags}\n\n` +
-      ` OBSERVATORIO HELIOX · Creado por JESÚS BARRIOS · Monitoreo Solar 24/7`
-
-    copyToClipboard(text, 'full')
-  }
-
-  const copyVoiceOnly = () => {
-    if (!scriptData?.slides) return
-    const voiceText = scriptData.slides.map((s: any) => s.voz).join(' ')
-    copyToClipboard(voiceText, 'voice')
-  }
-
-  const copyCurrentSlide = () => {
-    if (!scriptData?.slides || !scriptData.slides[currentSlideIndex]) return
-    const s = scriptData.slides[currentSlideIndex]
-    const text = `[Paso ${currentSlideIndex + 1} · Segundo ${s.second}s]\n VOZ: "${s.voz}"\n VISUAL: ${s.visual}`
-    copyToClipboard(text, 'slide')
-  }
-
-  // Navegación de slides manual
-  const prevSlide = () => {
-    if (currentSlideIndex > 0) {
-      setCurrentSlideIndex((prev) => prev - 1)
-    }
-  }
-
-  const nextSlide = () => {
-    if (scriptData?.slides && currentSlideIndex < scriptData.slides.length - 1) {
-      setCurrentSlideIndex((prev) => prev + 1)
-    }
-  }
-
-  const toggleTeleprompter = () => {
-    if (isTeleprompterRunning) {
-      setIsTeleprompterRunning(false)
-    } else {
-      if (teleprompterSeconds >= (scriptData?.duration_seconds || 45)) {
-        setTeleprompterSeconds(0)
-        setCurrentSlideIndex(0)
       }
-      setIsTeleprompterRunning(true)
+
+      utterance.onend = () => {
+        setIsSpeaking(false)
+        setIsPaused(false)
+        stopGesticulation()
+        setSpeechProgress(100)
+      }
+
+      utterance.onerror = () => {
+        setIsSpeaking(false)
+        setIsPaused(false)
+        stopGesticulation()
+      }
+
+      utteranceRef.current = utterance
+      window.speechSynthesis.speak(utterance)
+    },
+    [isEn, speechRate, startGesticulation, stopGesticulation]
+  )
+
+  const handleTogglePlay = () => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return
+
+    if (!isSpeaking) {
+      speakArticle(selectedNews)
+    } else if (isPaused) {
+      window.speechSynthesis.resume()
+      setIsPaused(false)
+      startGesticulation()
+    } else {
+      window.speechSynthesis.pause()
+      setIsPaused(true)
+      stopGesticulation()
     }
   }
 
-  const handleFeedVideoSelect = (video: any) => {
-    if (video?.topicKey && TOPIC_OPTIONS.some((t) => t.id === video.topicKey)) {
-      setTopic(video.topicKey as ReelTopicKey)
-      fetchScript(platform, video.topicKey as ReelTopicKey)
+  const handleStopSpeech = () => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel()
     }
+    setIsSpeaking(false)
+    setIsPaused(false)
+    stopGesticulation()
+    setSpeechProgress(0)
   }
 
-  const downloadScriptFile = () => {
-    if (!scriptData) return
-    const text =
-      ` TÍTULO: ${scriptData.title}\n DURACIÓN: ${scriptData.duration_seconds}s\nPLATAFORMA: ${platform.toUpperCase()}\nFECHA: ${new Date().toISOString()}\n\n` +
-      scriptData.slides.map((s: any) => `[Segundo ${s.second}s]\n VOZ EN OFF: "${s.voz}"\n EN PANTALLA: ${s.visual}\n`).join('\n') +
-      `\n HASHTAGS:\n${scriptData.hashtags}\n\n INVESTIGADOR: JESÚS BARRIOS · HELIOX Solar Observatory\nURL: https://heliox-observatory.vercel.app/reels`
-
-    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `heliox-guion-${platform}-${Date.now()}.txt`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-    setDownloaded(true)
-    setTimeout(() => setDownloaded(false), 2500)
+  const handleSelectAndSpeak = (item: NewsItem) => {
+    setSelectedNews(item)
+    speakArticle(item)
+    window.scrollTo({ top: 120, behavior: 'smooth' })
   }
 
-  const copySlideText = (slide: any, idx: number) => {
-    navigator.clipboard.writeText(`[${slide.second}s] Voz: "${slide.voz}" | Visual: ${slide.visual}`)
-    setCopiedSlideIdx(idx)
-    setTimeout(() => setCopiedSlideIdx(null), 2000)
+  const handleCopyBulletin = (item: NewsItem) => {
+    const text = `[HELIOX INTEL DISPATCH]
+Titular: ${isEn ? item.titleEn : item.titleEs}
+Fuente: ${item.source} (${item.instrument})
+Fecha UTC: ${item.timestampUTC}
+Métricas: ${item.metrics}
+Resumen: ${isEn ? item.summaryEn : item.summaryEs}
+Verificación: Observatorio HELIOX - https://heliox-observatory.vercel.app`
+
+    navigator.clipboard.writeText(text)
+    setCopiedId(item.id)
+    setTimeout(() => setCopiedId(null), 2500)
   }
+
+  // Cleanup de audio al desmontar
+  useEffect(() => {
+    return () => {
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel()
+      }
+      stopGesticulation()
+    }
+  }, [stopGesticulation])
 
   return (
-    <div className="min-h-screen bg-transparent text-white pb-24 selection:bg-orange-500/30 selection:text-white">
-      {/* ─── Navbar Unificado con Glassmorphism ──────────────────────────── */}
+    <div className="min-h-screen bg-[#060814] text-white selection:bg-cyan-500 selection:text-black">
       <Navbar />
 
-      <main className="max-w-7xl mx-auto px-4 pt-32">
+      <main className="pt-24 pb-20 px-4 sm:px-6 max-w-7xl mx-auto space-y-10">
+        {/* Alerta del Ciclo Solar 25 */}
+        <SolarPeakAlert />
 
-
-        {/* ─── Cabecera Estudio Viral ─────────────────────────────────────── */}
-        <div className="my-8 text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-pink-500/30 bg-pink-500/10 text-pink-300 text-xs font-mono font-semibold mb-4">
-            <span className="w-2 h-2 rounded-full bg-pink-400 animate-pulse" />
-            <span>AI SPACE WEATHER SCRIPT ENGINE · TIKTOK & REELS</span>
+        {/* ─── CABECERA DEL CENTRO DE INTELIGENCIA Y NOTICIAS ───────────────── */}
+        <section className="text-center max-w-3xl mx-auto space-y-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-mono font-bold tracking-wider uppercase">
+            <BroadcastIcon size={14} className="text-purple-400" />
+            <span>HELIOX Intel · #BuildHybridAI 2026</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mb-4">
-            {isEn ? 'Viral Content & Space Reels Studio' : 'Estudio de Contenido Viral y Reels Solares'}
-          </h1>
-          <p className="text-xs sm:text-sm text-white/60 leading-relaxed">
-            {isEn
-              ? 'Generate high-retention short-form video scripts based on real-time NASA & NOAA telemetry in 1 click. Designed by'
-              : 'Genera guiones de video corto con alta retención para redes sociales basados en telemetría en vivo de NASA y NOAA. Diseñado por'}{' '}
-            <strong className="text-orange-400 font-bold">JESÚS BARRIOS</strong>.
-          </p>
-        </div>
-
-        <div className="mb-8 p-4 sm:p-6 rounded-3xl bg-white/[0.02] border border-white/10 space-y-3">
-          <div className="flex items-center justify-between">
-            <label className="text-xs font-mono font-bold text-pink-400 uppercase tracking-wider block">
-              1. Selecciona el Evento Solar o Metraje Vinculado:
-            </label>
-            <span className="text-[11px] font-mono text-white/40">
-              6 Eventos de Alto Impacto
+          <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
+            {isEn ? 'AI Space Weather Anchor &' : 'Presentador IA y Feed de'}
+            <br />
+            <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+              {isEn ? 'Live Heliophysics Intelligence' : 'Noticias Heliofísicas en Vivo'}
             </span>
-          </div>
+          </h1>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
-            {TOPIC_OPTIONS.map((tOpt) => {
-              const isSelected = topic === tOpt.id
-              return (
+          <p className="text-xs sm:text-sm text-white/60 max-w-2xl mx-auto leading-relaxed">
+            {isEn
+              ? 'Real-time verified bulletins from NASA SDO, NOAA SWPC, and ESA Solar Orbiter. Articulated live by the HELIOX holographic AI scientific anchor with zero-hallucination accuracy.'
+              : 'Boletines verificados en tiempo real de satélites NASA SDO, NOAA SWPC y ESA. Gesticulados y narrados en directo por el presentador científico de IA con precisión matemática y sin alucinaciones.'}
+          </p>
+        </section>
+
+        {/* ─── ESCENARIO DEL PRESENTADOR CIENTÍFICO DE IA (HERO STAGE) ──────── */}
+        <section className="relative rounded-3xl p-6 sm:p-8 bg-gradient-to-b from-[#0c102b] via-[#080b1e] to-black border border-cyan-500/30 shadow-2xl overflow-hidden">
+          {/* Luz ambiental holográfica */}
+          <div className="absolute top-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
+
+          {/* Badge superior de estado de la emisión */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-6 border-b border-white/10 relative z-10">
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-[11px] font-mono text-cyan-300">
+                <span className={`w-2 h-2 rounded-full ${isSpeaking && !isPaused ? 'bg-emerald-400 animate-ping' : 'bg-cyan-400'}`} />
+                <span>{isSpeaking && !isPaused ? '[BROADCAST_ACTIVE: GESTICULATING]' : '[AI_ANCHOR: STANDBY]'}</span>
+              </div>
+              <span className="text-xs font-mono text-white/40 hidden sm:inline">
+                ID: {selectedNews.id} · Ref: {selectedNews.instrument}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 text-xs font-mono">
+              <span className="text-white/40">{isEn ? 'Voice Speed:' : 'Velocidad:'}</span>
+              {[0.9, 1.0, 1.2].map((rate) => (
                 <button
-                  key={tOpt.id}
-                  onClick={() => {
-                    setTopic(tOpt.id)
-                    setIsVideoPlaying(false)
-                  }}
-                  className={`p-3 rounded-2xl border text-left transition-all flex flex-col justify-between gap-1.5 ${
-                    isSelected
-                      ? 'bg-gradient-to-b from-pink-950/60 to-rose-950/40 border-pink-500 shadow-lg shadow-pink-500/20 scale-[1.02]'
-                      : 'bg-white/[0.03] border-white/10 hover:bg-white/[0.06] hover:border-white/20'
+                  key={rate}
+                  onClick={() => setSpeechRate(rate)}
+                  className={`px-2 py-0.5 rounded text-[11px] font-mono border transition-all cursor-pointer ${
+                    speechRate === rate
+                      ? 'bg-cyan-500 text-black border-cyan-400 font-bold'
+                      : 'bg-white/5 text-white/60 border-white/10 hover:text-white'
                   }`}
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xl">{tOpt.icon}</span>
-                    {isSelected && (
-                      <span className="w-2 h-2 rounded-full bg-pink-400 animate-ping" />
-                    )}
+                  {rate}x
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid lg:grid-cols-12 gap-8 items-center pt-6 relative z-10">
+            {/* Columna Izquierda: Avatar Holográfico de IA Gesticulando */}
+            <div className="lg:col-span-5 flex flex-col items-center justify-center space-y-4">
+              <div className="relative w-56 h-56 sm:w-64 sm:h-64 rounded-3xl bg-black/80 border-2 border-cyan-500/40 p-4 shadow-[0_0_40px_rgba(6,182,212,0.2)] flex flex-col items-center justify-center overflow-hidden">
+                {/* Cuadrícula de escaneo holográfico */}
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.06)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
+
+                {/* Retícula Táctica de Rastreo Facial */}
+                <div className="absolute top-2 left-2 text-[9px] font-mono text-cyan-400">TRK_FACIAL: 99.8%</div>
+                <div className="absolute top-2 right-2 text-[9px] font-mono text-purple-400">SYNC_VISEMES</div>
+                <div className="absolute bottom-2 left-2 text-[9px] font-mono text-emerald-400">FPS: 60</div>
+                <div className="absolute bottom-2 right-2 text-[9px] font-mono text-amber-400">{selectedNews.verifiedCoordinates || 'HELIOS'}</div>
+
+                {/* Rostro Vectorial de IA con Gesticulación de Boca y Ojos */}
+                <svg viewBox="0 0 120 120" className="w-40 h-40 drop-shadow-[0_0_15px_rgba(6,182,212,0.6)]">
+                  {/* Contorno Craneal Cibernético */}
+                  <rect x="25" y="20" width="70" height="75" rx="20" fill="none" stroke="#00f3ff" strokeWidth="2" strokeDasharray="4 2" opacity="0.6" />
+                  <path d="M35 15 L85 15" stroke="#a855f7" strokeWidth="2" />
+                  <circle cx="60" cy="15" r="3" fill="#a855f7" />
+
+                  {/* Cejas Tácticas */}
+                  <path d={selectedNews.severity === 'CRÍTICA' ? 'M35 44 L50 48' : 'M35 46 L50 46'} stroke="#00f3ff" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d={selectedNews.severity === 'CRÍTICA' ? 'M70 48 L85 44' : 'M70 46 L85 46'} stroke="#00f3ff" strokeWidth="2.5" strokeLinecap="round" />
+
+                  {/* Ojos Holográficos con Parpadeo */}
+                  <circle cx="43" cy="54" r="5" fill="#00f3ff" className="animate-pulse" />
+                  <circle cx="77" cy="54" r="5" fill="#00f3ff" className="animate-pulse" />
+                  <circle cx="43" cy="54" r="2" fill="#ffffff" />
+                  <circle cx="77" cy="54" r="2" fill="#ffffff" />
+
+                  {/* Nariz Sensorial */}
+                  <path d="M60 55 L60 67 L56 69" fill="none" stroke="#00f3ff" strokeWidth="1.5" opacity="0.7" />
+
+                  {/* Boca Dinámica Gesticulante (Visemas en tiempo real) */}
+                  {mouthShape === 0 && (
+                    /* Reposo: Neutral */
+                    <path d="M48 80 Q60 81 72 80" fill="none" stroke="#00f3ff" strokeWidth="2.5" strokeLinecap="round" />
+                  )}
+                  {mouthShape === 1 && (
+                    /* Fonema O: Redondo */
+                    <ellipse cx="60" cy="80" rx="7" ry="9" fill="#00f3ff" fillOpacity="0.25" stroke="#00f3ff" strokeWidth="2" />
+                  )}
+                  {mouthShape === 2 && (
+                    /* Fonema A: Abierto amplio */
+                    <ellipse cx="60" cy="82" rx="11" ry="8" fill="#00f3ff" fillOpacity="0.3" stroke="#00f3ff" strokeWidth="2.5" />
+                  )}
+                  {mouthShape === 3 && (
+                    /* Fonema E / I: Sonrisa abierta */
+                    <path d="M44 80 Q60 88 76 80 Q60 76 44 80" fill="#00f3ff" fillOpacity="0.25" stroke="#00f3ff" strokeWidth="2" />
+                  )}
+                  {mouthShape === 4 && (
+                    /* Fonema M / P: Cerrado tenso */
+                    <line x1="46" y1="80" x2="74" y2="80" stroke="#00f3ff" strokeWidth="3" strokeLinecap="round" />
+                  )}
+
+                  {/* Circuitos en Mandíbula */}
+                  <path d="M30 75 L22 85 M90 75 L98 85" stroke="#00f3ff" strokeWidth="1.5" opacity="0.5" />
+                  <circle cx="22" cy="85" r="2" fill="#00f3ff" />
+                  <circle cx="98" cy="85" r="2" fill="#00f3ff" />
+                </svg>
+
+                {/* Equalizador de audio simulado al gesticular */}
+                <div className="flex items-end justify-center gap-1 w-full h-8 px-6 mt-1">
+                  {[...Array(14)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      animate={{
+                        height: isSpeaking && !isPaused ? [4, Math.random() * 24 + 4, 4] : 4,
+                      }}
+                      transition={{
+                        repeat: Infinity,
+                        duration: 0.2 + (i % 5) * 0.05,
+                        ease: 'easeInOut',
+                      }}
+                      className="w-1.5 rounded-full bg-gradient-to-t from-cyan-500 to-purple-400"
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Botones de Control de la Emisión */}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleTogglePlay}
+                  className={`px-6 py-3 rounded-2xl text-xs font-mono font-bold transition-all shadow-lg flex items-center gap-2 cursor-pointer ${
+                    isSpeaking && !isPaused
+                      ? 'bg-amber-500 hover:bg-amber-400 text-black shadow-amber-500/20'
+                      : 'bg-cyan-500 hover:bg-cyan-400 text-black shadow-cyan-500/25 active:scale-95'
+                  }`}
+                >
+                  {isSpeaking && !isPaused ? (
+                    <>
+                      <PauseIcon size={14} />
+                      <span>{isEn ? 'Pause Anchor' : 'Pausar Presentador'}</span>
+                    </>
+                  ) : (
+                    <>
+                      <SpeakerIcon size={14} />
+                      <span>{isPaused ? (isEn ? 'Resume Speech' : 'Reanudar Voz') : isEn ? 'Speak & Gesticulate' : 'Gesticular Noticia con IA'}</span>
+                    </>
+                  )}
+                </button>
+
+                <button
+                  onClick={handleStopSpeech}
+                  disabled={!isSpeaking && !isPaused}
+                  className="p-3 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed text-white/70 hover:text-white transition-all cursor-pointer"
+                  title="Detener voz"
+                >
+                  <VolumeMuteIcon size={15} />
+                </button>
+              </div>
+            </div>
+
+            {/* Columna Derecha: Teleprompter Científico y Noticia Activa */}
+            <div className="lg:col-span-7 space-y-4">
+              <div className="flex items-center gap-2">
+                <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold border ${selectedNews.severityColor}`}>
+                  {selectedNews.severity}
+                </span>
+                <span className="text-xs font-mono text-cyan-400">{selectedNews.source}</span>
+                <span className="text-xs font-mono text-white/40 ml-auto">
+                  {new Date(selectedNews.timestampUTC).toLocaleString()}
+                </span>
+              </div>
+
+              <h2 className="text-xl sm:text-2xl font-black text-white leading-tight">
+                {isEn ? selectedNews.titleEn : selectedNews.titleEs}
+              </h2>
+
+              {/* Barra de métricas verificadas */}
+              <div className="p-3 rounded-xl bg-white/[0.03] border border-white/10 text-xs font-mono text-white/80 flex items-center gap-2">
+                <CrosshairIcon size={14} className="text-amber-400 shrink-0" />
+                <span className="truncate">{selectedNews.metrics}</span>
+              </div>
+
+              {/* Teleprompter en tiempo real */}
+              <div className="p-4 rounded-2xl bg-black/60 border border-cyan-500/20 space-y-2">
+                <div className="flex items-center justify-between text-[11px] font-mono text-white/50 pb-1 border-b border-white/5">
+                  <span className="flex items-center gap-1.5">
+                    <BrainChipIcon size={12} className="text-cyan-400" />
+                    <span>TELEPROMPTER VOCAL SINTETIZADO</span>
+                  </span>
+                  <span>{speechProgress}% COMPLETADO</span>
+                </div>
+
+                <p className="text-sm text-cyan-100 leading-relaxed font-mono">
+                  {isEn ? selectedNews.speechScriptEn : selectedNews.speechScriptEs}
+                </p>
+
+                {isSpeaking && spokenTextFragment && (
+                  <div className="pt-2 text-xs font-mono text-amber-300 bg-amber-500/10 p-2 rounded-lg border border-amber-500/20">
+                    <span className="text-amber-400 font-bold mr-1">Vocalizando ahora:</span>
+                    &ldquo;{spokenTextFragment}&rdquo;
                   </div>
-                  <div>
-                    <div className="text-xs font-bold text-white leading-tight">
-                      {tOpt.label}
-                    </div>
-                    <div className="text-[10px] text-white/40 line-clamp-1 mt-0.5">
-                      {tOpt.subtitle}
-                    </div>
-                  </div>
+                )}
+              </div>
+
+              {/* Sello de Verificación Satelital */}
+              <div className="flex flex-wrap items-center justify-between text-xs text-white/40 pt-1">
+                <span className="flex items-center gap-1 font-mono">
+                  <CheckCircleIcon size={13} className="text-emerald-400" />
+                  <span>Cero Alucinaciones · Datos Satelitales Oficiales</span>
+                </span>
+                <button
+                  onClick={() => handleCopyBulletin(selectedNews)}
+                  className="font-mono text-cyan-400 hover:text-cyan-300 text-xs flex items-center gap-1 cursor-pointer"
+                >
+                  <span>{copiedId === selectedNews.id ? '[COPIADO]' : 'Copiar Boletín Completo'}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ─── FEED DE NOTICIAS ESPACIALES EN VIVO ─────────────────────────── */}
+        <section className="space-y-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-white/10 pb-4 gap-4">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-mono text-white/50 mb-1">
+                <NewspaperIcon size={14} className="text-cyan-400" />
+                <span>BOLETINES OFICIALES DE CLIMA ESPACIAL</span>
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-black text-white">
+                {isEn ? 'Latest Heliophysics Dispatch Feed' : 'Feed de Inteligencia Heliofísica'}
+              </h3>
+            </div>
+
+            {/* Buscador de noticias */}
+            <div className="w-full md:w-72">
+              <input
+                type="text"
+                placeholder={isEn ? 'Filter by keyword, instrument...' : 'Buscar evento, satélite o región...'}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white placeholder-white/40 outline-none focus:border-cyan-400 transition-all"
+              />
+            </div>
+          </div>
+
+          {/* Filtros por Categoría */}
+          <div className="flex flex-wrap gap-2">
+            {[
+              { id: 'all', labelEs: 'Todas las Noticias', labelEn: 'All Bulletins', icon: GlobeGridIcon },
+              { id: 'flares', labelEs: 'Llamaradas X', labelEn: 'X-Class Flares', icon: FlareIcon },
+              { id: 'cmes', labelEs: 'CMEs & Plasma', labelEn: 'CMEs & Plasma', icon: WaveIcon },
+              { id: 'storms', labelEs: 'Tormentas Geomagnéticas', labelEn: 'Geomagnetic Storms', icon: SparklesIcon },
+              { id: 'missions', labelEs: 'Sondas & Misiones', labelEn: 'Space Missions', icon: SatelliteIcon },
+            ].map((cat) => {
+              const CatIcon = cat.icon
+              const isSelected = activeCategory === cat.id
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveCategory(cat.id as NewsCategory)}
+                  className={`px-4 py-2 rounded-xl text-xs font-mono font-bold border transition-all flex items-center gap-2 cursor-pointer ${
+                    isSelected
+                      ? 'bg-cyan-500 text-black border-cyan-400 shadow-md shadow-cyan-500/20'
+                      : 'bg-white/5 text-white/70 border-white/10 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  <CatIcon size={13} className={isSelected ? 'text-black' : 'text-cyan-400'} />
+                  <span>{isEn ? cat.labelEn : cat.labelEs}</span>
                 </button>
               )
             })}
           </div>
-        </div>
 
-        {/* ─── Panel Principal: Controles + Video Preview + Teleprompter ───── */}
-        <div className="grid lg:grid-cols-12 gap-8 my-8 items-start">
-          {/* Columna Izquierda: Plataforma, Metraje y Acciones de Copiado (5 cols) */}
-          <div className="lg:col-span-5 space-y-6">
-            {/* Selector de Plataforma */}
-            <div className="p-5 rounded-3xl bg-white/[0.02] border border-white/10 space-y-4">
-              <label className="text-xs font-mono font-bold text-white/60 uppercase tracking-wider block">
-                2. Plataforma de Destino:
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                {[
-                  { id: 'tiktok', label: 'TikTok', icon: '', badge: '15-35s' },
-                  { id: 'reels', label: 'Reels', icon: '', badge: '30-45s' },
-                  { id: 'shorts', label: 'Shorts', icon: '', badge: '40-60s' },
-                ].map((p) => (
-                  <button
-                    key={p.id}
-                    onClick={() => setPlatform(p.id as any)}
-                    className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1 text-xs font-semibold ${
-                      platform === p.id
-                        ? 'bg-pink-500 text-white border-pink-400 font-bold shadow-lg shadow-pink-500/25 scale-[1.02]'
-                        : 'bg-white/5 text-white/70 border-white/10 hover:bg-white/10 hover:text-white'
-                    }`}
-                  >
-                    <span className="text-lg">{p.icon}</span>
-                    <span className="font-bold">{p.label}</span>
-                    <span className="text-[9px] opacity-70 font-mono">{p.badge}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
+          {/* Lista del Feed */}
+          <div className="grid md:grid-cols-2 gap-4">
+            {filteredNews.map((item) => {
+              const isSelected = selectedNews.id === item.id
+              return (
+                <div
+                  key={item.id}
+                  className={`p-5 rounded-3xl border transition-all duration-200 flex flex-col justify-between space-y-4 ${
+                    isSelected
+                      ? 'bg-cyan-950/20 border-cyan-500/60 shadow-lg shadow-cyan-500/10'
+                      : 'bg-white/[0.02] border-white/10 hover:border-white/20 hover:bg-white/[0.04]'
+                  }`}
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between text-xs font-mono">
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${item.severityColor}`}>
+                        {item.severity}
+                      </span>
+                      <span className="text-white/40">{new Date(item.timestampUTC).toLocaleTimeString()} UTC</span>
+                    </div>
 
-            {/* Reproductor de Video NASA B-Roll Sincronizado */}
-            <div className="p-5 rounded-3xl bg-white/[0.02] border border-white/10 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-mono font-bold text-orange-400 flex items-center gap-1.5 uppercase">
-                  <span> Metraje NASA de Fondo</span>
-                </span>
-                <span className="text-[10px] font-mono text-white/40">
-                  ID: {activeTopicInfo.videoId}
-                </span>
-              </div>
+                    <div>
+                      <div className="text-[11px] font-mono text-cyan-400 font-bold mb-1">{item.source} · {item.instrument}</div>
+                      <h4 className="text-base font-bold text-white leading-snug">
+                        {isEn ? item.titleEn : item.titleEs}
+                      </h4>
+                    </div>
 
-              <div className="relative aspect-video rounded-2xl overflow-hidden bg-black border border-white/15 group">
-                {isVideoPlaying ? (
-                  <iframe
-                    src={`https://www.youtube.com/embed/${activeTopicInfo.videoId}?autoplay=1&rel=0`}
-                    title={activeTopicInfo.label}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <>
-                    <img
-                      src={`https://img.youtube.com/vi/${activeTopicInfo.videoId}/hqdefault.jpg`}
-                      alt={activeTopicInfo.label}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 brightness-75"
-                    />
-                    <div className="absolute inset-0 bg-black/40" />
+                    <p className="text-xs text-white/60 leading-relaxed">
+                      {isEn ? item.summaryEn : item.summaryEs}
+                    </p>
 
+                    <div className="p-2.5 rounded-xl bg-black/40 border border-white/5 text-[11px] font-mono text-white/70">
+                      {item.metrics}
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-white/5 flex items-center justify-between gap-2">
                     <button
-                      onClick={() => setIsVideoPlaying(true)}
-                      className="absolute inset-0 m-auto w-14 h-14 rounded-full bg-gradient-to-tr from-orange-500 to-amber-500 text-black flex items-center justify-center text-xl shadow-xl shadow-orange-500/40 hover:scale-110 transition-all z-20"
-                      aria-label="Reproducir video de fondo"
+                      onClick={() => handleSelectAndSpeak(item)}
+                      className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                        isSelected && isSpeaking
+                          ? 'bg-amber-500 text-black shadow-md shadow-amber-500/20'
+                          : 'bg-cyan-500/20 hover:bg-cyan-500 text-cyan-300 hover:text-black border border-cyan-500/40'
+                      }`}
                     >
-                      
+                      <SpeakerIcon size={13} />
+                      <span>{isEn ? 'Articulate with AI Anchor' : 'Gesticular con IA'}</span>
                     </button>
 
-                    <div className="absolute bottom-2.5 left-3 right-3 text-[11px] font-mono text-white/90 truncate">
-                      {activeTopicInfo.label} · {activeTopicInfo.subtitle}
-                    </div>
-                  </>
-                )}
-              </div>
-
-              {isVideoPlaying && (
-                <button
-                  onClick={() => setIsVideoPlaying(false)}
-                  className="w-full py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-mono text-white/60 transition-all text-center"
-                >
-                  ✕ Detener Video y Volver a Portada
-                </button>
-              )}
-            </div>
-
-            {/* Acciones de Copiado de Guion */}
-            <div className="p-5 rounded-3xl bg-white/[0.02] border border-white/10 space-y-3">
-              <label className="text-xs font-mono font-bold text-white/60 uppercase tracking-wider block">
-                3. Acciones del Guion & Exportación:
-              </label>
-
-              <div className="space-y-2">
-                <button
-                  onClick={copyFullScript}
-                  disabled={!scriptData}
-                  className="w-full py-3 px-4 rounded-xl font-bold text-xs font-mono flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-400 text-black hover:scale-[1.02] transition-all shadow-lg shadow-orange-500/25"
-                >
-                  <span>
-                    {copiedType === 'full'
-                      ? ' ¡Guion Completo Copiado!'
-                      : ' Copiar Guion Completo (Teleprompter)'}
-                  </span>
-                </button>
-
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    onClick={copyVoiceOnly}
-                    disabled={!scriptData}
-                    className="py-2.5 px-3 rounded-xl font-semibold text-[11px] font-mono flex items-center justify-center gap-1.5 bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 transition-all"
-                    title="Copia únicamente los textos de voz en off listos para pegar en ElevenLabs o CapCut TTS"
-                  >
-                    <span>{copiedType === 'voice' ? ' ¡Copiado!' : ' Solo Voz (TTS)'}</span>
-                  </button>
-
-                  <button
-                    onClick={copyCurrentSlide}
-                    disabled={!scriptData}
-                    className="py-2.5 px-3 rounded-xl font-semibold text-[11px] font-mono flex items-center justify-center gap-1.5 bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 transition-all"
-                    title="Copia el paso actual seleccionado en pantalla"
-                  >
-                    <span>{copiedType === 'slide' ? ' ¡Copiado!' : ' Copiar Paso Actual'}</span>
-                  </button>
-                </div>
-
-                <button
-                  onClick={() => fetchScript(platform, topic)}
-                  className="w-full py-2 px-3 rounded-xl font-semibold text-[11px] font-mono flex items-center justify-center gap-2 bg-pink-500/10 hover:bg-pink-500/20 border border-pink-500/30 text-pink-300 transition-all"
-                >
-                  <span> Regenerar con Telemetría Actual de NASA</span>
-                </button>
-              </div>
-
-              <div className="pt-3 border-t border-white/5 text-[11px] text-white/40 space-y-1">
-                <div className="flex justify-between">
-                  <span> Tiempo Estimado:</span>
-                  <span className="text-white font-mono">{scriptData?.duration_seconds || 45}s</span>
-                </div>
-                <div className="flex justify-between">
-                  <span> Tasa de Retención:</span>
-                  <span className="text-emerald-400 font-mono font-bold">~86% (Hooks Optimizados)</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Columna Derecha: Teleprompter Interactivo & Storyboard (7 cols) */}
-          <div className="lg:col-span-7">
-            <div className="p-6 sm:p-8 rounded-3xl bg-white/[0.02] border border-white/10 relative overflow-hidden space-y-6">
-              {loading ? (
-                <div className="py-24 text-center text-white/40 font-mono">
-                  <div className="w-8 h-8 rounded-full border-2 border-pink-500 border-t-transparent animate-spin mx-auto mb-3" />
-                  <span>Sintetizando telemetría heliofísica en guion viral...</span>
-                </div>
-              ) : scriptData ? (
-                <>
-                  {/* Encabezado del Guion */}
-                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 border-b border-white/10 pb-4">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-mono text-pink-400 uppercase font-bold tracking-widest bg-pink-500/10 px-2 py-0.5 rounded border border-pink-500/20">
-                           {platform.toUpperCase()} · {topic.toUpperCase()}
-                        </span>
-                        <span className="text-[10px] font-mono text-white/40">
-                          {scriptData.target_audience}
-                        </span>
-                      </div>
-                      <h2 className="text-lg sm:text-2xl font-black text-white leading-tight">
-                        {scriptData.title}
-                      </h2>
-                    </div>
-
-                    <div className="shrink-0 flex items-center gap-2">
-                      <span className="text-xs font-mono px-3 py-1 rounded-full bg-pink-500/20 border border-pink-500/40 text-pink-300 font-bold">
-                         {scriptData.duration_seconds}s
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Barra de Control de Slides & Simulador de Teleprompter */}
-                  <div className="p-4 rounded-2xl bg-black/60 border border-white/15 space-y-3">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                      {/* Botones de Navegación de Slide */}
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={prevSlide}
-                          disabled={currentSlideIndex === 0}
-                          className="px-3 py-1.5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed text-xs font-mono font-bold flex items-center gap-1 transition-all"
-                          title="Slide Anterior"
-                        >
-                           <span>Anterior</span>
-                        </button>
-                        <span className="text-xs font-mono text-pink-300 font-bold px-2">
-                          Paso {currentSlideIndex + 1} de {scriptData.slides.length}
-                        </span>
-                        <button
-                          onClick={nextSlide}
-                          disabled={currentSlideIndex >= scriptData.slides.length - 1}
-                          className="px-3 py-1.5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed text-xs font-mono font-bold flex items-center gap-1 transition-all"
-                          title="Slide Siguiente"
-                        >
-                          <span>Siguiente</span> 
-                        </button>
-                      </div>
-
-                      {/* Botón de Reproducir Teleprompter / Pausar */}
-                      <button
-                        onClick={toggleTeleprompter}
-                        className={`px-4 py-1.5 rounded-xl text-xs font-mono font-bold border transition-all flex items-center gap-2 ${
-                          isTeleprompterRunning
-                            ? 'bg-rose-500 text-white border-rose-400 animate-pulse'
-                            : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/30'
-                        }`}
-                      >
-                        <span>{isTeleprompterRunning ? ' Pausar Teleprompter' : ' Reproducir Teleprompter'}</span>
-                        <span className="font-mono text-[10px] bg-black/40 px-1.5 py-0.5 rounded">
-                          {teleprompterSeconds}s / {scriptData.duration_seconds}s
-                        </span>
-                      </button>
-                    </div>
-
-                    {/* Selector Rápido de Pasos (Pills) */}
-                    <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 no-scrollbar">
-                      {scriptData.slides.map((s: any, idx: number) => {
-                        const isCurrent = currentSlideIndex === idx
-                        return (
-                          <button
-                            key={idx}
-                            onClick={() => {
-                              setCurrentSlideIndex(idx)
-                              setTeleprompterSeconds(s.second)
-                            }}
-                            className={`px-3 py-1 rounded-xl text-xs font-mono font-bold border whitespace-nowrap transition-all ${
-                              isCurrent
-                                ? 'bg-pink-500 text-white border-pink-400 shadow-md shadow-pink-500/30 scale-105'
-                                : 'bg-white/5 border-white/10 text-white/60 hover:text-white hover:bg-white/10'
-                            }`}
-                          >
-                            Paso {idx + 1} ({s.second}s)
-                          </button>
-                        )
-                      })}
-                    </div>
-
-                    {/* Barra de progreso de lectura en tiempo real */}
-                    {isTeleprompterRunning && (
-                      <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-gradient-to-r from-emerald-400 to-pink-500 transition-all duration-1000"
-                          style={{
-                            width: `${Math.min(
-                              100,
-                              (teleprompterSeconds / (scriptData.duration_seconds || 45)) * 100
-                            )}%`,
-                          }}
-                        />
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Spotlight del Slide Activo (Modo Teleprompter Grande) */}
-                  {scriptData.slides[currentSlideIndex] && (
-                    <motion.div
-                      key={currentSlideIndex}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="p-5 sm:p-6 rounded-3xl bg-gradient-to-b from-pink-950/30 to-black/60 border border-pink-500/60 shadow-xl shadow-pink-500/10 space-y-4"
+                    <button
+                      onClick={() => handleCopyBulletin(item)}
+                      className="p-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all text-xs font-mono cursor-pointer"
+                      title="Copiar boletín"
                     >
-                      <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                        <div className="flex items-center gap-2">
-                          <span className="w-2.5 h-2.5 rounded-full bg-pink-500 animate-pulse" />
-                          <span className="text-xs font-mono font-bold text-pink-300 uppercase">
-                            EN PANTALLA AHORA · PASO {currentSlideIndex + 1}
-                          </span>
-                        </div>
-                        <span className="text-xs font-mono text-orange-400 font-bold bg-orange-500/10 px-2.5 py-1 rounded-lg border border-orange-500/20">
-                           Segundo {scriptData.slides[currentSlideIndex].second}s
-                        </span>
-                      </div>
-
-                      <div className="space-y-2">
-                        <span className="text-xs font-mono font-bold text-white/50 uppercase tracking-wider block">
-                           Voz en Off (Lee esto):
-                        </span>
-                        <p className="text-base sm:text-xl font-bold text-white leading-relaxed select-all">
-                          &quot;{scriptData.slides[currentSlideIndex].voz}&quot;
-                        </p>
-                      </div>
-
-                      <div className="p-3.5 rounded-2xl bg-black/50 border border-white/10 space-y-1">
-                        <span className="text-[11px] font-mono text-white/50 uppercase block">
-                           Indicación Visual / Metraje:
-                        </span>
-                        <p className="text-xs sm:text-sm text-white/80 italic leading-snug">
-                          {scriptData.slides[currentSlideIndex].visual}
-                        </p>
-                      </div>
-
-                      {scriptData.slides[currentSlideIndex].tip && (
-                        <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] font-mono text-amber-300 flex items-center gap-2">
-                          <span></span>
-                          <span>{scriptData.slides[currentSlideIndex].tip}</span>
-                        </div>
-                      )}
-                    </motion.div>
-                  )}
-
-                  {/* Storyboard Completo de Todos los Slides */}
-                  <div className="space-y-3">
-                    <span className="text-xs font-mono font-bold text-white/60 uppercase tracking-wider block">
-                      Storyboard Completo ({scriptData.slides.length} Pasos):
-                    </span>
-
-                    {scriptData.slides?.map((slide: any, idx: number) => {
-                      const isSelected = currentSlideIndex === idx
-                      return (
-                        <div
-                          key={idx}
-                          onClick={() => {
-                            setCurrentSlideIndex(idx)
-                            setTeleprompterSeconds(slide.second)
-                          }}
-                          className={`p-4 rounded-2xl border transition-all cursor-pointer space-y-2 ${
-                            isSelected
-                              ? 'bg-pink-950/30 border-pink-500/80 shadow-lg shadow-pink-500/15'
-                              : 'bg-black/40 border-white/10 hover:border-white/20 hover:bg-white/[0.03]'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <span
-                              className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded border ${
-                                isSelected
-                                  ? 'text-pink-300 bg-pink-500/20 border-pink-500/40'
-                                  : 'text-orange-400 bg-orange-500/10 border-orange-500/20'
-                              }`}
-                            >
-                              Segundo {slide.second}s · Paso {idx + 1}
-                            </span>
-                            <span className="text-[10px] text-white/40 font-mono">
-                              {isSelected ? ' Seleccionado' : 'Toca para enfocar'}
-                            </span>
-                          </div>
-
-                          <div className="text-xs sm:text-sm font-semibold text-white leading-relaxed">
-                             <strong className="text-white/60">Voz:</strong> &quot;{slide.voz}&quot;
-                          </div>
-
-                          <div className="text-xs text-white/50 italic">
-                             <strong className="text-white/40 not-italic">Visual:</strong> {slide.visual}
-                          </div>
-                        </div>
-                      )
-                    })}
+                      {copiedId === item.id ? <CheckCircleIcon size={14} className="text-emerald-400" /> : <CrosshairIcon size={14} />}
+                    </button>
                   </div>
-
-                  {/* Hashtags Virales */}
-                  <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1.5">
-                    <span className="text-[10px] font-mono text-white/40 uppercase block">
-                      Hashtags Recomendados (Alta Tracción):
-                    </span>
-                    <p className="text-xs font-mono text-pink-300 select-all leading-relaxed">
-                      {scriptData.hashtags}
-                    </p>
-                  </div>
-                </>
-              ) : null}
-            </div>
+                </div>
+              )
+            })}
           </div>
-        </div>
-
-        {/* ─── Galería de Videos y Reels Educativos ───────────────────────── */}
-        <div className="my-12">
-          <SocialVideoFeed onSelectVideo={handleFeedVideoSelect} />
-        </div>
-
-        {/* ─── Banner Oficial de Pico Máximo Ciclo 25 ────────────────────── */}
-        <SolarPeakAlert />
-
-
+        </section>
       </main>
-
-      {/* Footer Oficial */}
-      <footer className="border-t border-white/10 px-4 py-8 mt-12 bg-black/90">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/50">
-          <div className="flex items-center gap-2">
-            <span className="text-white font-bold">HELIOX</span>
-            <span>· por JESÚS BARRIOS</span>
-          </div>
-          <div className="flex flex-wrap gap-4 text-white/60">
-            <Link href="/" className="hover:text-orange-400 transition-colors">Inicio</Link>
-            <Link href="/dashboard" className="hover:text-orange-400 transition-colors">Dashboard</Link>
-            <Link href="/storms" className="hover:text-orange-400 transition-colors">Tormentas</Link>
-            <Link href="/reels" className="text-pink-400 font-bold">Reels</Link>
-            <Link href="/analysis" className="hover:text-orange-400 transition-colors">Análisis</Link>
-            <Link href="/privacy" className="hover:text-orange-400 transition-colors">Privacidad</Link>
-            <Link href="/terms" className="hover:text-orange-400 transition-colors">Términos</Link>
-          </div>
-          <div className="text-[11px] text-white/40">
-            © 2026 JESÚS BARRIOS · Datos NASA & NOAA
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }

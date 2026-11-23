@@ -244,3 +244,42 @@ export function TargetCrosshairIcon({ size = 18, className = '', ...props }: Ico
     </svg>
   )
 }
+
+export function SpeakerIcon({ size = 18, className = '', ...props }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" fillOpacity="0.2" />
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+    </svg>
+  )
+}
+
+export function VolumeMuteIcon({ size = 18, className = '', ...props }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+      <line x1="23" y1="9" x2="17" y2="15" />
+      <line x1="17" y1="9" x2="23" y2="15" />
+    </svg>
+  )
+}
+
+export function NewspaperIcon({ size = 18, className = '', ...props }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
+      <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2" />
+      <path d="M18 14h-8M15 18h-5M10 6h8v4h-8z" />
+    </svg>
+  )
+}
+
+export function BroadcastIcon({ size = 18, className = '', ...props }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
+      <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5" />
+      <circle cx="12" cy="12" r="2" fill="currentColor" />
+      <path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5M19.1 4.9c3.9 3.9 3.9 10.3 0 14.2" />
+    </svg>
+  )
+}

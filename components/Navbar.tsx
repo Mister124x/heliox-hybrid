@@ -19,6 +19,7 @@ import {
   WaveIcon,
   FlameIcon,
   ResetIcon,
+  NewspaperIcon,
 } from './ui/Icons'
 
 interface NavbarProps {
@@ -32,7 +33,7 @@ const NAV_ITEMS = [
   { href: '/',          labelEs: 'Inicio',      labelEn: 'Home',        icon: OrbitIcon,      color: 'text-cyan-400' },
   { href: '/dashboard', labelEs: 'Dashboard',   labelEn: 'Dashboard',   icon: SatelliteIcon,  color: 'text-blue-400' },
   { href: '/storms',    labelEs: 'Tormentas',   labelEn: 'Storms',      icon: FlareIcon,      color: 'text-amber-400' },
-  { href: '/reels',     labelEs: 'Media 4K',    labelEn: 'Media 4K',    icon: MediaIcon,      color: 'text-purple-400' },
+  { href: '/reels',     labelEs: 'Noticias IA', labelEn: 'AI News Feed',icon: NewspaperIcon,  color: 'text-purple-400' },
   { href: '/analysis',  labelEs: 'Análisis IA', labelEn: 'AI Analysis', icon: BrainChipIcon,  color: 'text-emerald-400' },
 ]
 
