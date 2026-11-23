@@ -55,7 +55,7 @@ export default function DonationWidget() {
       <div className="relative z-10">
         {/* Cabecera */}
         <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-solar-500/10 border border-solar-500/30 text-3xl mb-3">
-          ☀️
+          
         </div>
         <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">
           {t.donate_title} <span className="text-solar-400">HELIOX</span>
@@ -103,7 +103,7 @@ export default function DonationWidget() {
                 : 'text-white/60 hover:text-white hover:bg-white/5'
             }`}
           >
-            <span>🟣</span>
+            <span></span>
             <span>Nequi</span>
           </button>
 
@@ -115,7 +115,7 @@ export default function DonationWidget() {
                 : 'text-white/60 hover:text-white hover:bg-white/5'
             }`}
           >
-            <span>🔴</span>
+            <span></span>
             <span>Daviplata</span>
           </button>
 
@@ -127,7 +127,7 @@ export default function DonationWidget() {
                 : 'text-white/60 hover:text-white hover:bg-white/5'
             }`}
           >
-            <span>🟡</span>
+            <span></span>
             <span>Bancolombia</span>
           </button>
 
@@ -139,7 +139,7 @@ export default function DonationWidget() {
                 : 'text-white/60 hover:text-white hover:bg-white/5'
             }`}
           >
-            <span>🌐</span>
+            <span></span>
             <span>PayPal</span>
           </button>
 
@@ -151,7 +151,7 @@ export default function DonationWidget() {
                 : 'text-white/60 hover:text-white hover:bg-white/5'
             }`}
           >
-            <span>💳</span>
+            <span></span>
             <span>Tarjeta/PSE</span>
           </button>
         </div>
@@ -189,7 +189,7 @@ export default function DonationWidget() {
                   onClick={() => copyToClipboard(nequiNumber, 'nequi')}
                   className="w-full py-3 rounded-xl text-xs font-bold bg-purple-600 hover:bg-purple-500 active:scale-95 text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-600/30 cursor-pointer"
                 >
-                  {copiedField === 'nequi' ? '✅ ¡Copiado!' : `📋 ${t.donate_copy} Nequi`}
+                  {copiedField === 'nequi' ? ' ¡Copiado!' : ` ${t.donate_copy} Nequi`}
                 </button>
               </div>
               <p className="text-xs text-white/40">{t.donate_instructions}</p>
@@ -227,7 +227,7 @@ export default function DonationWidget() {
                   onClick={() => copyToClipboard(daviplataNumber, 'daviplata')}
                   className="w-full py-3 rounded-xl text-xs font-bold bg-red-600 hover:bg-red-500 active:scale-95 text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-red-600/30 cursor-pointer"
                 >
-                  {copiedField === 'daviplata' ? '✅ ¡Copiado!' : `📋 ${t.donate_copy} Daviplata`}
+                  {copiedField === 'daviplata' ? ' ¡Copiado!' : ` ${t.donate_copy} Daviplata`}
                 </button>
               </div>
               <p className="text-xs text-white/40">Abre tu app Daviplata, ingresa el número de celular y envía tu donación.</p>
@@ -246,7 +246,7 @@ export default function DonationWidget() {
             >
               <div className="flex items-center justify-between border-b border-yellow-500/20 pb-3">
                 <span className="font-bold text-yellow-300 flex items-center gap-2">
-                  🏦 {bankName} (Colombia)
+                   {bankName} (Colombia)
                 </span>
                 <span className="text-xs bg-yellow-500/20 text-yellow-200 px-2.5 py-0.5 rounded-full border border-yellow-500/30 font-semibold">
                   {accountType}
@@ -267,7 +267,7 @@ export default function DonationWidget() {
                 onClick={() => copyToClipboard(accountNumber, 'bancolombia')}
                 className="w-full py-3 rounded-xl text-xs font-bold bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-black transition-all flex items-center justify-center gap-2 shadow-lg shadow-yellow-500/20 cursor-pointer"
               >
-                {copiedField === 'bancolombia' ? '✅ ¡Copiado!' : `📋 ${t.savings_copy || 'Copiar Número de Cuenta'}`}
+                {copiedField === 'bancolombia' ? ' ¡Copiado!' : ` ${t.savings_copy || 'Copiar Número de Cuenta'}`}
               </button>
             </motion.div>
           )}
@@ -284,7 +284,7 @@ export default function DonationWidget() {
             >
               <div className="flex items-center justify-between border-b border-blue-500/20 pb-3">
                 <span className="font-bold text-blue-300 flex items-center gap-2">
-                  🌐 PayPal Oficial (Internacional)
+                   PayPal Oficial (Internacional)
                 </span>
                 <span className="text-xs bg-blue-500/20 text-blue-200 px-2.5 py-0.5 rounded-full border border-blue-500/30 font-mono">
                   {paypalUser}
@@ -317,7 +317,7 @@ export default function DonationWidget() {
                   rel="noopener noreferrer"
                   className="w-full py-3 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 active:scale-95 text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 font-mono"
                 >
-                  <span>🌐 Abrir PayPal.me/JesusBarriosGiraldo ↗</span>
+                  <span> Abrir PayPal.me/JesusBarriosGiraldo </span>
                 </a>
 
                 <button
@@ -325,7 +325,7 @@ export default function DonationWidget() {
                   onClick={() => copyToClipboard('https://paypal.me/JesusBarriosGiraldo', 'paypal_link')}
                   className="w-full py-3 rounded-xl text-xs font-semibold bg-white/5 hover:bg-white/10 active:scale-95 text-white/90 border border-white/10 transition-all flex items-center justify-center gap-2 font-mono cursor-pointer"
                 >
-                  <span>{copiedField === 'paypal_link' ? '✅ ¡Copiado!' : '📋 Copiar Enlace PayPal'}</span>
+                  <span>{copiedField === 'paypal_link' ? ' ¡Copiado!' : ' Copiar Enlace PayPal'}</span>
                 </button>
               </div>
 
@@ -346,7 +346,7 @@ export default function DonationWidget() {
               className="p-6 rounded-2xl bg-emerald-950/30 border border-emerald-500/30 text-center space-y-4 max-w-lg mx-auto"
             >
               <div className="text-sm font-bold text-emerald-300">
-                💳 Pasarela de Pago Seguro Wompi (Bancolombia, PSE, Tarjeta Débito/Crédito)
+                 Pasarela de Pago Seguro Wompi (Bancolombia, PSE, Tarjeta Débito/Crédito)
               </div>
               <div className="flex flex-wrap justify-center gap-2">
                 {suggestedAmountsCOP.map((amt) => (
@@ -369,7 +369,7 @@ export default function DonationWidget() {
                 onClick={() => copyToClipboard(accountNumber, 'pse')}
                 className="w-full py-3 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white transition-all shadow-lg cursor-pointer font-mono"
               >
-                {copiedField === 'pse' ? '✅ ¡Copiado!' : `Transferir $${finalAmountCOP.toLocaleString('es-CO')} COP por PSE / Bancolombia`}
+                {copiedField === 'pse' ? ' ¡Copiado!' : `Transferir $${finalAmountCOP.toLocaleString('es-CO')} COP por PSE / Bancolombia`}
               </button>
             </motion.div>
           )}
@@ -378,11 +378,11 @@ export default function DonationWidget() {
         {/* Garantías y Seguridad */}
         <div className="mt-6 pt-5 border-t border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
           <div className="p-2">
-            <div className="text-solar-400 font-bold text-sm">⚡ 24/7</div>
+            <div className="text-solar-400 font-bold text-sm"> 24/7</div>
             <div className="text-[11px] text-white/50">{t.servers_active}</div>
           </div>
           <div className="p-2">
-            <div className="text-solar-400 font-bold text-sm">🛰️ NASA/NOAA</div>
+            <div className="text-solar-400 font-bold text-sm"> NASA/NOAA</div>
             <div className="text-[11px] text-white/50">{t.live_data}</div>
           </div>
           <div className="p-2">
@@ -390,7 +390,7 @@ export default function DonationWidget() {
             <div className="text-[11px] text-white/50">{t.latin_science}</div>
           </div>
           <div className="p-2">
-            <div className="text-solar-400 font-bold text-sm">🔒 Seguro</div>
+            <div className="text-solar-400 font-bold text-sm"> Seguro</div>
             <div className="text-[11px] text-white/50">{t.secure}</div>
           </div>
         </div>

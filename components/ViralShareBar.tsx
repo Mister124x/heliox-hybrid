@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useI18n } from '../lib/i18n'
+import { FlameIcon, WaveIcon, SendIcon, GlobeGridIcon, CheckCircleIcon, CrosshairIcon } from './ui/Icons'
 
 export default function ViralShareBar() {
   const { lang } = useI18n()
@@ -11,8 +12,8 @@ export default function ViralShareBar() {
 
   const shareUrl = 'https://heliox-observatory.vercel.app'
   const shareTitle = isEn
-    ? '🚨 LIVE SOLAR ALERT! Real-time NASA & NOAA satellite telemetry of solar storms and flares ☀️'
-    : '🚨 ¡ALERTA SOLAR EN VIVO! Telemetría en tiempo real de satélites NASA y NOAA de tormentas y llamaradas ☀️'
+    ? '[LIVE SOLAR ALERT] Real-time NASA & NOAA satellite telemetry of solar storms and flares'
+    : '[ALERTA SOLAR EN VIVO] Telemetría en tiempo real de satélites NASA y NOAA de tormentas y llamaradas'
 
   const handleNativeShare = async () => {
     if (navigator.share) {
@@ -23,7 +24,7 @@ export default function ViralShareBar() {
           url: shareUrl,
         })
       } catch (e) {
-        // Fallback silenciados si cancela
+        // Fallback silenciado si cancela
       }
     } else {
       copyLink()
@@ -31,7 +32,7 @@ export default function ViralShareBar() {
   }
 
   const copyLink = () => {
-    navigator.clipboard.writeText(`${shareTitle}\n👇\n${shareUrl}`)
+    navigator.clipboard.writeText(`${shareTitle}\n${shareUrl}`)
     setCopied(true)
     setTimeout(() => setCopied(false), 2500)
   }
@@ -39,7 +40,7 @@ export default function ViralShareBar() {
   const encodedUrl = encodeURIComponent(shareUrl)
   const encodedText = encodeURIComponent(shareTitle)
 
-  const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedText}%20👇%20${encodedUrl}`
+  const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedText}%20${encodedUrl}`
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}&hashtags=SpaceWeather,SolarStorm,HELIOX`
   const telegramUrl = `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`
@@ -51,7 +52,7 @@ export default function ViralShareBar() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
         <div>
           <div className="solar-badge bg-pink-500/20 text-pink-300 border border-pink-500/30 mb-2 text-xs inline-flex items-center gap-1.5">
-            <span>🔥</span>
+            <FlameIcon size={13} className="text-pink-400 shrink-0" />
             <span>{isEn ? 'Viralize Space Science' : 'Viraliza la Ciencia Espacial'}</span>
           </div>
           <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight">
@@ -74,7 +75,7 @@ export default function ViralShareBar() {
             className="py-2.5 px-3.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white transition-all flex items-center gap-1.5 shadow-lg shadow-emerald-600/20 font-mono"
             title="Compartir en WhatsApp"
           >
-            <span>💬</span>
+            <WaveIcon size={13} className="text-white shrink-0" />
             <span>WhatsApp</span>
           </a>
 
@@ -86,7 +87,7 @@ export default function ViralShareBar() {
             className="py-2.5 px-3.5 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 active:scale-95 text-white border border-white/20 transition-all flex items-center gap-1.5 font-mono"
             title="Compartir en X / Twitter"
           >
-            <span>𝕏</span>
+            <span className="font-bold">𝕏</span>
             <span>X (Twitter)</span>
           </a>
 
@@ -98,7 +99,7 @@ export default function ViralShareBar() {
             className="py-2.5 px-3.5 rounded-xl text-xs font-bold bg-sky-600/30 hover:bg-sky-600 active:scale-95 text-sky-200 hover:text-white border border-sky-500/30 transition-all flex items-center gap-1.5 font-mono"
             title="Compartir en Telegram"
           >
-            <span>✈️</span>
+            <SendIcon size={13} className="text-sky-300 shrink-0" />
             <span>Telegram</span>
           </a>
 
@@ -110,7 +111,7 @@ export default function ViralShareBar() {
             className="py-2.5 px-3.5 rounded-xl text-xs font-bold bg-blue-600/30 hover:bg-blue-600 active:scale-95 text-blue-200 hover:text-white border border-blue-500/30 transition-all flex items-center gap-1.5 font-mono hidden sm:flex"
             title="Compartir en Facebook"
           >
-            <span>📘</span>
+            <GlobeGridIcon size={13} className="text-blue-300 shrink-0" />
             <span>Facebook</span>
           </a>
 
@@ -121,7 +122,7 @@ export default function ViralShareBar() {
             className="py-2.5 px-3.5 rounded-xl text-xs font-bold bg-orange-500 hover:bg-orange-400 active:scale-95 text-black transition-all flex items-center gap-1.5 shadow-lg shadow-orange-500/20 font-mono cursor-pointer"
             title="Copiar enlace al portapapeles"
           >
-            <span>{copied ? '✅' : '📋'}</span>
+            {copied ? <CheckCircleIcon size={14} className="text-black shrink-0" /> : <CrosshairIcon size={14} className="text-black shrink-0" />}
             <span>{copied ? (isEn ? 'Link Copied!' : '¡Enlace Copiado!') : (isEn ? 'Copy Link' : 'Copiar Link')}</span>
           </button>
         </div>

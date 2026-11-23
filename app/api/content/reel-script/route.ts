@@ -23,7 +23,7 @@ interface ReelScript {
 const SCRIPTS_BY_TOPIC: Record<string, Record<string, ReelScript>> = {
   flare: {
     tiktok: {
-      title: '⚡ ¡ALERTA ROJA! El Sol acaba de detonar una Llamarada Clase X',
+      title: ' ¡ALERTA ROJA! El Sol acaba de detonar una Llamarada Clase X',
       topic: 'flare',
       duration_seconds: 35,
       target_audience: 'TikTok viral 18-35 años (Retención inmediata)',
@@ -52,7 +52,7 @@ const SCRIPTS_BY_TOPIC: Record<string, Record<string, ReelScript>> = {
       ],
     },
     reels: {
-      title: '⚡ La Física de una Llamarada Clase X: Detonaciones que Hacen Temblar la Tierra',
+      title: ' La Física de una Llamarada Clase X: Detonaciones que Hacen Temblar la Tierra',
       topic: 'flare',
       duration_seconds: 45,
       target_audience: 'Instagram Reels científico y visual',
@@ -78,7 +78,7 @@ const SCRIPTS_BY_TOPIC: Record<string, Record<string, ReelScript>> = {
       ],
     },
     shorts: {
-      title: '⚡ ¿Cuánto tarda una llamarada solar en golpear la Tierra? (Respuesta Real)',
+      title: ' ¿Cuánto tarda una llamarada solar en golpear la Tierra? (Respuesta Real)',
       topic: 'flare',
       duration_seconds: 40,
       target_audience: 'YouTube Shorts datos impactantes',
@@ -107,7 +107,7 @@ const SCRIPTS_BY_TOPIC: Record<string, Record<string, ReelScript>> = {
 
   cme: {
     tiktok: {
-      title: '🌊 ¡ALERTA DE CME! Tsunami de Plasma Solar viaja hacia la Tierra',
+      title: ' ¡ALERTA DE CME! Tsunami de Plasma Solar viaja hacia la Tierra',
       topic: 'cme',
       duration_seconds: 40,
       target_audience: 'TikTok viral impacto geomagnético',
@@ -135,7 +135,7 @@ const SCRIPTS_BY_TOPIC: Record<string, Record<string, ReelScript>> = {
       ],
     },
     reels: {
-      title: '🌊 La Anatomía de una Eyección de Masa Coronal (CME) explicada',
+      title: ' La Anatomía de una Eyección de Masa Coronal (CME) explicada',
       topic: 'cme',
       duration_seconds: 50,
       target_audience: 'Instagram Reels divulgación espacial',
@@ -161,7 +161,7 @@ const SCRIPTS_BY_TOPIC: Record<string, Record<string, ReelScript>> = {
       ],
     },
     shorts: {
-      title: '🌊 ¿Una Tormenta Solar puede apagar el Internet? La verdad de las CMEs',
+      title: ' ¿Una Tormenta Solar puede apagar el Internet? La verdad de las CMEs',
       topic: 'cme',
       duration_seconds: 45,
       target_audience: 'YouTube Shorts tecnología y espacio',
@@ -190,7 +190,7 @@ const SCRIPTS_BY_TOPIC: Record<string, Record<string, ReelScript>> = {
 
   aurora: {
     tiktok: {
-      title: '🌌 ¡EL CIELO SE VOLVIÓ ROJO! La Tormenta Solar G5 de Mayo 2024',
+      title: ' ¡EL CIELO SE VOLVIÓ ROJO! La Tormenta Solar G5 de Mayo 2024',
       topic: 'aurora',
       duration_seconds: 35,
       target_audience: 'TikTok viral asombro y auroras',
@@ -217,7 +217,7 @@ const SCRIPTS_BY_TOPIC: Record<string, Record<string, ReelScript>> = {
       ],
     },
     reels: {
-      title: '🌌 ¿Por qué algunas Auroras son Rojas y otras Verdes? La Química del Cielo',
+      title: ' ¿Por qué algunas Auroras son Rojas y otras Verdes? La Química del Cielo',
       topic: 'aurora',
       duration_seconds: 45,
       target_audience: 'Instagram Reels educativo y estético',
@@ -243,7 +243,7 @@ const SCRIPTS_BY_TOPIC: Record<string, Record<string, ReelScript>> = {
       ],
     },
     shorts: {
-      title: '🌌 El Sonido Oculto de las Auroras Boreales (Nadie te lo dijo)',
+      title: ' El Sonido Oculto de las Auroras Boreales (Nadie te lo dijo)',
       topic: 'aurora',
       duration_seconds: 35,
       target_audience: 'YouTube Shorts curiosidades científicas',
@@ -272,7 +272,7 @@ const SCRIPTS_BY_TOPIC: Record<string, Record<string, ReelScript>> = {
 
   sdo: {
     tiktok: {
-      title: '☀️ ¡10 AÑOS DEL SOL CONDENSADOS EN 60 SEGUNDOS! (NASA SDO 4K)',
+      title: ' ¡10 AÑOS DEL SOL CONDENSADOS EN 60 SEGUNDOS! (NASA SDO 4K)',
       topic: 'sdo',
       duration_seconds: 35,
       target_audience: 'TikTok viral timelapse cósmico',
@@ -299,7 +299,7 @@ const SCRIPTS_BY_TOPIC: Record<string, Record<string, ReelScript>> = {
       ],
     },
     reels: {
-      title: '☀️ La Danza Magnética de 11 Años del Sol: Revelaciones de NASA SDO',
+      title: ' La Danza Magnética de 11 Años del Sol: Revelaciones de NASA SDO',
       topic: 'sdo',
       duration_seconds: 45,
       target_audience: 'Instagram Reels documental y cinematográfico',
@@ -325,7 +325,7 @@ const SCRIPTS_BY_TOPIC: Record<string, Record<string, ReelScript>> = {
       ],
     },
     shorts: {
-      title: '☀️ 425 Millones de Fotos del Sol: El Experimento más Monumental de la NASA',
+      title: ' 425 Millones de Fotos del Sol: El Experimento más Monumental de la NASA',
       topic: 'sdo',
       duration_seconds: 40,
       target_audience: 'YouTube Shorts datos descomunales',
@@ -354,7 +354,7 @@ const SCRIPTS_BY_TOPIC: Record<string, Record<string, ReelScript>> = {
 
   parker: {
     tiktok: {
-      title: '🛰️ ¡LA NAVE QUE TOCÓ EL SOL! La Odisea de Parker Solar Probe',
+      title: ' ¡LA NAVE QUE TOCÓ EL SOL! La Odisea de Parker Solar Probe',
       topic: 'parker',
       duration_seconds: 35,
       target_audience: 'TikTok viral hazaña tecnológica',
@@ -381,7 +381,7 @@ const SCRIPTS_BY_TOPIC: Record<string, Record<string, ReelScript>> = {
       ],
     },
     reels: {
-      title: '🛰️ El Misterio de la Corona Solar: ¿Por qué es más caliente que la Superficie?',
+      title: ' El Misterio de la Corona Solar: ¿Por qué es más caliente que la Superficie?',
       topic: 'parker',
       duration_seconds: 45,
       target_audience: 'Instagram Reels física y enigmas cósmicos',
@@ -407,7 +407,7 @@ const SCRIPTS_BY_TOPIC: Record<string, Record<string, ReelScript>> = {
       ],
     },
     shorts: {
-      title: '🛰️ El Objeto más Rápido Creado por la Humanidad (Récord Imbatible)',
+      title: ' El Objeto más Rápido Creado por la Humanidad (Récord Imbatible)',
       topic: 'parker',
       duration_seconds: 40,
       target_audience: 'YouTube Shorts récords mundiales y espacio',
@@ -436,7 +436,7 @@ const SCRIPTS_BY_TOPIC: Record<string, Record<string, ReelScript>> = {
 
   live: {
     tiktok: {
-      title: '🔴 ¡EL SOL EN DIRECTO 24/7! Transmisión Satelital Continua',
+      title: ' ¡EL SOL EN DIRECTO 24/7! Transmisión Satelital Continua',
       topic: 'live',
       duration_seconds: 30,
       target_audience: 'TikTok viral streaming en vivo',
@@ -448,7 +448,7 @@ const SCRIPTS_BY_TOPIC: Record<string, Record<string, ReelScript>> = {
           second: 0,
           voz: '¿Sabías que puedes ver el Sol y la Tierra en vivo desde el espacio las 24 horas del día sin interrupciones?',
           visual: 'Vista del stream satelital en vivo con telemetría orbital y la silueta del horizonte terrestre.',
-          tip: 'Coloca badge de 🔴 EN VIVO parpadeante.',
+          tip: 'Coloca badge de  EN VIVO parpadeante.',
         },
         {
           second: 10,
@@ -463,7 +463,7 @@ const SCRIPTS_BY_TOPIC: Record<string, Record<string, ReelScript>> = {
       ],
     },
     reels: {
-      title: '🔴 Telemetría Satelital en Tiempo Real: Cómo Monitorear el Clima Espacial',
+      title: ' Telemetría Satelital en Tiempo Real: Cómo Monitorear el Clima Espacial',
       topic: 'live',
       duration_seconds: 45,
       target_audience: 'Instagram Reels aficionados a la astronomía',
@@ -489,7 +489,7 @@ const SCRIPTS_BY_TOPIC: Record<string, Record<string, ReelScript>> = {
       ],
     },
     shorts: {
-      title: '🔴 Dónde Ver el Sol en Vivo Antes de una Gran Tormenta Solar',
+      title: ' Dónde Ver el Sol en Vivo Antes de una Gran Tormenta Solar',
       topic: 'live',
       duration_seconds: 35,
       target_audience: 'YouTube Shorts tutorial rápido',

@@ -3,23 +3,24 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useI18n } from '../lib/i18n'
+import { FlareIcon, SatelliteIcon, SparklesIcon, WaveIcon, CrosshairIcon, CheckCircleIcon } from './ui/Icons'
 
 interface Region {
   name: string
   lat: number
-  flag: string
+  code: string
   geomagLat: number
 }
 
 const REGIONS: Region[] = [
-  { name: 'Bogotá / Colombia / Andina', lat: 4.7, geomagLat: 15.2, flag: '🇨🇴' },
-  { name: 'Ciudad de México / Centroamérica', lat: 19.4, geomagLat: 28.5, flag: '🇲🇽' },
-  { name: 'Madrid / España / Sur de Europa', lat: 40.4, geomagLat: 42.1, flag: '🇪🇸' },
-  { name: 'Buenos Aires / Cono Sur', lat: -34.6, geomagLat: -24.8, flag: '🇦🇷' },
-  { name: 'Santiago / Chile / Patagonia', lat: -33.4, geomagLat: -23.1, flag: '🇨🇱' },
-  { name: 'Miami / Sur de EE.UU.', lat: 25.7, geomagLat: 36.4, flag: '🇺🇸' },
-  { name: 'Nueva York / Norte de EE.UU.', lat: 40.7, geomagLat: 51.2, flag: '🇺🇸' },
-  { name: 'Londres / Norte de Europa', lat: 51.5, geomagLat: 53.8, flag: '🇬🇧' },
+  { name: 'Bogotá / Colombia / Andina', lat: 4.7, geomagLat: 15.2, code: 'CO' },
+  { name: 'Ciudad de México / Centroamérica', lat: 19.4, geomagLat: 28.5, code: 'MX' },
+  { name: 'Madrid / España / Sur de Europa', lat: 40.4, geomagLat: 42.1, code: 'ES' },
+  { name: 'Buenos Aires / Cono Sur', lat: -34.6, geomagLat: -24.8, code: 'AR' },
+  { name: 'Santiago / Chile / Patagonia', lat: -33.4, geomagLat: -23.1, code: 'CL' },
+  { name: 'Miami / Sur de EE.UU.', lat: 25.7, geomagLat: 36.4, code: 'US' },
+  { name: 'Nueva York / Norte de EE.UU.', lat: 40.7, geomagLat: 51.2, code: 'US' },
+  { name: 'Londres / Norte de Europa', lat: 51.5, geomagLat: 53.8, code: 'GB' },
 ]
 
 export default function SolarStormSimulator() {
@@ -47,14 +48,14 @@ export default function SolarStormSimulator() {
   const gicColor = testKp < 5 ? 'text-emerald-400' : testKp < 7 ? 'text-yellow-400' : 'text-red-400'
 
   // Texto del reporte para copiar y compartir
-  const reportText = `🚨 REPORTE DE IMPACTO SOLAR — HELIOX
-📍 Ubicación: ${selectedRegion.name}
-🛰️ Latitud Geomagnética: ${selectedRegion.geomagLat}°
-⚡ Nivel de Tormenta: Kp ${testKp} (Escala NOAA G${testKp >= 5 ? testKp - 4 : 0})
-🌌 Probabilidad de Auroras: ${auroraProbability}%
-📡 Desviación de Señal GPS: ±${gpsDriftMeters}m
-⚡ Riesgo en Red Eléctrica: ${gicRisk}
-🔗 Monitoreo en tiempo real por JESÚS BARRIOS: https://heliox-observatory.vercel.app`
+  const reportText = `[REPORTE DE IMPACTO SOLAR — HELIOX]
+[UBICACION]: ${selectedRegion.name}
+[LAT-GEOMAG]: ${selectedRegion.geomagLat}°
+[TORMENTA]: Kp ${testKp} (Escala NOAA G${testKp >= 5 ? testKp - 4 : 0})
+[AURORAS]: ${auroraProbability}%
+[GPS-DRIFT]: ±${gpsDriftMeters}m
+[RED-ELECTRICA]: ${gicRisk}
+[TELEMETRIA-OFICIAL]: https://heliox-observatory.vercel.app`
 
   const handleCopyReport = () => {
     navigator.clipboard.writeText(reportText)
@@ -74,7 +75,7 @@ export default function SolarStormSimulator() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 relative z-10">
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-400 text-xs font-mono font-bold mb-2">
-            <span>⚡</span>
+            <FlareIcon size={13} className="text-orange-400 shrink-0" />
             <span>SIMULADOR INTERACTIVO DE IMPACTO GEOMAGNÉTICO</span>
           </div>
           <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
@@ -100,13 +101,15 @@ export default function SolarStormSimulator() {
               <button
                 key={region.name}
                 onClick={() => setSelectedRegion(region)}
-                className={`p-3 rounded-xl border text-left text-xs transition-all flex items-center gap-2 active:scale-95 ${
+                className={`p-3 rounded-xl border text-left text-xs transition-all flex items-center gap-2 active:scale-95 cursor-pointer ${
                   selectedRegion.name === region.name
                     ? 'bg-orange-500 text-black font-bold border-orange-400 shadow-lg shadow-orange-500/25'
                     : 'bg-white/5 text-white/70 border-white/10 hover:text-white hover:bg-white/10'
                 }`}
               >
-                <span className="text-lg">{region.flag}</span>
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-white/10 text-orange-300">
+                  {region.code}
+                </span>
                 <span className="truncate font-semibold">{region.name.split('/')[0].trim()}</span>
               </button>
             ))}
@@ -139,7 +142,7 @@ export default function SolarStormSimulator() {
                       key={kpVal}
                       type="button"
                       onClick={() => setTestKp(kpVal)}
-                      className={`py-2 px-1 rounded-xl text-xs font-mono font-bold border transition-all text-center flex flex-col items-center justify-center active:scale-95 ${
+                      className={`py-2 px-1 rounded-xl text-xs font-mono font-bold border transition-all text-center flex flex-col items-center justify-center active:scale-95 cursor-pointer ${
                         isSelected
                           ? 'bg-orange-500 text-black border-orange-400 shadow-lg shadow-orange-500/30'
                           : 'bg-white/5 text-white/70 border-white/10 hover:text-white hover:bg-white/10 hover:border-white/20'
@@ -171,8 +174,9 @@ export default function SolarStormSimulator() {
             </div>
           </div>
 
-          <div className="text-xs text-white/50 bg-black/40 p-2.5 rounded-xl border border-white/5">
-            📍 Latitud Geomagnética simulada: <strong className="text-white font-mono">{selectedRegion.geomagLat}°</strong>
+          <div className="text-xs text-white/50 bg-black/40 p-2.5 rounded-xl border border-white/5 flex items-center gap-1.5 font-mono">
+            <CrosshairIcon size={13} className="text-orange-400 shrink-0" />
+            <span>Latitud Geomagnética simulada: <strong className="text-white font-mono">{selectedRegion.geomagLat}°</strong></span>
           </div>
         </div>
       </div>
@@ -182,7 +186,8 @@ export default function SolarStormSimulator() {
         {/* 1. Auroras */}
         <div className="p-4 rounded-2xl bg-black/60 border border-white/10 space-y-2">
           <div className="text-[11px] font-mono text-purple-400 uppercase font-bold flex items-center gap-1.5">
-            <span>🌌</span> Visibilidad de Auroras
+            <SparklesIcon size={13} className="text-purple-400 shrink-0" />
+            <span>Visibilidad de Auroras</span>
           </div>
           <div className="text-3xl font-black font-mono text-white">
             {auroraProbability}%
@@ -199,7 +204,8 @@ export default function SolarStormSimulator() {
         {/* 2. GPS */}
         <div className="p-4 rounded-2xl bg-black/60 border border-white/10 space-y-2">
           <div className="text-[11px] font-mono text-blue-400 uppercase font-bold flex items-center gap-1.5">
-            <span>🛰️</span> Desviación de Señal GPS
+            <SatelliteIcon size={13} className="text-blue-400 shrink-0" />
+            <span>Desviación de Señal GPS</span>
           </div>
           <div className="text-3xl font-black font-mono text-white">
             ±{gpsDriftMeters} <span className="text-sm text-white/40">metros</span>
@@ -214,7 +220,8 @@ export default function SolarStormSimulator() {
         {/* 3. Redes Eléctricas */}
         <div className="p-4 rounded-2xl bg-black/60 border border-white/10 space-y-2">
           <div className="text-[11px] font-mono text-amber-400 uppercase font-bold flex items-center gap-1.5">
-            <span>⚡</span> Riesgo en Redes y Transformadores
+            <FlareIcon size={13} className="text-amber-400 shrink-0" />
+            <span>Riesgo en Redes y Transformadores</span>
           </div>
           <div className={`text-2xl font-black font-mono ${gicColor}`}>
             {gicRisk}
@@ -241,7 +248,7 @@ export default function SolarStormSimulator() {
             className="py-2.5 px-4 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white transition-all flex items-center gap-1.5 shadow-lg shadow-emerald-600/30 font-mono"
             title="Compartir en WhatsApp"
           >
-            <span>💬</span>
+            <WaveIcon size={13} className="text-white shrink-0" />
             <span>WhatsApp</span>
           </a>
 
@@ -253,7 +260,7 @@ export default function SolarStormSimulator() {
             className="py-2.5 px-4 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 active:scale-95 text-white border border-white/20 transition-all flex items-center gap-1.5 font-mono"
             title="Compartir en X / Twitter"
           >
-            <span>𝕏</span>
+            <span className="font-bold">𝕏</span>
             <span>Post en X</span>
           </a>
 
@@ -264,7 +271,7 @@ export default function SolarStormSimulator() {
             className="py-2.5 px-4 rounded-xl text-xs font-bold bg-orange-500 hover:bg-orange-400 active:scale-95 text-black transition-all flex items-center gap-1.5 shadow-lg shadow-orange-500/20 font-mono cursor-pointer"
             title="Copiar reporte al portapapeles"
           >
-            <span>{copiedReport ? '✅' : '📋'}</span>
+            {copiedReport ? <CheckCircleIcon size={14} className="text-black shrink-0" /> : <CrosshairIcon size={14} className="text-black shrink-0" />}
             <span>{copiedReport ? '¡Copiado al portapapeles!' : 'Copiar Reporte'}</span>
           </button>
         </div>

@@ -36,7 +36,7 @@ export default function TermsPage() {
       <main className="max-w-4xl mx-auto px-4 py-16">
         {/* Badge */}
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-sm font-semibold mb-6">
-          📋 Documento Legal Oficial
+           Documento Legal Oficial
         </div>
 
         <h1 className="text-4xl sm:text-5xl font-black text-white mb-4 leading-tight">
@@ -95,12 +95,12 @@ export default function TermsPage() {
               </p>
               <div className="grid sm:grid-cols-2 gap-3">
                 {[
-                  { icon: '✅', text: 'Usar el sitio solo para fines lícitos y personales.' },
-                  { icon: '✅', text: 'No reproducir ni redistribuir el contenido sin atribución.' },
-                  { icon: '❌', text: 'No intentar vulnerar la seguridad del sistema.' },
-                  { icon: '❌', text: 'No usar bots o scrapers automatizados sin autorización.' },
-                  { icon: '❌', text: 'No realizar ingeniería inversa del software.' },
-                  { icon: '❌', text: 'No interferir con el funcionamiento del servicio.' },
+                  { icon: '', text: 'Usar el sitio solo para fines lícitos y personales.' },
+                  { icon: '', text: 'No reproducir ni redistribuir el contenido sin atribución.' },
+                  { icon: '', text: 'No intentar vulnerar la seguridad del sistema.' },
+                  { icon: '', text: 'No usar bots o scrapers automatizados sin autorización.' },
+                  { icon: '', text: 'No realizar ingeniería inversa del software.' },
+                  { icon: '', text: 'No interferir con el funcionamiento del servicio.' },
                 ].map((item) => (
                   <div key={item.text} className="flex gap-2 p-3 bg-white/[0.02] rounded-lg border border-white/5">
                     <span className="flex-shrink-0">{item.icon}</span>
@@ -154,7 +154,7 @@ export default function TermsPage() {
               <span className="text-blue-400">4.</span> Precisión de los Datos
             </h2>
             <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl mb-4">
-              <p className="text-amber-300 text-sm font-semibold mb-1">⚠️ Aviso importante</p>
+              <p className="text-amber-300 text-sm font-semibold mb-1"> Aviso importante</p>
               <p className="text-amber-200/80 text-sm">
                 Los datos presentados en HELIOX provienen directamente de agencias gubernamentales
                 (NASA, NOAA, ESA) y se muestran tal como son recibidos. HELIOX NO garantiza la
@@ -288,13 +288,13 @@ export default function TermsPage() {
             </p>
             <div className="space-y-2 text-sm">
               <div className="flex items-center gap-3 p-3 bg-black/30 rounded-xl">
-                <span>📧</span>
+                <span></span>
                 <a href={`mailto:${CONTACT_EMAIL}`} className="text-orange-400 hover:underline font-mono">
                   {CONTACT_EMAIL}
                 </a>
               </div>
               <div className="flex items-center gap-3 p-3 bg-black/30 rounded-xl">
-                <span>🐙</span>
+                <span></span>
                 <a
                   href="https://github.com/Mister124x/heliox"
                   target="_blank"
@@ -305,7 +305,7 @@ export default function TermsPage() {
                 </a>
               </div>
               <div className="flex items-center gap-3 p-3 bg-black/30 rounded-xl">
-                <span>👨‍💻</span>
+                <span>‍</span>
                 <span className="text-white/70">Responsable: <strong className="text-white">JESÚS BARRIOS</strong> · Colombia</span>
               </div>
             </div>

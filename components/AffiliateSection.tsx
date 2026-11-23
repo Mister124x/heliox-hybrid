@@ -27,7 +27,7 @@ const AFFILIATE_PRODUCTS: Product[] = [
     description: 'Telescopio computarizado de 8 pulgadas con filtro solar certificado para observación de manchas solares y llamaradas.',
     amazonSearchQuery: 'Celestron NexStar 8SE Solar Telescope',
     amazonAffiliateUrl: 'https://www.amazon.com/s?k=Celestron+NexStar+8SE+Solar+filter&tag=jesusbarrios2-20',
-    imagePlaceholder: '🔭',
+    imagePlaceholder: '',
   },
   {
     id: 'camera-1',
@@ -39,7 +39,7 @@ const AFFILIATE_PRODUCTS: Product[] = [
     description: 'Sensor monocromático enfriado ultra sensible para capturar la cromosfera solar en H-Alpha y prominencias.',
     amazonSearchQuery: 'ZWO ASI533MM Pro solar camera',
     amazonAffiliateUrl: 'https://www.amazon.com/s?k=ZWO+ASI533MM+Pro+camera&tag=jesusbarrios2-20',
-    imagePlaceholder: '📷',
+    imagePlaceholder: '',
   },
   {
     id: 'smart-scope',
@@ -51,7 +51,7 @@ const AFFILIATE_PRODUCTS: Product[] = [
     description: 'Telescopio inteligente con procesamiento de imagen en vivo y reconocimiento autónomo de campos celestes.',
     amazonSearchQuery: 'Unistellar eVscope 2 Smart Telescope',
     amazonAffiliateUrl: 'https://www.amazon.com/s?k=Unistellar+eVscope+2&tag=jesusbarrios2-20',
-    imagePlaceholder: '🛰️',
+    imagePlaceholder: '',
   },
   {
     id: 'filter-1',
@@ -63,7 +63,7 @@ const AFFILIATE_PRODUCTS: Product[] = [
     description: 'Filtro óptico de alta densidad para observación visual y fotográfica 100% segura del disco solar.',
     amazonSearchQuery: 'Baader Solar Filter AstroSolar 5.0',
     amazonAffiliateUrl: 'https://www.amazon.com/s?k=Baader+Solar+Filter+AstroSolar+5.0&tag=jesusbarrios2-20',
-    imagePlaceholder: '🛡️',
+    imagePlaceholder: '',
   },
 ]
 
@@ -78,7 +78,7 @@ export default function AffiliateSection() {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
             <div className="solar-badge bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 mb-2 text-xs inline-flex items-center gap-1.5">
-              <span>🔬</span>
+              <span></span>
               <span>{t.equip_badge}</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
@@ -90,7 +90,7 @@ export default function AffiliateSection() {
           </div>
 
           <div className="text-xs text-white/50 bg-white/5 border border-white/10 px-4 py-2 rounded-xl">
-            🤝 Programa de Afiliados Oficial: Amazon Associates (Tag: <span className="text-solar-400 font-mono">jesusbarrios2-20</span>) & Cotización Directa
+             Programa de Afiliados Oficial: Amazon Associates (Tag: <span className="text-solar-400 font-mono">jesusbarrios2-20</span>) & Cotización Directa
           </div>
         </div>
 
@@ -98,7 +98,7 @@ export default function AffiliateSection() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
           {AFFILIATE_PRODUCTS.map((prod, idx) => {
             const whatsappMsg = encodeURIComponent(
-              `Hola Jesús Barrios 👋 Vi el producto "${prod.name}" ($${prod.priceUSD} USD) en el observatorio HELIOX y deseo cotizarlo / adquirirlo directamente contigo.`
+              `Hola Jesús Barrios  Vi el producto "${prod.name}" ($${prod.priceUSD} USD) en el observatorio HELIOX y deseo cotizarlo / adquirirlo directamente contigo.`
             )
             const whatsappUrl = `https://wa.me/${sellerPhone}?text=${whatsappMsg}`
 
@@ -132,7 +132,7 @@ export default function AffiliateSection() {
                       ${prod.priceUSD.toLocaleString()} USD
                     </span>
                     <span className="text-xs text-yellow-400 flex items-center gap-0.5">
-                      ★ {prod.rating}
+                       {prod.rating}
                     </span>
                   </div>
 
@@ -143,7 +143,7 @@ export default function AffiliateSection() {
 
                 <div className="space-y-2 mt-2">
                   <div className="text-[11px] text-solar-400/80 mb-2 bg-solar-500/5 p-2 rounded-lg border border-solar-500/10 flex items-center justify-between">
-                    <span>💡 Afiliado: <strong className="text-white">jesusbarrios2-20</strong></span>
+                    <span> Afiliado: <strong className="text-white">jesusbarrios2-20</strong></span>
                     <span className="text-emerald-400 font-mono">Activo ✓</span>
                   </div>
 
@@ -154,7 +154,7 @@ export default function AffiliateSection() {
                     rel="noopener noreferrer"
                     className="w-full py-2.5 px-3 rounded-xl text-xs font-bold text-center block bg-solar-500 hover:bg-solar-400 text-black shadow-lg shadow-solar-500/20 transition-all"
                   >
-                    🛒 Comprar en Amazon Oficial →
+                     Comprar en Amazon Oficial →
                   </a>
 
                   {/* Botón 2: Cotizar / Asesoría Directa por WhatsApp con Jesús Barrios */}
@@ -164,7 +164,7 @@ export default function AffiliateSection() {
                     rel="noopener noreferrer"
                     className="w-full py-2 px-3 rounded-xl text-xs font-semibold text-center block bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/30 transition-all flex items-center justify-center gap-1.5"
                   >
-                    <span>💬</span>
+                    <span></span>
                     <span>Asesoría Directa (WhatsApp)</span>
                   </a>
                 </div>

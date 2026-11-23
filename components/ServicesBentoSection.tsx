@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { useI18n } from '../lib/i18n'
+import { FlareIcon, SatelliteIcon, BrainChipIcon } from './ui/Icons'
 
 export default function ServicesBentoSection() {
   const { lang } = useI18n()
@@ -9,7 +10,7 @@ export default function ServicesBentoSection() {
 
   const services = [
     {
-      icon: '⚡',
+      icon: FlareIcon,
       badge: isEn ? '24H Delivery' : 'Entrega 24h',
       title: isEn ? 'Express Landing Pages (Next.js 14)' : 'Landing Pages Express (Next.js 14)',
       desc: isEn
@@ -24,7 +25,7 @@ export default function ServicesBentoSection() {
       popular: true,
     },
     {
-      icon: '🛰️',
+      icon: SatelliteIcon,
       badge: isEn ? 'Full Template' : 'Plantilla Lista',
       title: isEn ? 'Antigravity Dark UI Kit' : 'Kit de UI Antigravity Dark',
       desc: isEn
@@ -39,7 +40,7 @@ export default function ServicesBentoSection() {
       popular: false,
     },
     {
-      icon: '🤖',
+      icon: BrainChipIcon,
       badge: isEn ? 'Custom SaaS' : 'A Medida',
       title: isEn ? 'Fullstack AI & Dashboard Engineering' : 'Ingeniería Fullstack & Dashboards IA',
       desc: isEn
@@ -64,7 +65,7 @@ export default function ServicesBentoSection() {
             <span>{isEn ? 'ENGINEERING & DESIGN LAB' : 'SERVICIOS PROFESIONALES DE DESARROLLO'}</span>
           </div>
           <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2">
-            <span>💻</span>
+            <BrainChipIcon size={20} className="text-cyan-400 shrink-0" />
             <span>
               {isEn ? 'Custom Engineering by Jesús Barrios' : 'Desarrollo de Software & UI por Jesús Barrios'}
             </span>
@@ -83,31 +84,35 @@ export default function ServicesBentoSection() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {services.map((svc, idx) => (
-          <motion.div
-            key={idx}
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.1 }}
-            className={`relative rounded-2xl p-5 border flex flex-col justify-between transition-all duration-300 hover:scale-[1.01] ${
-              svc.popular
-                ? 'bg-gradient-to-b from-orange-500/10 to-black/60 border-orange-500/30 shadow-lg shadow-orange-500/5'
-                : 'bg-white/[0.02] border-white/[0.08] hover:border-white/20'
-            }`}
-          >
-            {svc.popular && (
-              <div className="absolute -top-3 right-4 px-3 py-0.5 rounded-full bg-gradient-to-r from-orange-500 to-amber-400 text-black text-[10px] font-black uppercase font-mono tracking-wider shadow-md">
-                {isEn ? 'Most Requested' : 'Más Solicitado'}
-              </div>
-            )}
+        {services.map((svc, idx) => {
+          const SvcIcon = svc.icon
+          return (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.1 }}
+              className={`relative rounded-2xl p-5 border flex flex-col justify-between transition-all duration-300 hover:scale-[1.01] ${
+                svc.popular
+                  ? 'bg-gradient-to-b from-orange-500/10 to-black/60 border-orange-500/30 shadow-lg shadow-orange-500/5'
+                  : 'bg-white/[0.02] border-white/[0.08] hover:border-white/20'
+              }`}
+            >
+              {svc.popular && (
+                <div className="absolute -top-3 right-4 px-3 py-0.5 rounded-full bg-gradient-to-r from-orange-500 to-amber-400 text-black text-[10px] font-black uppercase font-mono tracking-wider shadow-md">
+                  {isEn ? 'Most Requested' : 'Más Solicitado'}
+                </div>
+              )}
 
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-2xl">{svc.icon}</span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/5 text-white/60 border border-white/10">
-                  {svc.badge}
-                </span>
-              </div>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                    <SvcIcon size={20} className="text-orange-400" />
+                  </div>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/5 text-white/60 border border-white/10">
+                    {svc.badge}
+                  </span>
+                </div>
 
               <div>
                 <h3 className="text-base font-bold text-white tracking-tight">{svc.title}</h3>
@@ -149,7 +154,8 @@ export default function ServicesBentoSection() {
               </a>
             </div>
           </motion.div>
-        ))}
+          )
+        })}
       </div>
     </section>
   )

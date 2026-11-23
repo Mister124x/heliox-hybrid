@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useI18n } from '../lib/i18n'
+import { SunIcon, ResetIcon, ThermometerIcon, SatelliteIcon } from './ui/Icons'
 
 export interface WavelengthOption {
   key: string
@@ -186,9 +187,9 @@ export default function SolarViewer({ compact = false }: SolarViewerProps) {
                 }}
               />
             ) : (
-              <div className="text-center p-8">
-                <span className="text-6xl">☀️</span>
-                <p className="text-xs text-white/50 mt-2">
+              <div className="text-center p-8 flex flex-col items-center justify-center">
+                <SunIcon size={56} className="text-amber-500 animate-pulse mx-auto" />
+                <p className="text-xs text-white/50 mt-2 font-mono">
                   {isEn ? 'Tuning satellite link...' : isPt ? 'Sintonizando satélite...' : 'Sintonizando satélite...'}
                 </p>
               </div>
@@ -223,7 +224,7 @@ export default function SolarViewer({ compact = false }: SolarViewerProps) {
                 title={isEn ? 'Update live image from NASA SDO' : 'Actualizar imagen con telemetría de NASA SDO en tiempo real'}
                 aria-label="Recargar imagen SDO en tiempo real"
               >
-                <span className={isRefreshing ? 'animate-spin inline-block' : 'inline-block'}>🔄</span>
+                <ResetIcon size={12} className={isRefreshing ? 'animate-spin inline-block text-cyan-400' : 'inline-block text-cyan-400'} />
                 <span suppressHydrationWarning>{isRefreshing ? (isEn ? 'Syncing...' : 'Sincronizando...') : `${countdown}s`}</span>
               </button>
             </div>
@@ -243,8 +244,9 @@ export default function SolarViewer({ compact = false }: SolarViewerProps) {
                       {activeWL.desc}
                     </span>
                   </div>
-                  <div className="text-[11px] text-white/50 mt-1">
-                    🌡️ {activeWL.temperature} · {activeWL.features}
+                  <div className="text-[11px] text-white/60 mt-1 flex items-center gap-1.5">
+                    <ThermometerIcon size={12} className="text-amber-400 inline shrink-0" />
+                    <span>{activeWL.temperature} · {activeWL.features}</span>
                   </div>
                 </div>
                 <div className="text-right shrink-0">
@@ -290,12 +292,15 @@ export default function SolarViewer({ compact = false }: SolarViewerProps) {
 
       {/* Pie de imagen informativo con botón de recarga adicional */}
       <div className="flex flex-wrap items-center justify-between text-xs text-white/40 mt-3 px-1 gap-2">
-        <span>🛰️ {isEn ? 'SDO & SOHO Satellites in Orbit' : isPt ? 'Satélites SDO e SOHO em Órbita' : 'Satélites SDO & SOHO en Órbita'}</span>
+        <span className="flex items-center gap-1.5">
+          <SatelliteIcon size={13} className="text-cyan-400" />
+          <span>{isEn ? 'SDO & SOHO Satellites in Orbit' : isPt ? 'Satélites SDO e SOHO em Órbita' : 'Satélites SDO & SOHO en Órbita'}</span>
+        </span>
         <button
           onClick={() => updateImage(true)}
           className="text-solar-400/90 hover:text-solar-300 font-mono text-[11px] flex items-center gap-1 active:scale-95 transition-all cursor-pointer"
         >
-          <span className={isRefreshing ? 'animate-spin' : ''}>🔄</span>
+          <ResetIcon size={12} className={isRefreshing ? 'animate-spin text-amber-400' : 'text-amber-400'} />
           <span>{isRefreshing ? (isEn ? 'Reloading...' : 'Recargando...') : (isEn ? 'Reload SDO Live' : 'Recargar en Tiempo Real')}</span>
         </button>
       </div>

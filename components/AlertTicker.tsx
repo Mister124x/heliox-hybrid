@@ -34,15 +34,15 @@ export default function AlertTicker({ alerts, kp }: AlertTickerProps) {
   const cleanedAlerts = (alerts || [])
     .map((a) => {
       const text = cleanMessage(a.message)
-      return text ? `🛰️ [${a.product_id}]: ${text}` : null
+      return text ? `[SAT-FEED] [${a.product_id}]: ${text}` : null
     })
     .filter(Boolean) as string[]
 
   const fallback = [
-    `☀️ HELIOX — Monitoreo Solar 24/7 en Tiempo Real`,
-    `📡 Kp Planetario Actual: ${kp.toFixed(1)} (${isStormy ? 'Tormenta Activa' : 'Campo Estable'})`,
-    `🛰️ Telemetría Satelital Directa: NASA SDO · SOHO L1 · NOAA SWPC · ESA`,
-    `🇨🇴 Fundado e Investigado por JESÚS BARRIOS`,
+    `[SOLAR-CORE] HELIOX — Monitoreo Solar 24/7 en Tiempo Real`,
+    `[MAG-TEL] Kp Planetario Actual: ${kp.toFixed(1)} (${isStormy ? 'Tormenta Activa' : 'Campo Estable'})`,
+    `[SAT-NET] Telemetría Satelital Directa: NASA SDO · SOHO L1 · NOAA SWPC · ESA`,
+    `[MISSION-LEAD] Observatorio Científico Fundado por JESÚS BARRIOS`,
   ]
 
   const items = cleanedAlerts.length > 0 ? cleanedAlerts : fallback

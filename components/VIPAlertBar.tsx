@@ -62,7 +62,7 @@ export default function VIPAlertBar() {
               onClick={() => setIsOpen(true)}
               className="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-400 text-black hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-orange-500/30 font-mono flex items-center gap-1.5 cursor-pointer"
             >
-              <span>📲</span>
+              <span></span>
               <span>{isEn ? 'Get VIP Access' : 'Activar Acceso VIP'}</span>
             </button>
             <button
@@ -97,7 +97,7 @@ export default function VIPAlertBar() {
 
               <div className="text-center space-y-2">
                 <div className="inline-flex p-3 rounded-2xl bg-orange-500/10 border border-orange-500/30 text-3xl">
-                  🛰️
+                  
                 </div>
                 <h3 className="text-xl sm:text-2xl font-black text-white">
                   {isEn ? 'Join HELIOX VIP Alert Network' : 'Únete a la Red VIP de Alertas HELIOX'}
@@ -131,7 +131,7 @@ export default function VIPAlertBar() {
                 {/* Nequi */}
                 <div className="p-3.5 rounded-xl bg-purple-950/30 border border-purple-500/30 flex items-center justify-between">
                   <div>
-                    <div className="text-xs font-bold text-purple-300">🟣 Nequi / Daviplata</div>
+                    <div className="text-xs font-bold text-purple-300"> Nequi / Daviplata</div>
                     <div className="font-mono text-lg font-bold text-white">{nequiNumber}</div>
                     <div className="text-[10px] text-white/40">Titular: {holderName}</div>
                   </div>
@@ -139,14 +139,14 @@ export default function VIPAlertBar() {
                     onClick={() => handleCopy(nequiNumber, 'nequi')}
                     className="px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-600 hover:bg-purple-500 text-white font-mono active:scale-95"
                   >
-                    {copied === 'nequi' ? '✅ Copiado' : 'Copiar'}
+                    {copied === 'nequi' ? ' Copiado' : 'Copiar'}
                   </button>
                 </div>
 
                 {/* Bancolombia */}
                 <div className="p-3.5 rounded-xl bg-yellow-950/30 border border-yellow-500/30 flex items-center justify-between">
                   <div>
-                    <div className="text-xs font-bold text-yellow-300">🟡 Bancolombia Ahorros</div>
+                    <div className="text-xs font-bold text-yellow-300"> Bancolombia Ahorros</div>
                     <div className="font-mono text-lg font-bold text-white">{bancolombiaNumber}</div>
                     <div className="text-[10px] text-white/40">Titular: {holderName}</div>
                   </div>
@@ -154,14 +154,14 @@ export default function VIPAlertBar() {
                     onClick={() => handleCopy(bancolombiaNumber, 'bancolombia')}
                     className="px-3 py-1.5 rounded-lg text-xs font-bold bg-yellow-500 hover:bg-yellow-400 text-black font-mono active:scale-95"
                   >
-                    {copied === 'bancolombia' ? '✅ Copiado' : 'Copiar'}
+                    {copied === 'bancolombia' ? ' Copiado' : 'Copiar'}
                   </button>
                 </div>
 
                 {/* PayPal */}
                 <div className="p-3.5 rounded-xl bg-blue-950/30 border border-blue-500/30 flex items-center justify-between">
                   <div>
-                    <div className="text-xs font-bold text-blue-300">🌐 PayPal (Internacional)</div>
+                    <div className="text-xs font-bold text-blue-300"> PayPal (Internacional)</div>
                     <div className="font-mono text-xs font-bold text-white">@{paypalUser} ($3 USD)</div>
                   </div>
                   <a
@@ -186,7 +186,7 @@ export default function VIPAlertBar() {
                   rel="noopener noreferrer"
                   className="w-full py-3.5 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm text-center flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 active:scale-95 transition-all"
                 >
-                  <span>💬</span>
+                  <span></span>
                   <span>Confirmar y Activar por WhatsApp (+57 324 588 4678)</span>
                 </a>
               </div>

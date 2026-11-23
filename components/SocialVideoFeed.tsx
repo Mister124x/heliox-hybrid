@@ -26,12 +26,12 @@ export interface VideoItem {
 }
 
 export const CATEGORY_FILTERS: { id: VideoFilterCategory; label: string; icon: string }[] = [
-  { id: 'all', label: 'Todos', icon: '🎬' },
-  { id: 'flares', label: '⚡ Llamaradas X', icon: '⚡' },
-  { id: 'cmes', label: '🌊 CMEs', icon: '🌊' },
-  { id: 'auroras', label: '🌌 Auroras', icon: '🌌' },
-  { id: 'satellites', label: '🛰️ Satélites NASA', icon: '🛰️' },
-  { id: 'live', label: '🔴 En Vivo', icon: '🔴' },
+  { id: 'all', label: 'Todos', icon: '' },
+  { id: 'flares', label: ' Llamaradas X', icon: '' },
+  { id: 'cmes', label: ' CMEs', icon: '' },
+  { id: 'auroras', label: ' Auroras', icon: '' },
+  { id: 'satellites', label: ' Satélites NASA', icon: '' },
+  { id: 'live', label: ' En Vivo', icon: '' },
 ]
 
 export const VIRAL_SOLAR_VIDEOS: VideoItem[] = [
@@ -47,7 +47,7 @@ export const VIRAL_SOLAR_VIDEOS: VideoItem[] = [
     description: 'Compilación de una década completa (2010-2020) con más de 425 millones de imágenes en 171Å y 304Å capturadas por el Solar Dynamics Observatory, mostrando la respiración magnética del Sol.',
     embedId: 'l3QQQu7QLoM',
     thumbnailUrl: 'https://images.unsplash.com/photo-1532693322450-2cb5c511067d?auto=format&fit=crop&w=800&q=80',
-    badge: '☀️ TIMELAPSE 10 AÑOS 4K',
+    badge: ' TIMELAPSE 10 AÑOS 4K',
     timestamp: 'NASA SDO Oficial',
     topicKey: 'sdo',
   },
@@ -63,7 +63,7 @@ export const VIRAL_SOLAR_VIDEOS: VideoItem[] = [
     description: 'Detonación coronal extrema capturada en longitudes de onda de 131Å (10 millones de °C) y 304Å, provocada por reconexión magnética masiva e ionización inmediata de la atmósfera superior terrestre.',
     embedId: 'F0-4u7h-R6s',
     thumbnailUrl: 'https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&w=800&q=80',
-    badge: '⚡ CLASE X HISTÓRICA',
+    badge: ' CLASE X HISTÓRICA',
     timestamp: 'Ciclo 25 en Pico',
     topicKey: 'flare',
   },
@@ -79,7 +79,7 @@ export const VIRAL_SOLAR_VIDEOS: VideoItem[] = [
     description: 'Erupción coronal masiva tipo Halo observada por los coronógrafos espaciales LASCO C2 y C3, disparando billones de toneladas de plasma magnetizado a más de 1,500 km/s en trayectoria directa a la Tierra.',
     embedId: 'NnMIhD3h6Sg',
     thumbnailUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80',
-    badge: '🌊 CME HALO GIGANTE',
+    badge: ' CME HALO GIGANTE',
     timestamp: 'SOHO / LASCO',
     topicKey: 'cme',
   },
@@ -95,7 +95,7 @@ export const VIRAL_SOLAR_VIDEOS: VideoItem[] = [
     description: 'Análisis científico de la supertormenta geomagnética G5 de Mayo 2024 desatada por la región activa AR3664, que tiñó de rojo sangre y violeta cielos en México, el Caribe, España y Europa.',
     embedId: 'kYJv8y6_D64',
     thumbnailUrl: 'https://images.unsplash.com/photo-1579033461380-adb47c3eb938?auto=format&fit=crop&w=800&q=80',
-    badge: '🌌 TORMENTA G5 HISTÓRICA',
+    badge: ' TORMENTA G5 HISTÓRICA',
     timestamp: 'Evento Mayo 2024',
     topicKey: 'aurora',
   },
@@ -111,7 +111,7 @@ export const VIRAL_SOLAR_VIDEOS: VideoItem[] = [
     description: 'Simulación magnetohidrodinámica 3D que modela la compresión del choque de proa (bow shock) y la reconexión magnética en la magnetocola ante el embate de un frente de onda de choque solar.',
     embedId: 'R9K1wL1k1X4',
     thumbnailUrl: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=800&q=80',
-    badge: '🛡️ ESCUDO MAGNETOSFÉRICO',
+    badge: ' ESCUDO MAGNETOSFÉRICO',
     timestamp: 'Supercomputadora NASA',
     topicKey: 'cme',
   },
@@ -127,7 +127,7 @@ export const VIRAL_SOLAR_VIDEOS: VideoItem[] = [
     description: 'Hito histórico de la exploración espacial: Parker Solar Probe cruza la superficie crítica de Alfvén a más de 500,000 km/h, recolectando datos in situ de switchbacks y calentamiento coronal a 1,400 °C.',
     embedId: 'LkaLfbuB_6E',
     thumbnailUrl: 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=800&q=80',
-    badge: '🛰️ CONTACTO SOLAR DIRECTO',
+    badge: ' CONTACTO SOLAR DIRECTO',
     timestamp: 'Misión Parker Probe',
     topicKey: 'parker',
   },
@@ -143,7 +143,7 @@ export const VIRAL_SOLAR_VIDEOS: VideoItem[] = [
     description: 'Secuencia en 4K del pequeño disco de Mercurio cruzando la corona solar en múltiples longitudes de onda ultravioleta, complementada con observaciones de cometas Kreutz sungrazers evaporándose.',
     embedId: 'iTjWw_c-jF0',
     thumbnailUrl: 'https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&w=800&q=80',
-    badge: '☄️ TRÁNSITO PLANETARIO 4K',
+    badge: ' TRÁNSITO PLANETARIO 4K',
     timestamp: 'SDO / SOHO',
     topicKey: 'sdo',
   },
@@ -153,14 +153,14 @@ export const VIRAL_SOLAR_VIDEOS: VideoItem[] = [
     platform: 'live',
     category: 'live',
     author: 'NASA Live Official Stream',
-    duration: '🔴 24/7 EN DIRECTO',
+    duration: ' 24/7 EN DIRECTO',
     views: '240K online',
     likes: '1.5M',
     isLive: true,
     description: 'Señal continua de telemetría y video orbital de satélites SDO, coronógrafos espaciales, cámaras de la Estación Espacial Internacional y la red de espacio profundo de la NASA.',
     embedId: '21X5lGlDOfg',
     thumbnailUrl: 'https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=800&q=80',
-    badge: '🔴 EN VIVO 24/7',
+    badge: ' EN VIVO 24/7',
     timestamp: 'Streaming Satelital Activo',
     topicKey: 'live',
   },
@@ -176,7 +176,7 @@ export const VIRAL_SOLAR_VIDEOS: VideoItem[] = [
     description: 'Arcos plasmáticos incandescentes de más de 100,000 km condensándose y precipitándose como lluvia coronal sobre la cromosfera solar guiados por líneas del campo magnético.',
     embedId: 'mJ7Vw_U3yvQ',
     thumbnailUrl: 'https://images.unsplash.com/photo-1532693322450-2cb5c511067d?auto=format&fit=crop&w=800&q=80',
-    badge: '⚡ LLUVIA CORONAL X',
+    badge: ' LLUVIA CORONAL X',
     timestamp: 'SDO Ultra-Detalle',
     topicKey: 'flare',
   },
@@ -192,7 +192,7 @@ export const VIRAL_SOLAR_VIDEOS: VideoItem[] = [
     description: 'Mosaico de resolución récord mundial que desvela hogueras coronales (campfires) a escala milimétrica y los campos magnéticos del polo sur solar tomados por el telescopio EUI.',
     embedId: 'kY0w6l-P8aA',
     thumbnailUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80',
-    badge: '🔭 MÁXIMA RESOLUCIÓN ESA',
+    badge: ' MÁXIMA RESOLUCIÓN ESA',
     timestamp: 'Misión ESA / NASA',
     topicKey: 'sdo',
   },
@@ -306,7 +306,7 @@ export default function SocialVideoFeed({
               title={autoRotate ? 'Pausar rotación automática' : 'Reanudar rotación automática'}
             >
               <span className={`w-2 h-2 rounded-full ${autoRotate ? 'bg-pink-400 animate-pulse' : 'bg-white/40'}`} />
-              <span>{autoRotate ? '⏱️ Rotación 5s Activa' : '⏸️ Rotación Pausada'}</span>
+              <span>{autoRotate ? ' Rotación 5s Activa' : ' Rotación Pausada'}</span>
             </button>
           </div>
         </div>
@@ -392,7 +392,7 @@ export default function SocialVideoFeed({
                     className="absolute inset-0 m-auto w-20 h-20 rounded-full bg-gradient-to-tr from-pink-500 via-rose-500 to-amber-500 hover:from-pink-400 hover:to-amber-400 text-white flex items-center justify-center text-3xl shadow-2xl shadow-pink-500/60 hover:scale-110 transition-all z-20 group/btn"
                     aria-label="Reproducir video"
                   >
-                    <span className="ml-1 transform group-hover/btn:scale-110 transition-transform">▶</span>
+                    <span className="ml-1 transform group-hover/btn:scale-110 transition-transform"></span>
                   </button>
 
                   {/* Flechas de Navegación Rápida Anterior / Siguiente */}
@@ -405,7 +405,7 @@ export default function SocialVideoFeed({
                     title="Video Anterior"
                     aria-label="Video Anterior"
                   >
-                    ◀
+                    
                   </button>
                   <button
                     onClick={(e) => {
@@ -416,7 +416,7 @@ export default function SocialVideoFeed({
                     title="Video Siguiente"
                     aria-label="Video Siguiente"
                   >
-                    ▶
+                    
                   </button>
 
                   {/* Badges Superiores */}
@@ -434,8 +434,8 @@ export default function SocialVideoFeed({
                   {/* Información Inferior */}
                   <div className="absolute bottom-4 left-4 right-4 z-10 space-y-1.5">
                     <div className="flex flex-wrap items-center gap-3 text-xs text-white/70 font-mono">
-                      <span>👁️ {activeVideo.views}</span>
-                      <span>❤️ {activeVideo.likes}</span>
+                      <span> {activeVideo.views}</span>
+                      <span> {activeVideo.likes}</span>
                       <span>• {activeVideo.author}</span>
                       <span className="text-pink-300">[{currentIndex + 1} de {filteredVideos.length}]</span>
                     </div>
@@ -462,7 +462,7 @@ export default function SocialVideoFeed({
             <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/10 space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-bold text-white">🔬 Ficha Heliofísica Oficial</span>
+                  <span className="text-sm font-bold text-white"> Ficha Heliofísica Oficial</span>
                   <span className="text-xs font-mono text-pink-400 bg-pink-500/10 px-2 py-0.5 rounded border border-pink-500/20">
                     {activeVideo.timestamp}
                   </span>
@@ -471,7 +471,7 @@ export default function SocialVideoFeed({
                   href={`/reels?topic=${activeVideo.topicKey || 'flare'}`}
                   className="text-xs font-mono font-bold text-orange-400 hover:text-orange-300 flex items-center gap-1.5 transition-colors"
                 >
-                  <span>✨ Crear Reel IA con este Evento</span>
+                  <span> Crear Reel IA con este Evento</span>
                   <span>→</span>
                 </Link>
               </div>
@@ -482,8 +482,8 @@ export default function SocialVideoFeed({
 
               <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-white/40 pt-1">
                 <div className="flex items-center gap-3">
-                  <span>🛰️ Observatorio: <strong className="text-white/70">{activeVideo.author}</strong></span>
-                  <span>⚡ Categoría: <strong className="text-pink-400 uppercase">{activeVideo.category}</strong></span>
+                  <span> Observatorio: <strong className="text-white/70">{activeVideo.author}</strong></span>
+                  <span> Categoría: <strong className="text-pink-400 uppercase">{activeVideo.category}</strong></span>
                 </div>
                 <span>ID: {activeVideo.embedId}</span>
               </div>
@@ -527,7 +527,7 @@ export default function SocialVideoFeed({
                       <div className="absolute inset-0 bg-black/20" />
                       {isSelected ? (
                         <div className="absolute inset-0 bg-pink-500/40 flex items-center justify-center text-white text-xs font-bold">
-                          ▶
+                          
                         </div>
                       ) : (
                         <span className="absolute bottom-1 right-1 px-1 py-0.2 rounded bg-black/80 text-[9px] font-mono text-white/90">

@@ -24,42 +24,42 @@ const TOPIC_OPTIONS: TopicOption[] = [
   {
     id: 'flare',
     label: 'Llamaradas X',
-    icon: '⚡',
+    icon: '',
     subtitle: 'Erupciones extremas y pulso de rayos X',
     videoId: 'F0-4u7h-R6s',
   },
   {
     id: 'cme',
     label: 'CME hacia la Tierra',
-    icon: '🌊',
+    icon: '',
     subtitle: 'Tsunami de plasma a 1,500 km/s',
     videoId: 'NnMIhD3h6Sg',
   },
   {
     id: 'aurora',
     label: 'Auroras G5 Históricas',
-    icon: '🌌',
+    icon: '',
     subtitle: 'Cielos carmesí en el trópico (Mayo 2024)',
     videoId: 'kYJv8y6_D64',
   },
   {
     id: 'sdo',
     label: '10 Años en 4K',
-    icon: '☀️',
+    icon: '',
     subtitle: 'Secretos de 425M fotos de NASA SDO',
     videoId: 'l3QQQu7QLoM',
   },
   {
     id: 'parker',
     label: 'Sonda Parker',
-    icon: '🛰️',
+    icon: '',
     subtitle: 'Cruzando la corona a 1,400 °C',
     videoId: 'LkaLfbuB_6E',
   },
   {
     id: 'live',
     label: 'NASA Live 24/7',
-    icon: '🔴',
+    icon: '',
     subtitle: 'Streaming satelital continuo del Sol',
     videoId: '21X5lGlDOfg',
   },
@@ -172,21 +172,21 @@ export default function ReelsMediaPage() {
   const copyFullScript = () => {
     if (!scriptData) return
     const text =
-      `🎬 TÍTULO: ${scriptData.title}\n` +
-      `🎯 FORMATO: ${platform.toUpperCase()} (${scriptData.target_audience})\n` +
-      `⏱️ DURACIÓN: ${scriptData.duration_seconds}s\n\n` +
+      ` TÍTULO: ${scriptData.title}\n` +
+      ` FORMATO: ${platform.toUpperCase()} (${scriptData.target_audience})\n` +
+      ` DURACIÓN: ${scriptData.duration_seconds}s\n\n` +
       `────────────────────────────────────────\n` +
       scriptData.slides
         .map(
           (s: any, i: number) =>
-            `[PASO ${i + 1} · ${s.second}s]\n🗣️ VOZ: "${s.voz}"\n🖼️ VISUAL: ${s.visual}\n${
-              s.tip ? `💡 TIP: ${s.tip}\n` : ''
+            `[PASO ${i + 1} · ${s.second}s]\n VOZ: "${s.voz}"\n VISUAL: ${s.visual}\n${
+              s.tip ? ` TIP: ${s.tip}\n` : ''
             }`
         )
         .join('\n') +
       `────────────────────────────────────────\n` +
-      `🏷️ HASHTAGS VIRALES:\n${scriptData.hashtags}\n\n` +
-      `📌 OBSERVATORIO HELIOX · Creado por JESÚS BARRIOS · Monitoreo Solar 24/7`
+      ` HASHTAGS VIRALES:\n${scriptData.hashtags}\n\n` +
+      ` OBSERVATORIO HELIOX · Creado por JESÚS BARRIOS · Monitoreo Solar 24/7`
 
     copyToClipboard(text, 'full')
   }
@@ -200,7 +200,7 @@ export default function ReelsMediaPage() {
   const copyCurrentSlide = () => {
     if (!scriptData?.slides || !scriptData.slides[currentSlideIndex]) return
     const s = scriptData.slides[currentSlideIndex]
-    const text = `[Paso ${currentSlideIndex + 1} · Segundo ${s.second}s]\n🗣️ VOZ: "${s.voz}"\n🖼️ VISUAL: ${s.visual}`
+    const text = `[Paso ${currentSlideIndex + 1} · Segundo ${s.second}s]\n VOZ: "${s.voz}"\n VISUAL: ${s.visual}`
     copyToClipboard(text, 'slide')
   }
 
@@ -239,9 +239,9 @@ export default function ReelsMediaPage() {
   const downloadScriptFile = () => {
     if (!scriptData) return
     const text =
-      `🎬 TÍTULO: ${scriptData.title}\n⏱️ DURACIÓN: ${scriptData.duration_seconds}s\nPLATAFORMA: ${platform.toUpperCase()}\nFECHA: ${new Date().toISOString()}\n\n` +
-      scriptData.slides.map((s: any) => `[Segundo ${s.second}s]\n🗣️ VOZ EN OFF: "${s.voz}"\n🖼️ EN PANTALLA: ${s.visual}\n`).join('\n') +
-      `\n🏷️ HASHTAGS:\n${scriptData.hashtags}\n\n📌 INVESTIGADOR: JESÚS BARRIOS · HELIOX Solar Observatory\nURL: https://heliox-observatory.vercel.app/reels`
+      ` TÍTULO: ${scriptData.title}\n DURACIÓN: ${scriptData.duration_seconds}s\nPLATAFORMA: ${platform.toUpperCase()}\nFECHA: ${new Date().toISOString()}\n\n` +
+      scriptData.slides.map((s: any) => `[Segundo ${s.second}s]\n VOZ EN OFF: "${s.voz}"\n EN PANTALLA: ${s.visual}\n`).join('\n') +
+      `\n HASHTAGS:\n${scriptData.hashtags}\n\n INVESTIGADOR: JESÚS BARRIOS · HELIOX Solar Observatory\nURL: https://heliox-observatory.vercel.app/reels`
 
     const blob = new Blob([text], { type: 'text/plain;charset=utf-8' })
     const url = URL.createObjectURL(blob)
@@ -345,9 +345,9 @@ export default function ReelsMediaPage() {
               </label>
               <div className="grid grid-cols-3 gap-2">
                 {[
-                  { id: 'tiktok', label: 'TikTok', icon: '🎵', badge: '15-35s' },
-                  { id: 'reels', label: 'Reels', icon: '📸', badge: '30-45s' },
-                  { id: 'shorts', label: 'Shorts', icon: '▶️', badge: '40-60s' },
+                  { id: 'tiktok', label: 'TikTok', icon: '', badge: '15-35s' },
+                  { id: 'reels', label: 'Reels', icon: '', badge: '30-45s' },
+                  { id: 'shorts', label: 'Shorts', icon: '', badge: '40-60s' },
                 ].map((p) => (
                   <button
                     key={p.id}
@@ -370,7 +370,7 @@ export default function ReelsMediaPage() {
             <div className="p-5 rounded-3xl bg-white/[0.02] border border-white/10 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono font-bold text-orange-400 flex items-center gap-1.5 uppercase">
-                  <span>📹 Metraje NASA de Fondo</span>
+                  <span> Metraje NASA de Fondo</span>
                 </span>
                 <span className="text-[10px] font-mono text-white/40">
                   ID: {activeTopicInfo.videoId}
@@ -400,7 +400,7 @@ export default function ReelsMediaPage() {
                       className="absolute inset-0 m-auto w-14 h-14 rounded-full bg-gradient-to-tr from-orange-500 to-amber-500 text-black flex items-center justify-center text-xl shadow-xl shadow-orange-500/40 hover:scale-110 transition-all z-20"
                       aria-label="Reproducir video de fondo"
                     >
-                      ▶
+                      
                     </button>
 
                     <div className="absolute bottom-2.5 left-3 right-3 text-[11px] font-mono text-white/90 truncate">
@@ -434,8 +434,8 @@ export default function ReelsMediaPage() {
                 >
                   <span>
                     {copiedType === 'full'
-                      ? '✅ ¡Guion Completo Copiado!'
-                      : '📋 Copiar Guion Completo (Teleprompter)'}
+                      ? ' ¡Guion Completo Copiado!'
+                      : ' Copiar Guion Completo (Teleprompter)'}
                   </span>
                 </button>
 
@@ -446,7 +446,7 @@ export default function ReelsMediaPage() {
                     className="py-2.5 px-3 rounded-xl font-semibold text-[11px] font-mono flex items-center justify-center gap-1.5 bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 transition-all"
                     title="Copia únicamente los textos de voz en off listos para pegar en ElevenLabs o CapCut TTS"
                   >
-                    <span>{copiedType === 'voice' ? '✅ ¡Copiado!' : '🗣️ Solo Voz (TTS)'}</span>
+                    <span>{copiedType === 'voice' ? ' ¡Copiado!' : ' Solo Voz (TTS)'}</span>
                   </button>
 
                   <button
@@ -455,7 +455,7 @@ export default function ReelsMediaPage() {
                     className="py-2.5 px-3 rounded-xl font-semibold text-[11px] font-mono flex items-center justify-center gap-1.5 bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 transition-all"
                     title="Copia el paso actual seleccionado en pantalla"
                   >
-                    <span>{copiedType === 'slide' ? '✅ ¡Copiado!' : '📝 Copiar Paso Actual'}</span>
+                    <span>{copiedType === 'slide' ? ' ¡Copiado!' : ' Copiar Paso Actual'}</span>
                   </button>
                 </div>
 
@@ -463,17 +463,17 @@ export default function ReelsMediaPage() {
                   onClick={() => fetchScript(platform, topic)}
                   className="w-full py-2 px-3 rounded-xl font-semibold text-[11px] font-mono flex items-center justify-center gap-2 bg-pink-500/10 hover:bg-pink-500/20 border border-pink-500/30 text-pink-300 transition-all"
                 >
-                  <span>🔄 Regenerar con Telemetría Actual de NASA</span>
+                  <span> Regenerar con Telemetría Actual de NASA</span>
                 </button>
               </div>
 
               <div className="pt-3 border-t border-white/5 text-[11px] text-white/40 space-y-1">
                 <div className="flex justify-between">
-                  <span>⏱️ Tiempo Estimado:</span>
+                  <span> Tiempo Estimado:</span>
                   <span className="text-white font-mono">{scriptData?.duration_seconds || 45}s</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>🎯 Tasa de Retención:</span>
+                  <span> Tasa de Retención:</span>
                   <span className="text-emerald-400 font-mono font-bold">~86% (Hooks Optimizados)</span>
                 </div>
               </div>
@@ -495,7 +495,7 @@ export default function ReelsMediaPage() {
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <span className="text-[10px] font-mono text-pink-400 uppercase font-bold tracking-widest bg-pink-500/10 px-2 py-0.5 rounded border border-pink-500/20">
-                          🎬 {platform.toUpperCase()} · {topic.toUpperCase()}
+                           {platform.toUpperCase()} · {topic.toUpperCase()}
                         </span>
                         <span className="text-[10px] font-mono text-white/40">
                           {scriptData.target_audience}
@@ -508,7 +508,7 @@ export default function ReelsMediaPage() {
 
                     <div className="shrink-0 flex items-center gap-2">
                       <span className="text-xs font-mono px-3 py-1 rounded-full bg-pink-500/20 border border-pink-500/40 text-pink-300 font-bold">
-                        ⏱️ {scriptData.duration_seconds}s
+                         {scriptData.duration_seconds}s
                       </span>
                     </div>
                   </div>
@@ -524,7 +524,7 @@ export default function ReelsMediaPage() {
                           className="px-3 py-1.5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed text-xs font-mono font-bold flex items-center gap-1 transition-all"
                           title="Slide Anterior"
                         >
-                          ◀ <span>Anterior</span>
+                           <span>Anterior</span>
                         </button>
                         <span className="text-xs font-mono text-pink-300 font-bold px-2">
                           Paso {currentSlideIndex + 1} de {scriptData.slides.length}
@@ -535,7 +535,7 @@ export default function ReelsMediaPage() {
                           className="px-3 py-1.5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed text-xs font-mono font-bold flex items-center gap-1 transition-all"
                           title="Slide Siguiente"
                         >
-                          <span>Siguiente</span> ▶
+                          <span>Siguiente</span> 
                         </button>
                       </div>
 
@@ -548,7 +548,7 @@ export default function ReelsMediaPage() {
                             : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/30'
                         }`}
                       >
-                        <span>{isTeleprompterRunning ? '⏸️ Pausar Teleprompter' : '▶ Reproducir Teleprompter'}</span>
+                        <span>{isTeleprompterRunning ? ' Pausar Teleprompter' : ' Reproducir Teleprompter'}</span>
                         <span className="font-mono text-[10px] bg-black/40 px-1.5 py-0.5 rounded">
                           {teleprompterSeconds}s / {scriptData.duration_seconds}s
                         </span>
@@ -610,13 +610,13 @@ export default function ReelsMediaPage() {
                           </span>
                         </div>
                         <span className="text-xs font-mono text-orange-400 font-bold bg-orange-500/10 px-2.5 py-1 rounded-lg border border-orange-500/20">
-                          ⏱️ Segundo {scriptData.slides[currentSlideIndex].second}s
+                           Segundo {scriptData.slides[currentSlideIndex].second}s
                         </span>
                       </div>
 
                       <div className="space-y-2">
                         <span className="text-xs font-mono font-bold text-white/50 uppercase tracking-wider block">
-                          🗣️ Voz en Off (Lee esto):
+                           Voz en Off (Lee esto):
                         </span>
                         <p className="text-base sm:text-xl font-bold text-white leading-relaxed select-all">
                           &quot;{scriptData.slides[currentSlideIndex].voz}&quot;
@@ -625,7 +625,7 @@ export default function ReelsMediaPage() {
 
                       <div className="p-3.5 rounded-2xl bg-black/50 border border-white/10 space-y-1">
                         <span className="text-[11px] font-mono text-white/50 uppercase block">
-                          🖼️ Indicación Visual / Metraje:
+                           Indicación Visual / Metraje:
                         </span>
                         <p className="text-xs sm:text-sm text-white/80 italic leading-snug">
                           {scriptData.slides[currentSlideIndex].visual}
@@ -634,7 +634,7 @@ export default function ReelsMediaPage() {
 
                       {scriptData.slides[currentSlideIndex].tip && (
                         <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] font-mono text-amber-300 flex items-center gap-2">
-                          <span>💡</span>
+                          <span></span>
                           <span>{scriptData.slides[currentSlideIndex].tip}</span>
                         </div>
                       )}
@@ -673,16 +673,16 @@ export default function ReelsMediaPage() {
                               Segundo {slide.second}s · Paso {idx + 1}
                             </span>
                             <span className="text-[10px] text-white/40 font-mono">
-                              {isSelected ? '🎯 Seleccionado' : 'Toca para enfocar'}
+                              {isSelected ? ' Seleccionado' : 'Toca para enfocar'}
                             </span>
                           </div>
 
                           <div className="text-xs sm:text-sm font-semibold text-white leading-relaxed">
-                            🗣️ <strong className="text-white/60">Voz:</strong> &quot;{slide.voz}&quot;
+                             <strong className="text-white/60">Voz:</strong> &quot;{slide.voz}&quot;
                           </div>
 
                           <div className="text-xs text-white/50 italic">
-                            🖼️ <strong className="text-white/40 not-italic">Visual:</strong> {slide.visual}
+                             <strong className="text-white/40 not-italic">Visual:</strong> {slide.visual}
                           </div>
                         </div>
                       )

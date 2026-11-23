@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useI18n } from '../lib/i18n'
+import { FlameIcon } from './ui/Icons'
 
 export default function SolarPeakAlert() {
   const { lang } = useI18n()
@@ -19,8 +20,8 @@ export default function SolarPeakAlert() {
 
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative z-10">
         <div className="flex items-start sm:items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-red-500/20 border border-red-500/40 flex items-center justify-center text-xl shrink-0 animate-pulse">
-            🔥
+          <div className="w-10 h-10 rounded-2xl bg-red-500/20 border border-red-500/40 flex items-center justify-center shrink-0">
+            <FlameIcon size={22} className="text-red-400 animate-pulse" />
           </div>
           <div>
             <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-300 text-[11px] font-mono font-bold mb-1 border border-red-500/30">

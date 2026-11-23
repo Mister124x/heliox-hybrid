@@ -90,7 +90,7 @@ export default function StormsPage() {
           <div className="p-5 rounded-3xl bg-white/[0.02] border border-orange-500/30">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-mono font-bold text-orange-400">ESCALA G (G1 – G5)</span>
-              <span className="text-lg">🌍</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
             </div>
             <h3 className="font-bold text-sm text-white mb-1">Tormentas Geomagnéticas</h3>
             <p className="text-xs text-white/50 leading-relaxed">
@@ -101,7 +101,7 @@ export default function StormsPage() {
           <div className="p-5 rounded-3xl bg-white/[0.02] border border-red-500/30">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-mono font-bold text-red-400">ESCALA S (S1 – S5)</span>
-              <span className="text-lg">⚛️</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-400"><circle cx="12" cy="12" r="2" fill="currentColor"/><ellipse cx="12" cy="12" rx="9" ry="3.5" transform="rotate(30 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.5" transform="rotate(-30 12 12)"/></svg>
             </div>
             <h3 className="font-bold text-sm text-white mb-1">Radiación Solar (Protones)</h3>
             <p className="text-xs text-white/50 leading-relaxed">
@@ -112,7 +112,7 @@ export default function StormsPage() {
           <div className="p-5 rounded-3xl bg-white/[0.02] border border-blue-500/30">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-mono font-bold text-blue-400">ESCALA R (R1 – R5)</span>
-              <span className="text-lg">📡</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4.93 4.93a10 10 0 0 1 14.14 0M7.76 7.76a6 6 0 0 1 8.48 0"/><circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M12 14v8M8 22h8"/></svg>
             </div>
             <h3 className="font-bold text-sm text-white mb-1">Bloqueos de Radio HF</h3>
             <p className="text-xs text-white/50 leading-relaxed">
@@ -161,7 +161,7 @@ export default function StormsPage() {
             {(filterType === 'all' || filterType === 'flare') && flares.length > 0 && (
               <div>
                 <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                  <span>⚡</span> {isEn ? 'Solar Flares (GOES X-ray Detectors)' : 'Llamaradas Solares (Detectores GOES)'}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> {isEn ? 'Solar Flares (GOES X-ray Detectors)' : 'Llamaradas Solares (Detectores GOES)'}
                 </h3>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {flares.map((f, i) => (
@@ -181,7 +181,7 @@ export default function StormsPage() {
             {(filterType === 'all' || filterType === 'cme') && cmes.length > 0 && (
               <div>
                 <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                  <span>💥</span> {isEn ? 'Coronal Mass Ejections (SOHO LASCO Radar)' : 'Eyecciones de Masa Coronal (Radar SOHO LASCO)'}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> {isEn ? 'Coronal Mass Ejections (SOHO LASCO Radar)' : 'Eyecciones de Masa Coronal (Radar SOHO LASCO)'}
                 </h3>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {cmes.map((c, i) => (
@@ -201,7 +201,7 @@ export default function StormsPage() {
             {(filterType === 'all' || filterType === 'geomag') && geomag.length > 0 && (
               <div>
                 <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                  <span>🧲</span> {isEn ? 'Geomagnetic Storm Intervals (Planetary Kp Index)' : 'Tormentas Geomagnéticas Registradas'}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a9 9 0 0 0-9 9h18a9 9 0 0 0-9-9z"/><circle cx="12" cy="12" r="2"/></svg> {isEn ? 'Geomagnetic Storm Intervals (Planetary Kp Index)' : 'Tormentas Geomagnéticas Registradas'}
                 </h3>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {geomag.map((g, i) => (

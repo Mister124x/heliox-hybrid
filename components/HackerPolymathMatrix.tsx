@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useI18n } from '../lib/i18n'
+import { WaveIcon, FlareIcon, AtomIcon, GlobeGridIcon, RadioTowerIcon, SatelliteIcon } from './ui/Icons'
 
 interface HeliophysicsMetrics {
   speed_km_s: number
@@ -76,25 +77,29 @@ export default function HackerPolymathMatrix({
       {/* ─── Pestañas de Métricas Avanzadas ────────────────────────────── */}
       <div className="flex flex-wrap gap-2">
         {[
-          { id: 'alfven', label: '⚡ Velocidad de Alfvén (v_A)', icon: '🌊' },
-          { id: 'beta', label: '🔥 Plasma Beta (β_p)', icon: '⚛️' },
-          { id: 'schumann', label: '🌍 Resonancias de Schumann', icon: '📡' },
-          { id: 'drap', label: '📻 Absorción HF (D-RAP)', icon: '📶' },
-          { id: 'fleet', label: '🛰️ Flota Espacio Profundo', icon: '🚀' },
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveMetricTab(tab.id as any)}
-            className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold border transition-all flex items-center gap-1.5 ${
-              activeMetricTab === tab.id
-                ? 'bg-emerald-500 text-black border-emerald-400 shadow-lg shadow-emerald-500/25'
-                : 'bg-white/5 text-white/60 border-white/10 hover:text-white'
-            }`}
-          >
-            <span>{tab.icon}</span>
-            <span>{tab.label}</span>
-          </button>
-        ))}
+          { id: 'alfven', label: 'Velocidad de Alfvén (v_A)', icon: WaveIcon, color: 'text-cyan-400' },
+          { id: 'beta', label: 'Plasma Beta (β_p)', icon: AtomIcon, color: 'text-amber-400' },
+          { id: 'schumann', label: 'Resonancias de Schumann', icon: GlobeGridIcon, color: 'text-emerald-400' },
+          { id: 'drap', label: 'Absorción HF (D-RAP)', icon: RadioTowerIcon, color: 'text-blue-400' },
+          { id: 'fleet', label: 'Flota Espacio Profundo', icon: SatelliteIcon, color: 'text-purple-400' },
+        ].map((tab) => {
+          const TabIcon = tab.icon
+          const isActive = activeMetricTab === tab.id
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveMetricTab(tab.id as any)}
+              className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold border transition-all flex items-center gap-2 cursor-pointer ${
+                isActive
+                  ? 'bg-emerald-500 text-black border-emerald-400 shadow-lg shadow-emerald-500/25'
+                  : 'bg-white/5 text-white/60 border-white/10 hover:text-white'
+              }`}
+            >
+              <TabIcon size={14} className={isActive ? 'text-black' : tab.color} />
+              <span>{tab.label}</span>
+            </button>
+          )
+        })}
       </div>
 
       {/* ─── Panel Detallado de la Métrica Activa ───────────────────────── */}

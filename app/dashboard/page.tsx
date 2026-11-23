@@ -15,6 +15,7 @@ import AlertTicker from '../../components/AlertTicker'
 
 import { fetchLiveSolarData, SolarSummary } from '../../lib/solarClient'
 import { useI18n } from '../../lib/i18n'
+import { ResetIcon, FlareIcon, AtomIcon } from '../../components/ui/Icons'
 
 export default function DashboardPage() {
   const { t, lang } = useI18n()
@@ -111,9 +112,9 @@ export default function DashboardPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => loadData(true)}
-              className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs text-white/80 font-mono flex items-center gap-2 transition-all"
+              className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs text-white/80 font-mono flex items-center gap-2 transition-all cursor-pointer"
             >
-              <span className={refreshing ? 'animate-spin' : ''}>🔄</span>
+              <ResetIcon size={13} className={refreshing ? 'animate-spin text-cyan-400' : 'text-cyan-400'} />
               <span>{isEn ? 'Refresh' : 'Actualizar'} ({countdown}s)</span>
             </button>
             <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-3.5 py-2 rounded-xl text-xs font-mono text-emerald-400">
@@ -132,14 +133,14 @@ export default function DashboardPage() {
           <div className="p-5 rounded-3xl bg-white/[0.02] border border-white/10 hover:border-orange-500/40 transition-all">
             <div className="text-xs text-white/50 mb-1 flex items-center justify-between font-mono">
               <span>SOLAR WIND SPEED</span>
-              <span>🚀</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 7l4-4 4 4-4 4"/><path d="M15 9l-6 6"/><path d="M9 15l-4 4-2-2 4-4"/><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="17" y="17" width="5" height="5" rx="1"/></svg>
             </div>
             <div className="text-3xl sm:text-4xl font-mono font-black text-orange-400 tracking-tight">
               {solarWind.speed_km_s ? `${solarWind.speed_km_s.toFixed(0)}` : '438'} <span className="text-xs text-white/40 font-normal">km/s</span>
             </div>
             <div className="mt-2 text-[11px] text-white/50">
               {solarWind.speed_km_s > 600
-                ? '⚡ Viento Solar Rápido (Coronal Hole Stream)'
+                ? 'Viento Solar Rápido (Coronal Hole Stream)'
                 : 'Viento Solar Nominal Interplanetario'}
             </div>
           </div>
@@ -148,13 +149,13 @@ export default function DashboardPage() {
           <div className="p-5 rounded-3xl bg-white/[0.02] border border-white/10 hover:border-white/20 transition-all">
             <div className="text-xs text-white/50 mb-1 flex items-center justify-between font-mono">
               <span>IMF VECTOR (Bz)</span>
-              <span>🧲</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a9 9 0 0 0-9 9h18a9 9 0 0 0-9-9z"/><path d="M3 11h18M3 13h18"/><circle cx="12" cy="12" r="2"/></svg>
             </div>
             <div className={`text-3xl sm:text-4xl font-mono font-black tracking-tight ${solarWind.bz_nT < -5 ? 'text-red-400' : 'text-emerald-400'}`}>
               {solarWind.bz_nT !== undefined ? `${solarWind.bz_nT.toFixed(1)}` : '-1.8'} <span className="text-xs text-white/40 font-normal">nT</span>
             </div>
             <div className="mt-2 text-[11px] text-white/50">
-              {solarWind.bz_nT < -5 ? '⚠️ Reconexión Magnética Sur' : '✅ Acoplamiento Seguro Norte'}
+              {solarWind.bz_nT < -5 ? '[ALERT] Reconexión Magnética Sur' : '[OK] Acoplamiento Seguro Norte'}
             </div>
           </div>
 
@@ -162,7 +163,7 @@ export default function DashboardPage() {
           <div className="p-5 rounded-3xl bg-white/[0.02] border border-white/10 hover:border-blue-400/40 transition-all">
             <div className="text-xs text-white/50 mb-1 flex items-center justify-between font-mono">
               <span>GOES X-RAY FLUX</span>
-              <span>⚡</span>
+              <FlareIcon size={14} className="text-blue-400" />
             </div>
             <div className="text-3xl sm:text-4xl font-mono font-black text-blue-400 tracking-tight">
               {xray.class || 'C1.4'}
@@ -176,7 +177,7 @@ export default function DashboardPage() {
           <div className="p-5 rounded-3xl bg-white/[0.02] border border-white/10 hover:border-emerald-400/40 transition-all">
             <div className="text-xs text-white/50 mb-1 flex items-center justify-between font-mono">
               <span>PROTON DENSITY</span>
-              <span>⚛️</span>
+              <AtomIcon size={14} className="text-emerald-400" />
             </div>
             <div className="text-3xl sm:text-4xl font-mono font-black text-white tracking-tight">
               {solarWind.density_p_cm3 ? `${solarWind.density_p_cm3.toFixed(1)}` : '5.2'} <span className="text-xs text-white/40 font-normal">p/cm³</span>
@@ -247,7 +248,7 @@ export default function DashboardPage() {
         <div className="my-8">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <span>🚨</span> {isEn ? 'Recent Flares & Space Weather Bulletins' : 'Llamaradas y Boletines Recientes'}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> {isEn ? 'Recent Flares & Space Weather Bulletins' : 'Llamaradas y Boletines Recientes'}
             </h2>
             <Link href="/storms" className="text-xs text-orange-400 hover:underline font-mono font-bold">
               {isEn ? 'Storm Tracker →' : 'Rastreador de Tormentas →'}

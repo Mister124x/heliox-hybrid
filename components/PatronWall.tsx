@@ -133,7 +133,7 @@ export default function PatronWall() {
           href="/#donations"
           className="solar-btn text-xs sm:text-sm py-2.5 px-5 self-start md:self-auto font-bold flex items-center gap-2 active:scale-95 transition-all shadow-lg shadow-emerald-500/20"
         >
-          <span>💖</span>
+          <span></span>
           <span>{isEn ? 'Become a Patron' : 'Quiero Apoyar el Proyecto'}</span>
         </Link>
       </div>
@@ -142,7 +142,7 @@ export default function PatronWall() {
       <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 mb-6 space-y-2 relative z-10">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs font-mono gap-1">
           <span className="text-white/70">
-            🎯 <strong>Meta de Servidores & Telemetría Satelital:</strong> ${currentGoalCOP.toLocaleString('es-CO')} / ${targetGoalCOP.toLocaleString('es-CO')} COP
+             <strong>Meta de Servidores & Telemetría Satelital:</strong> ${currentGoalCOP.toLocaleString('es-CO')} / ${targetGoalCOP.toLocaleString('es-CO')} COP
           </span>
           <span className="text-emerald-400 font-bold">
             {progressPercent}% Financiado este mes
@@ -182,7 +182,7 @@ export default function PatronWall() {
               : 'bg-white/5 text-white/60 border-white/10 hover:text-white hover:bg-white/10'
           }`}
         >
-          📱 Nequi / Daviplata / Bancolombia
+           Nequi / Daviplata / Bancolombia
         </button>
         <button
           type="button"
@@ -193,7 +193,7 @@ export default function PatronWall() {
               : 'bg-white/5 text-white/60 border-white/10 hover:text-white hover:bg-white/10'
           }`}
         >
-          🌐 PayPal (Internacional)
+           PayPal (Internacional)
         </button>
       </div>
 
@@ -220,7 +220,7 @@ export default function PatronWall() {
               </div>
 
               <div className="text-[11px] text-white/50 mb-2 truncate">
-                📍 {patron.location}
+                 {patron.location}
               </div>
 
               <p className="text-xs text-white/80 italic leading-relaxed bg-white/[0.02] p-2.5 rounded-xl border border-white/5">
@@ -230,10 +230,10 @@ export default function PatronWall() {
 
             <div className="flex items-center justify-between pt-2 border-t border-white/10 text-xs font-mono mt-2">
               <span className="text-[10px] uppercase text-white/40">
-                {patron.method === 'nequi' && '🟣 Nequi'}
-                {patron.method === 'daviplata' && '🔴 Daviplata'}
-                {patron.method === 'bancolombia' && '🟡 Bancolombia'}
-                {patron.method === 'paypal' && '🔵 PayPal'}
+                {patron.method === 'nequi' && ' Nequi'}
+                {patron.method === 'daviplata' && ' Daviplata'}
+                {patron.method === 'bancolombia' && ' Bancolombia'}
+                {patron.method === 'paypal' && ' PayPal'}
               </span>
               <span className="font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
                 {patron.amount}
@@ -245,7 +245,7 @@ export default function PatronWall() {
 
       {/* Nota de verificación */}
       <div className="mt-6 text-center text-xs text-white/40 font-mono relative z-10">
-        🔒 Todas las donaciones a Nequi (<strong className="text-white">3245884678</strong>), Bancolombia (<strong className="text-white">488474988372</strong>) y PayPal (<strong className="text-white">@JesusBarriosGiraldo</strong>) son procesadas de forma segura y directa a nombre de JESÚS BARRIOS.
+         Todas las donaciones a Nequi (<strong className="text-white">3245884678</strong>), Bancolombia (<strong className="text-white">488474988372</strong>) y PayPal (<strong className="text-white">@JesusBarriosGiraldo</strong>) son procesadas de forma segura y directa a nombre de JESÚS BARRIOS.
       </div>
     </div>
   )

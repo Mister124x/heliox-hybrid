@@ -39,7 +39,7 @@ export default function PrivacyPage() {
       <main className="max-w-4xl mx-auto px-4 py-16">
         {/* Badge */}
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-400 text-sm font-semibold mb-6">
-          🔒 Documento Legal Oficial
+           Documento Legal Oficial
         </div>
 
         <h1 className="text-4xl sm:text-5xl font-black text-white mb-4 leading-tight">
@@ -83,22 +83,22 @@ export default function PrivacyPage() {
               <div className="space-y-3">
                 {[
                   {
-                    icon: '📊',
+                    icon: '',
                     title: 'Datos de Uso Anónimo',
                     desc: 'Páginas visitadas, duración de la sesión, dispositivo y navegador. Estos datos son completamente anónimos y no permiten identificar a un usuario específico. Se recopilan mediante Vercel Analytics.',
                   },
                   {
-                    icon: '🍪',
+                    icon: '',
                     title: 'Cookies de Preferencia',
                     desc: 'Almacenamos el idioma seleccionado por el usuario (localStorage) para recordar su preferencia de idioma entre visitas.',
                   },
                   {
-                    icon: '💰',
+                    icon: '',
                     title: 'Cookies de Publicidad (Google AdSense)',
                     desc: 'Google AdSense puede utilizar cookies para mostrar anuncios relevantes. Estas cookies pertenecen a Google LLC y están sujetas a la Política de Privacidad de Google.',
                   },
                   {
-                    icon: '⚡',
+                    icon: '',
                     title: 'Datos Técnicos de Telemetría',
                     desc: 'Las solicitudes a APIs de NASA, NOAA y ESA se realizan en el servidor de forma anónima. No se almacenan IPs de usuarios al hacer consultas de datos científicos.',
                   },
@@ -225,12 +225,12 @@ export default function PrivacyPage() {
             </p>
             <div className="grid sm:grid-cols-2 gap-3 text-sm">
               {[
-                { icon: '📋', right: 'Acceso', desc: 'Conocer qué datos tenemos sobre usted.' },
-                { icon: '✏️', right: 'Rectificación', desc: 'Corregir datos incorrectos.' },
-                { icon: '🗑️', right: 'Supresión', desc: 'Solicitar la eliminación de sus datos.' },
-                { icon: '⛔', right: 'Oposición', desc: 'Oponerse al tratamiento de sus datos.' },
-                { icon: '📦', right: 'Portabilidad', desc: 'Recibir sus datos en formato estructurado.' },
-                { icon: '🔒', right: 'Limitación', desc: 'Limitar el tratamiento de sus datos.' },
+                { icon: '', right: 'Acceso', desc: 'Conocer qué datos tenemos sobre usted.' },
+                { icon: '', right: 'Rectificación', desc: 'Corregir datos incorrectos.' },
+                { icon: '', right: 'Supresión', desc: 'Solicitar la eliminación de sus datos.' },
+                { icon: '', right: 'Oposición', desc: 'Oponerse al tratamiento de sus datos.' },
+                { icon: '', right: 'Portabilidad', desc: 'Recibir sus datos en formato estructurado.' },
+                { icon: '', right: 'Limitación', desc: 'Limitar el tratamiento de sus datos.' },
               ].map((item) => (
                 <div key={item.right} className="flex gap-3 p-3 bg-white/[0.02] rounded-lg border border-white/5">
                   <span>{item.icon}</span>
@@ -309,10 +309,10 @@ export default function PrivacyPage() {
             </p>
             <ul className="mt-3 space-y-1 text-sm text-white/60 list-none">
               {[
-                '🔒 Conexión HTTPS/TLS en todas las comunicaciones',
-                '🛡️ Headers de seguridad (HSTS, X-Content-Type-Options)',
-                '⚡ Despliegue en infraestructura Vercel con SOC 2 Type II',
-                '🔐 Sin almacenamiento de contraseñas ni datos de pago propios',
+                ' Conexión HTTPS/TLS en todas las comunicaciones',
+                ' Headers de seguridad (HSTS, X-Content-Type-Options)',
+                ' Despliegue en infraestructura Vercel con SOC 2 Type II',
+                ' Sin almacenamiento de contraseñas ni datos de pago propios',
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2">
                   <span>{item}</span>
@@ -345,19 +345,19 @@ export default function PrivacyPage() {
             </p>
             <div className="space-y-2 text-sm">
               <div className="flex items-center gap-3 p-3 bg-black/30 rounded-xl">
-                <span>📧</span>
+                <span></span>
                 <a href={`mailto:${CONTACT_EMAIL}`} className="text-orange-400 hover:underline font-mono">
                   {CONTACT_EMAIL}
                 </a>
               </div>
               <div className="flex items-center gap-3 p-3 bg-black/30 rounded-xl">
-                <span>🌐</span>
+                <span></span>
                 <a href={SITE_URL} className="text-orange-400 hover:underline font-mono">
                   {SITE_URL}
                 </a>
               </div>
               <div className="flex items-center gap-3 p-3 bg-black/30 rounded-xl">
-                <span>👨‍💻</span>
+                <span>‍</span>
                 <span className="text-white/70">Responsable: <strong className="text-white">JESÚS BARRIOS</strong> · Colombia</span>
               </div>
             </div>

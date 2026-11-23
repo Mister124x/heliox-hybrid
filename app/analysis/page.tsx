@@ -46,7 +46,7 @@ function useGovData() {
             noaa_goes_protons: {
               name: 'GOES Integral Solar Energetic Protons (SEP)',
               endpoint: 'https://services.swpc.noaa.gov/json/goes/primary/integral-protons-1-day.json',
-              status: '✅ Real-Time Proton Channel Active',
+              status: ' Real-Time Proton Channel Active',
             },
             nasa_donki_alerts: {
               name: 'NASA DONKI – Space Weather Alerts',
@@ -56,7 +56,7 @@ function useGovData() {
             usgs_geomagnetism: {
               name: 'USGS Geomagnetism National Program',
               endpoint: 'https://geomag.usgs.gov/ws/data/',
-              status: '✅ Active Terrestrial Monitoring Node',
+              status: ' Active Terrestrial Monitoring Node',
             },
           },
         })
@@ -129,12 +129,12 @@ export default function AnalysisPage() {
   }
 
   const CHAPTERS = [
-    { id: 'fundacional' as ChapterId, label: isEn ? '1. Manifesto & Mission' : isPt ? '1. Manifesto & Missão' : '1. Manifiesto & Misión', icon: '☀️', readTime: '3 min', color: 'from-orange-500 to-yellow-500' },
-    { id: 'ciclo25'    as ChapterId, label: isEn ? '2. Solar Cycle 25 Peak' : isPt ? '2. Máximo do Ciclo 25' : '2. Ciclo Solar 25', icon: '📈', readTime: '4 min', color: 'from-amber-500 to-orange-500' },
-    { id: 'carrington' as ChapterId, label: isEn ? '3. Carrington Risk ($2.6T)' : isPt ? '3. Risco Carrington' : '3. El Riesgo Carrington', icon: '⚡', readTime: '4 min', color: 'from-red-500 to-orange-500' },
-    { id: 'apis_gobierno' as ChapterId, label: isEn ? '4. Govt APIs (NASA/NOAA)' : isPt ? '4. APIs Governamentais' : '4. APIs del Gobierno', icon: '🏛️', readTime: '5 min', color: 'from-emerald-500 to-teal-500' },
-    { id: 'geopolitica' as ChapterId, label: isEn ? '5. Space Geopolitics' : isPt ? '5. Geopolítica Espacial' : '5. Perspectiva Geopolítica', icon: '🌐', readTime: '3 min', color: 'from-blue-500 to-indigo-500' },
-    { id: 'nasa_letter' as ChapterId, label: isEn ? '6. Open Letter to NASA' : isPt ? '6. Carta à NASA' : '6. Carta a la NASA', icon: '✉️', readTime: '2 min', color: 'from-purple-500 to-violet-500' },
+    { id: 'fundacional' as ChapterId, label: isEn ? '1. Manifesto & Mission' : isPt ? '1. Manifesto & Missão' : '1. Manifiesto & Misión', icon: '', readTime: '3 min', color: 'from-orange-500 to-yellow-500' },
+    { id: 'ciclo25'    as ChapterId, label: isEn ? '2. Solar Cycle 25 Peak' : isPt ? '2. Máximo do Ciclo 25' : '2. Ciclo Solar 25', icon: '', readTime: '4 min', color: 'from-amber-500 to-orange-500' },
+    { id: 'carrington' as ChapterId, label: isEn ? '3. Carrington Risk ($2.6T)' : isPt ? '3. Risco Carrington' : '3. El Riesgo Carrington', icon: '', readTime: '4 min', color: 'from-red-500 to-orange-500' },
+    { id: 'apis_gobierno' as ChapterId, label: isEn ? '4. Govt APIs (NASA/NOAA)' : isPt ? '4. APIs Governamentais' : '4. APIs del Gobierno', icon: '', readTime: '5 min', color: 'from-emerald-500 to-teal-500' },
+    { id: 'geopolitica' as ChapterId, label: isEn ? '5. Space Geopolitics' : isPt ? '5. Geopolítica Espacial' : '5. Perspectiva Geopolítica', icon: '', readTime: '3 min', color: 'from-blue-500 to-indigo-500' },
+    { id: 'nasa_letter' as ChapterId, label: isEn ? '6. Open Letter to NASA' : isPt ? '6. Carta à NASA' : '6. Carta a la NASA', icon: '', readTime: '2 min', color: 'from-purple-500 to-violet-500' },
   ]
 
   const activeChapter = CHAPTERS.find(c => c.id === activeTab)!
@@ -181,7 +181,7 @@ export default function AnalysisPage() {
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500/20 to-orange-600/20 border border-amber-500/50 text-amber-300 text-xs font-bold tracking-wide shadow-lg shadow-amber-500/10">
               <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-              🏆 #BuildHybridAI 2026 · Featured Demo · Google Firebase Hackathon
+               #BuildHybridAI 2026 · Featured Demo · Google Firebase Hackathon
               <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
             </div>
           </motion.div>
@@ -194,20 +194,20 @@ export default function AnalysisPage() {
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-orange-500/40 bg-orange-500/10 text-orange-300 text-xs font-semibold">
               <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" />
-              📄 {isEn ? 'Master Scientific Whitepaper · Government API Index v1.0' : 'Documento Científico Maestro · Índice de APIs del Gobierno v1.0'}
+               {isEn ? 'Master Scientific Whitepaper · Government API Index v1.0' : 'Documento Científico Maestro · Índice de APIs del Gobierno v1.0'}
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={copyCitation}
                 className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 text-xs text-white/70 font-mono flex items-center gap-1.5 transition-all"
               >
-                {copiedCitation ? '✅ ¡Copiado!' : '📖 Citar APA'}
+                {copiedCitation ? ' ¡Copiado!' : ' Citar APA'}
               </button>
               <button
                 onClick={() => window.print()}
                 className="px-3 py-1.5 rounded-lg bg-orange-500 hover:bg-orange-400 text-black text-xs font-bold font-mono transition-all"
               >
-                🖨️ PDF
+                 PDF
               </button>
             </div>
           </motion.div>
@@ -247,10 +247,10 @@ export default function AnalysisPage() {
             className="flex flex-wrap gap-4 text-xs text-white/40"
           >
             {[
-              { icon: '✍️', label: isEn ? 'Lead Author' : 'Investigador', value: 'JESÚS BARRIOS', highlight: true },
-              { icon: '⏱️', label: isEn ? 'Read Time' : 'Lectura', value: '12 min', highlight: false },
-              { icon: '📅', label: isEn ? 'Published' : 'Publicado', value: '2026', highlight: false },
-              { icon: '🔓', label: isEn ? 'License' : 'Licencia', value: 'CC BY 4.0 Open Science', highlight: false },
+              { icon: '', label: isEn ? 'Lead Author' : 'Investigador', value: 'JESÚS BARRIOS', highlight: true },
+              { icon: '', label: isEn ? 'Read Time' : 'Lectura', value: '12 min', highlight: false },
+              { icon: '', label: isEn ? 'Published' : 'Publicado', value: '2026', highlight: false },
+              { icon: '', label: isEn ? 'License' : 'Licencia', value: 'CC BY 4.0 Open Science', highlight: false },
             ].map(m => (
               <div key={m.label} className="flex items-center gap-1.5 bg-white/5 border border-white/10 rounded-full px-3 py-1.5">
                 <span>{m.icon}</span>
@@ -276,7 +276,7 @@ export default function AnalysisPage() {
             {/* Header sidebar */}
             <div className="flex items-center justify-between px-1 mb-4">
               <span className="text-xs font-bold uppercase tracking-widest text-orange-400">
-                {isEn ? 'Chapter Directory' : '📚 Índice'}
+                {isEn ? 'Chapter Directory' : ' Índice'}
               </span>
               <span className="text-[10px] font-mono bg-white/5 border border-white/10 text-white/40 px-2 py-0.5 rounded-full">
                 6 Docs
@@ -434,8 +434,8 @@ export default function AnalysisPage() {
                       {/* Badges de misión */}
                       <div className="flex flex-wrap gap-2 pt-2">
                         {[
-                          '🌐 12 Idiomas', '📡 5 APIs del Gobierno', '⚡ Tiempo Real', '🔓 Open Science',
-                          isEn ? '📱 Mobile First' : '📱 Optimizado Móvil',
+                          ' 12 Idiomas', ' 5 APIs del Gobierno', ' Tiempo Real', ' Open Science',
+                          isEn ? ' Mobile First' : ' Optimizado Móvil',
                         ].map(badge => (
                           <span key={badge} className="text-xs px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/60">
                             {badge}
@@ -481,7 +481,7 @@ export default function AnalysisPage() {
                       </div>
 
                       <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-200/80 text-xs sm:text-sm">
-                        🚨 <strong>{isEn ? 'Critical Window 2025–2026:' : 'Ventana Crítica 2025–2026:'}</strong> {isEn ? 'Super-fast CMEs (>2,200 km/s) with direct Earth-facing trajectories are expected during the solar maximum peak.' : 'CMEs súper rápidas (>2,200 km/s) con dirección directa al hemisferio nocturno terrestre son esperadas durante el pico del máximo solar.'}
+                         <strong>{isEn ? 'Critical Window 2025–2026:' : 'Ventana Crítica 2025–2026:'}</strong> {isEn ? 'Super-fast CMEs (>2,200 km/s) with direct Earth-facing trajectories are expected during the solar maximum peak.' : 'CMEs súper rápidas (>2,200 km/s) con dirección directa al hemisferio nocturno terrestre son esperadas durante el pico del máximo solar.'}
                       </div>
                     </div>
                   )}
@@ -490,7 +490,7 @@ export default function AnalysisPage() {
                   {activeTab === 'carrington' && (
                     <div className="space-y-6">
                       <div className="flex items-center gap-3 p-4 rounded-2xl bg-red-950/40 border border-red-500/30">
-                        <span className="text-4xl">⚡</span>
+                        <span className="text-4xl"></span>
                         <div>
                           <div className="text-xs text-red-400 font-mono font-bold mb-1">ESCENARIO CATASTRÓFICO</div>
                           <div className="text-2xl font-black text-white">$2.6 Trillones USD</div>
@@ -504,9 +504,9 @@ export default function AnalysisPage() {
 
                       <div className="grid sm:grid-cols-3 gap-3">
                         {[
-                          { icon: '⚡', title: isEn ? 'Power Grids' : 'Redes Eléctricas', desc: isEn ? 'EHV transformers destroyed, 4-10 years to replace' : 'Transformadores EHV destruidos, 4-10 años de reemplazo', color: 'border-red-500/20 bg-red-500/5' },
-                          { icon: '📡', title: isEn ? 'Satellites' : 'Satélites', desc: isEn ? 'GPS, Starlink, telecom orbital decay acceleration' : 'GPS, Starlink, telecom — aceleración de reentrada orbital', color: 'border-orange-500/20 bg-orange-500/5' },
-                          { icon: '🌐', title: isEn ? 'Internet' : 'Internet', desc: isEn ? 'Undersea cable failure due to GIC currents' : 'Falla de cables submarinos por corrientes GIC', color: 'border-amber-500/20 bg-amber-500/5' },
+                          { icon: '', title: isEn ? 'Power Grids' : 'Redes Eléctricas', desc: isEn ? 'EHV transformers destroyed, 4-10 years to replace' : 'Transformadores EHV destruidos, 4-10 años de reemplazo', color: 'border-red-500/20 bg-red-500/5' },
+                          { icon: '', title: isEn ? 'Satellites' : 'Satélites', desc: isEn ? 'GPS, Starlink, telecom orbital decay acceleration' : 'GPS, Starlink, telecom — aceleración de reentrada orbital', color: 'border-orange-500/20 bg-orange-500/5' },
+                          { icon: '', title: isEn ? 'Internet' : 'Internet', desc: isEn ? 'Undersea cable failure due to GIC currents' : 'Falla de cables submarinos por corrientes GIC', color: 'border-amber-500/20 bg-amber-500/5' },
                         ].map(item => (
                           <motion.div key={item.title} whileHover={{ y: -3 }} className={`p-4 rounded-xl border ${item.color} transition-all`}>
                             <span className="text-2xl mb-2 block">{item.icon}</span>
@@ -517,7 +517,7 @@ export default function AnalysisPage() {
                       </div>
 
                       <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-xs sm:text-sm text-white/70">
-                        📚 <strong className="text-white">Fuente:</strong> {isEn ? 'National Academy of Sciences (NAS), "Severe Space Weather Events – Understanding Societal and Economic Impacts" (2008).' : 'Academia Nacional de Ciencias de EE.UU., "Severe Space Weather Events – Understanding Societal and Economic Impacts" (2008).'}
+                         <strong className="text-white">Fuente:</strong> {isEn ? 'National Academy of Sciences (NAS), "Severe Space Weather Events – Understanding Societal and Economic Impacts" (2008).' : 'Academia Nacional de Ciencias de EE.UU., "Severe Space Weather Events – Understanding Societal and Economic Impacts" (2008).'}
                       </div>
                     </div>
                   )}
@@ -534,10 +534,10 @@ export default function AnalysisPage() {
                       {/* Tabs de selección de API — estilo terminal */}
                       <div className="flex flex-wrap gap-2">
                         {([
-                          { id: 'noaa_solar_cycle' as const, label: '☀️ NOAA Solar Cycle 25', agency: 'NOAA' },
-                          { id: 'noaa_goes_protons' as const, label: '⚡ GOES Protons (SEP)', agency: 'NOAA' },
-                          { id: 'nasa_donki_alerts' as const, label: '🚨 NASA DONKI Alerts', agency: 'NASA' },
-                          { id: 'usgs_geomagnetism' as const, label: '🌍 USGS Geomagnetism', agency: 'USGS' },
+                          { id: 'noaa_solar_cycle' as const, label: ' NOAA Solar Cycle 25', agency: 'NOAA' },
+                          { id: 'noaa_goes_protons' as const, label: ' GOES Protons (SEP)', agency: 'NOAA' },
+                          { id: 'nasa_donki_alerts' as const, label: ' NASA DONKI Alerts', agency: 'NASA' },
+                          { id: 'usgs_geomagnetism' as const, label: ' USGS Geomagnetism', agency: 'USGS' },
                         ] as const).map(tab => (
                           <button
                             key={tab.id}
@@ -598,10 +598,10 @@ export default function AnalysisPage() {
                       {/* Grid de APIs adicionales */}
                       <div className="grid sm:grid-cols-2 gap-3 pt-2">
                         {[
-                          { icon: '🛰️', name: 'NASA SDO AIA', desc: isEn ? 'Solar Dynamics Observatory image pipeline (171Å, 304Å, 193Å)' : 'Pipeline de imágenes SDO (171Å, 304Å, 193Å)', url: 'https://sdo.gsfc.nasa.gov', color: 'text-blue-300' },
-                          { icon: '🌊', name: 'ESA Helioviewer', desc: isEn ? 'Multi-wavelength solar image feed (SOHO/LASCO C2/C3)' : 'Feed de imágenes solares multiespectral (SOHO/LASCO C2/C3)', url: 'https://helioviewer.org', color: 'text-purple-300' },
-                          { icon: '🧲', name: 'NOAA K-Index', desc: isEn ? 'Planetary Kp geomagnetic activity index (3-hour resolution)' : 'Índice Kp geomagnético planetario (resolución 3 horas)', url: 'https://services.swpc.noaa.gov', color: 'text-amber-300' },
-                          { icon: '🔭', name: 'SOHO LASCO', desc: isEn ? 'CME real-time coronagraph imagery from L1 Lagrange point' : 'Imágenes coronagráficas de CMEs en tiempo real desde L1', url: 'https://soho.nascom.nasa.gov', color: 'text-green-300' },
+                          { icon: '', name: 'NASA SDO AIA', desc: isEn ? 'Solar Dynamics Observatory image pipeline (171Å, 304Å, 193Å)' : 'Pipeline de imágenes SDO (171Å, 304Å, 193Å)', url: 'https://sdo.gsfc.nasa.gov', color: 'text-blue-300' },
+                          { icon: '', name: 'ESA Helioviewer', desc: isEn ? 'Multi-wavelength solar image feed (SOHO/LASCO C2/C3)' : 'Feed de imágenes solares multiespectral (SOHO/LASCO C2/C3)', url: 'https://helioviewer.org', color: 'text-purple-300' },
+                          { icon: '', name: 'NOAA K-Index', desc: isEn ? 'Planetary Kp geomagnetic activity index (3-hour resolution)' : 'Índice Kp geomagnético planetario (resolución 3 horas)', url: 'https://services.swpc.noaa.gov', color: 'text-amber-300' },
+                          { icon: '', name: 'SOHO LASCO', desc: isEn ? 'CME real-time coronagraph imagery from L1 Lagrange point' : 'Imágenes coronagráficas de CMEs en tiempo real desde L1', url: 'https://soho.nascom.nasa.gov', color: 'text-green-300' },
                         ].map(api => (
                           <a
                             key={api.name}
@@ -612,7 +612,7 @@ export default function AnalysisPage() {
                           >
                             <span className="text-xl shrink-0">{api.icon}</span>
                             <div>
-                              <div className={`text-xs font-bold font-mono ${api.color} group-hover:underline`}>{api.name} ↗</div>
+                              <div className={`text-xs font-bold font-mono ${api.color} group-hover:underline`}>{api.name} </div>
                               <div className="text-[11px] text-white/40 mt-0.5">{api.desc}</div>
                             </div>
                           </a>
@@ -632,7 +632,7 @@ export default function AnalysisPage() {
                         {[
                           { flag: '🇨🇴', country: isEn ? 'Colombia' : 'Colombia', relevance: isEn ? 'Equatorial ionosphere studies, Latacunga Space Agency (FAC)' : 'Estudios ionosféricos en el ecuador, Agencia Espacial FAC' },
                           { flag: '🇧🇷', country: isEn ? 'Brazil' : 'Brasil', relevance: isEn ? 'INPE solar monitoring, Amazon deforestation radar (SIRIUS)' : 'INPE monitoreo solar, radar Amazónico (SIRIUS)' },
-                          { flag: '🌎', country: isEn ? 'Latin America' : 'Latinoamérica', relevance: isEn ? '12 active observatories with limited solar weather access' : '12 observatorios activos con acceso limitado al clima espacial' },
+                          { flag: '', country: isEn ? 'Latin America' : 'Latinoamérica', relevance: isEn ? '12 active observatories with limited solar weather access' : '12 observatorios activos con acceso limitado al clima espacial' },
                           { flag: '🇺🇳', country: 'UN / UNOOSA', relevance: isEn ? 'Space weather international treaty framework (Sendai)' : 'Marco de tratado internacional de clima espacial (Sendai)' },
                         ].map(c => (
                           <div key={c.country} className="flex items-start gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/10">
@@ -660,7 +660,7 @@ export default function AnalysisPage() {
                     <div className="space-y-6">
                       {/* Encabezado de carta oficial */}
                       <div className="flex items-center gap-4 p-4 rounded-xl border border-purple-500/20 bg-purple-500/5">
-                        <span className="text-4xl">✉️</span>
+                        <span className="text-4xl"></span>
                         <div>
                           <div className="text-xs font-mono text-purple-400 font-bold">OFFICIAL DOCUMENT</div>
                           <div className="text-sm text-white font-bold">{isEn ? 'Open Letter to NASA & Space Agencies' : 'Carta Oficial Abierta a la NASA y Agencias Espaciales'}</div>
@@ -728,17 +728,17 @@ export default function AnalysisPage() {
 
         {/* ─── Visor Solar 3D Interactivo en 360 Grados ──────────────────── */}
         {/* ════════════════════════════════════════════════════════════════════
-            🤖 FIREBASE AI LOGIC — HYBRID INFERENCE ENGINE SECTION
+             FIREBASE AI LOGIC — HYBRID INFERENCE ENGINE SECTION
             ════════════════════════════════════════════════════════════════════ */}
         <div className="my-14 space-y-10">
 
           {/* Section header */}
           <div className="text-center">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-mono font-bold mb-4">
-              🔥 Powered by Firebase AI Logic SDK
+               Powered by Firebase AI Logic SDK
             </div>
             <h2 className="text-3xl sm:text-4xl font-black text-white mb-3">
-              🤖 Hybrid Inference Engine
+               Hybrid Inference Engine
             </h2>
             <p className="text-white/50 max-w-2xl mx-auto text-sm">
               On-Device Gemini Nano + Cloud Gemini 2.0 Flash — La columna vertebral de HELIOX para inferencia solar inteligente
@@ -748,13 +748,13 @@ export default function AnalysisPage() {
           {/* Hybrid Flow Diagram */}
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8 overflow-x-auto">
             <div className="text-xs text-white/40 font-mono uppercase tracking-widest mb-6 text-center">
-              ⚡ Flujo de Inferencia Híbrida — Firebase AI Logic
+               Flujo de Inferencia Híbrida — Firebase AI Logic
             </div>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-0 min-w-[560px]">
               {/* Step 1 */}
               <div className="flex flex-col items-center text-center w-36">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-2xl shadow-lg shadow-blue-500/20 mb-2">
-                  📡
+                  
                 </div>
                 <div className="text-[11px] font-bold text-blue-300">NASA/NOAA APIs</div>
                 <div className="text-[10px] text-white/40 mt-0.5">Solar Telemetry</div>
@@ -764,7 +764,7 @@ export default function AnalysisPage() {
               {/* Step 2: Device check */}
               <div className="flex flex-col items-center text-center w-36">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center text-2xl shadow-lg shadow-purple-500/20 mb-2">
-                  🔍
+                  
                 </div>
                 <div className="text-[11px] font-bold text-purple-300">Device Check</div>
                 <div className="text-[10px] text-white/40 mt-0.5">NPU Detection</div>
@@ -774,7 +774,7 @@ export default function AnalysisPage() {
               {/* Step 3a: On-Device */}
               <div className="flex flex-col items-center text-center w-36">
                 <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-800 flex items-center justify-center text-2xl shadow-lg shadow-emerald-500/20 mb-2">
-                  💻
+                  
                   <span className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-pulse" />
                 </div>
                 <div className="text-[11px] font-bold text-emerald-300">On-Device</div>
@@ -789,7 +789,7 @@ export default function AnalysisPage() {
               {/* Step 3b: Cloud */}
               <div className="flex flex-col items-center text-center w-36">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-600 to-blue-700 flex items-center justify-center text-2xl shadow-lg shadow-cyan-500/20 mb-2">
-                  ☁️
+                  
                 </div>
                 <div className="text-[11px] font-bold text-cyan-300">Cloud Fallback</div>
                 <div className="text-[10px] text-white/40 mt-0.5">Gemini 2.0 Flash</div>
@@ -800,7 +800,7 @@ export default function AnalysisPage() {
               {/* Result */}
               <div className="flex flex-col items-center text-center w-36">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-2xl shadow-lg shadow-amber-500/30 mb-2">
-                  🧠
+                  
                 </div>
                 <div className="text-[11px] font-bold text-amber-300">AI Assessment</div>
                 <div className="text-[10px] text-white/40 mt-0.5">Solar Report</div>
@@ -829,7 +829,7 @@ export default function AnalysisPage() {
           {/* Comparison Table */}
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
             <div className="px-6 py-4 border-b border-white/10 flex items-center gap-3">
-              <span className="text-orange-400 text-lg">⚖️</span>
+              <span className="text-orange-400 text-lg"></span>
               <h3 className="font-bold text-white text-sm">Comparación Técnica: On-Device vs Cloud Inference</h3>
             </div>
             <div className="overflow-x-auto">
@@ -837,20 +837,20 @@ export default function AnalysisPage() {
                 <thead>
                   <tr className="border-b border-white/10">
                     <th className="text-left px-6 py-3 text-white/40 font-mono uppercase tracking-wider">Métrica</th>
-                    <th className="text-center px-4 py-3 text-emerald-400 font-bold">💻 On-Device (Nano)</th>
-                    <th className="text-center px-4 py-3 text-cyan-400 font-bold">☁️ Cloud (Flash)</th>
-                    <th className="text-center px-4 py-3 text-amber-400 font-bold">⚡ Hybrid Auto</th>
+                    <th className="text-center px-4 py-3 text-emerald-400 font-bold"> On-Device (Nano)</th>
+                    <th className="text-center px-4 py-3 text-cyan-400 font-bold"> Cloud (Flash)</th>
+                    <th className="text-center px-4 py-3 text-amber-400 font-bold"> Hybrid Auto</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {[
                     { metric: 'Latencia', device: `~${latencyMetrics.onDevice}ms`, cloud: `~${latencyMetrics.cloud}ms`, hybrid: `~${latencyMetrics.hybrid}ms`, winner: 'device' },
-                    { metric: 'Privacidad de Datos', device: '🟢 100% Local', cloud: '🟡 Servidor remoto', hybrid: '🟢 Prioritiza local', winner: 'device' },
-                    { metric: 'Disponibilidad Offline', device: '🟢 Sí', cloud: '🔴 No', hybrid: '🟢 Sí (fallback)', winner: 'hybrid' },
-                    { metric: 'Costo Inferencia', device: '🟢 $0 / req', cloud: '🟡 Pay-per-use', hybrid: '🟢 Mínimo', winner: 'device' },
-                    { metric: 'Calidad de Análisis', device: '🟡 Básico', cloud: '🟢 Premium', hybrid: '🟢 Premium+', winner: 'hybrid' },
-                    { metric: 'Límite de Tokens', device: '🟡 Limitado', cloud: '🟢 2M tokens', hybrid: '🟢 Flexible', winner: 'hybrid' },
-                    { metric: 'Tiempo Real (<100ms)', device: '🟢 Sí', cloud: '🔴 No', hybrid: '🟢 Sí', winner: 'device' },
+                    { metric: 'Privacidad de Datos', device: ' 100% Local', cloud: ' Servidor remoto', hybrid: ' Prioritiza local', winner: 'device' },
+                    { metric: 'Disponibilidad Offline', device: ' Sí', cloud: ' No', hybrid: ' Sí (fallback)', winner: 'hybrid' },
+                    { metric: 'Costo Inferencia', device: ' $0 / req', cloud: ' Pay-per-use', hybrid: ' Mínimo', winner: 'device' },
+                    { metric: 'Calidad de Análisis', device: ' Básico', cloud: ' Premium', hybrid: ' Premium+', winner: 'hybrid' },
+                    { metric: 'Límite de Tokens', device: ' Limitado', cloud: ' 2M tokens', hybrid: ' Flexible', winner: 'hybrid' },
+                    { metric: 'Tiempo Real (<100ms)', device: ' Sí', cloud: ' No', hybrid: ' Sí', winner: 'device' },
                   ].map(row => (
                     <tr key={row.metric} className="hover:bg-white/[0.02] transition-colors">
                       <td className="px-6 py-3 text-white/60 font-semibold">{row.metric}</td>
@@ -867,14 +867,14 @@ export default function AnalysisPage() {
           {/* How Firebase AI Logic Works — 3 steps */}
           <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-6 sm:p-8">
             <div className="text-center mb-8">
-              <h3 className="text-xl font-black text-white mb-2">🔥 Cómo Funciona Firebase AI Logic</h3>
+              <h3 className="text-xl font-black text-white mb-2"> Cómo Funciona Firebase AI Logic</h3>
               <p className="text-xs text-white/40">La arquitectura detrás del motor de HELIOX</p>
             </div>
             <div className="grid sm:grid-cols-3 gap-6">
               {[
                 {
                   step: '01',
-                  icon: '🛰️',
+                  icon: '',
                   title: 'Telemetría en Vivo',
                   desc: 'HELIOX consulta las APIs públicas de NASA DONKI, NOAA SWPC y GOES en tiempo real. Los datos de Kp, viento solar y rayos X se normalizan en un payload estructurado.',
                   color: 'from-blue-600/20 to-blue-800/10 border-blue-500/30',
@@ -882,7 +882,7 @@ export default function AnalysisPage() {
                 },
                 {
                   step: '02',
-                  icon: '🔀',
+                  icon: '',
                   title: 'Enrutamiento Inteligente',
                   desc: 'Firebase AI Logic SDK detecta si el NPU local soporta Gemini Nano (Chrome Prompt API). Si sí: inferencia local <100ms. Si no: fallback transparente a Gemini 2.0 Flash en la nube.',
                   color: 'from-purple-600/20 to-purple-800/10 border-purple-500/30',
@@ -890,7 +890,7 @@ export default function AnalysisPage() {
                 },
                 {
                   step: '03',
-                  icon: '📊',
+                  icon: '',
                   title: 'Reporte Ejecutivo',
                   desc: 'El modelo genera un análisis con nivel de amenaza (Green/Yellow/Red), impacto en redes eléctricas, GPS y satélites, y probabilidad de auroras. Todo en <400ms end-to-end.',
                   color: 'from-amber-600/20 to-orange-800/10 border-amber-500/30',
@@ -920,7 +920,7 @@ export default function AnalysisPage() {
                 <span className="text-[10px] text-white/30 font-mono">últimos análisis del AI</span>
               </div>
               <span className="text-[10px] font-mono text-orange-400 bg-orange-500/10 border border-orange-500/20 px-2 py-0.5 rounded-full">
-                🔥 Firebase AI Logic
+                 Firebase AI Logic
               </span>
             </div>
             <div className="divide-y divide-white/5">
@@ -958,7 +958,7 @@ export default function AnalysisPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2 flex-wrap">
                         <span className={`text-[10px] font-black px-2 py-0.5 rounded border font-mono ${item.modeColor}`}>
-                          {item.mode === 'ON-DEVICE' ? '💻' : '☁️'} {item.mode}
+                          {item.mode === 'ON-DEVICE' ? '' : ''} {item.mode}
                         </span>
                         <span className="text-[10px] text-white/30 font-mono">Kp {item.kp}</span>
                         <span className="text-[10px] text-white/30 font-mono">{item.latency}ms</span>
@@ -988,7 +988,7 @@ export default function AnalysisPage() {
                 <div className="text-sm font-bold">Ver en GitHub</div>
                 <div className="text-xs text-white/40 font-mono">Mister124x/heliox-hybrid</div>
               </div>
-              <span className="text-white/40 group-hover:translate-x-1 transition-transform">↗</span>
+              <span className="text-white/40 group-hover:translate-x-1 transition-transform"></span>
             </a>
           </div>
 

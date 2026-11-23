@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { useI18n } from '../lib/i18n'
+import { FlareIcon, WaveIcon, AtomIcon, SparklesIcon, CrosshairIcon } from './ui/Icons'
 
 interface StormAlertProps {
   type: 'CME' | 'LLAMARADA' | 'TORMENTA' | 'SEP'
@@ -41,13 +42,14 @@ export default function StormAlert({ type, intensity, time, location }: StormAle
   }
 
   const typeStyles = {
-    CME: { icon: '💥', color: '#f97316', bg: 'bg-orange-500/10 border-orange-500/30' },
-    LLAMARADA: { icon: '⚡', color: '#eab308', bg: 'bg-yellow-500/10 border-yellow-500/30' },
-    TORMENTA: { icon: '🌩️', color: '#ef4444', bg: 'bg-red-500/10 border-red-500/30' },
-    SEP: { icon: '☢️', color: '#a855f7', bg: 'bg-purple-500/10 border-purple-500/30' },
+    CME: { icon: SparklesIcon, color: '#f97316', bg: 'bg-orange-500/10 border-orange-500/30' },
+    LLAMARADA: { icon: FlareIcon, color: '#eab308', bg: 'bg-yellow-500/10 border-yellow-500/30' },
+    TORMENTA: { icon: WaveIcon, color: '#ef4444', bg: 'bg-red-500/10 border-red-500/30' },
+    SEP: { icon: AtomIcon, color: '#a855f7', bg: 'bg-purple-500/10 border-purple-500/30' },
   }
 
   const style = typeStyles[type] ?? typeStyles.CME
+  const IconComponent = style.icon
   const label = labels[type] ?? labels.CME
   const isSevere = isXClass(intensity) || (type === 'CME' && parseFloat(intensity) > 900)
 
@@ -59,7 +61,9 @@ export default function StormAlert({ type, intensity, time, location }: StormAle
       className={`solar-card border p-5 ${style.bg} ${isSevere ? 'alert-glow' : ''}`}
     >
       <div className="flex items-start gap-3">
-        <span className="text-2xl">{style.icon}</span>
+        <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0" style={{ color: style.color }}>
+          <IconComponent size={22} />
+        </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: style.color }}>
@@ -77,19 +81,20 @@ export default function StormAlert({ type, intensity, time, location }: StormAle
           </div>
 
           <div className="mt-2 space-y-1">
-            <div className="text-xs text-white/50" suppressHydrationWarning>
-              🕐 {formatTime(time, lang)}
+            <div className="text-xs text-white/60 font-mono" suppressHydrationWarning>
+              <span className="text-white/40 font-semibold">[UTC]</span> {formatTime(time, lang)}
             </div>
             {location && (
-              <div className="text-xs text-white/50">
-                📍 {location}
+              <div className="text-xs text-white/60 font-mono flex items-center gap-1">
+                <CrosshairIcon size={12} className="text-white/40 shrink-0" />
+                <span>{location}</span>
               </div>
             )}
           </div>
         </div>
       </div>
 
-      <div className="mt-3 text-xs text-white/30">
+      <div className="mt-3 text-xs text-white/30 font-mono">
         NASA DONKI · {isEn ? 'Real-time satellite data' : isPt ? 'Dados em tempo real' : 'Datos en tiempo real'}
       </div>
     </motion.div>

@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useI18n } from '../lib/i18n'
+import { ResetIcon, PauseIcon, PlayIcon, DragHandIcon, TargetCrosshairIcon } from './ui/Icons'
 
 interface Hotspot {
   id: string
@@ -311,24 +312,24 @@ export default function SolarGlobe3D() {
           {/* Botón de Reset de Vista */}
           <button
             onClick={handleResetView}
-            className="px-3 py-1.5 rounded-xl text-xs font-mono border border-white/10 bg-white/5 hover:bg-white/10 active:scale-95 text-white/80 hover:text-white transition-all flex items-center gap-1.5"
+            className="px-3 py-1.5 rounded-xl text-xs font-mono border border-white/10 bg-white/5 hover:bg-white/10 active:scale-95 text-white/80 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer"
             title="Restablecer orientación y zoom original"
           >
-            <span>🔄</span>
+            <ResetIcon size={13} className="text-cyan-400" />
             <span>{isEn ? 'Reset View' : 'Restablecer'}</span>
           </button>
 
           {/* Botón de Auto-rotación (Play/Pausa) */}
           <button
             onClick={() => setAutoRotate(!autoRotate)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono border transition-all active:scale-95 flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-mono border transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer ${
               autoRotate
                 ? 'bg-orange-500 text-black border-orange-400 font-bold shadow-lg shadow-orange-500/25'
                 : 'bg-white/5 text-white/70 border-white/10 hover:text-white hover:bg-white/10'
             }`}
             title={autoRotate ? 'Pausar auto-rotación' : 'Activar auto-rotación'}
           >
-            <span>{autoRotate ? '⏸️' : '▶️'}</span>
+            {autoRotate ? <PauseIcon size={12} /> : <PlayIcon size={12} />}
             <span>{autoRotate ? (isEn ? 'Pause' : 'Pausar') : (isEn ? 'Auto-Rotate' : 'Auto-Rotar')}</span>
           </button>
         </div>
@@ -349,7 +350,7 @@ export default function SolarGlobe3D() {
             <button
               key={mode}
               onClick={() => setSpectralMode(mode)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold border transition-all flex items-center gap-2 active:scale-95 ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold border transition-all flex items-center gap-2 active:scale-95 cursor-pointer ${
                 isSelected
                   ? 'bg-white text-black border-white shadow-lg'
                   : 'bg-white/5 text-white/70 border-white/10 hover:text-white hover:bg-white/10'
@@ -381,7 +382,8 @@ export default function SolarGlobe3D() {
 
         {/* Overlay de Guía Interpolar */}
         <div className="absolute top-3 left-3 bg-black/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 text-[11px] font-mono text-white/70 flex items-center gap-2">
-          <span>👆 Arrastra con el ratón o el dedo para girar el Sol en 360°</span>
+          <DragHandIcon size={13} className="text-cyan-400" />
+          <span>Arrastra con el ratón o el dedo para girar el Sol en 360°</span>
         </div>
 
         <div
@@ -417,7 +419,7 @@ export default function SolarGlobe3D() {
       {selectedHotspot && (
         <div className="p-4 rounded-2xl bg-white/5 border border-white/10 text-xs space-y-1">
           <div className="font-bold text-orange-300 flex items-center gap-2">
-            <span>🎯</span>
+            <TargetCrosshairIcon size={14} className="text-orange-400 shrink-0" />
             <span>{selectedHotspot.name} — Coordenadas Heliofísicas: {selectedHotspot.lat}° Lat, {selectedHotspot.lon}° Lon</span>
           </div>
           <p className="text-white/70 leading-relaxed">{selectedHotspot.description}</p>

@@ -7,6 +7,7 @@ import {
   HybridAnalysisResult,
 } from "@/lib/firebase-ai";
 import { Cpu, Cloud, Zap, RefreshCw, Wifi, WifiOff, Info } from "lucide-react";
+import { SunIcon, FlameIcon, FlareIcon, BrainChipIcon, SatelliteIcon } from "./ui/Icons";
 
 interface HybridAIConsoleProps {
   currentStormData?: any;
@@ -124,9 +125,9 @@ function Tooltip({ children, tip }: { children: React.ReactNode; tip: string }) 
 // ─── Comparison Table ─────────────────────────────────────────────────────────
 const TABLE_DATA = [
   { metric: "Latency",          onDevice: "< 100 ms",   cloud: "400–1200 ms" },
-  { metric: "Privacy",          onDevice: "✅ Full",    cloud: "⚠️ Partial" },
+  { metric: "Privacy",          onDevice: "Full (Local)","cloud": "Encrypted Cloud" },
   { metric: "Cost per query",   onDevice: "$0.000",     cloud: "~$0.002" },
-  { metric: "Offline capable",  onDevice: "✅ Yes",     cloud: "❌ No" },
+  { metric: "Offline capable",  onDevice: "Autonomous", cloud: "Network Required" },
   { metric: "Max context",      onDevice: "~6K tokens", cloud: "1M tokens" },
   { metric: "Model",            onDevice: "Gemini Nano","cloud": "Gemini 2.0 Flash" },
 ];
@@ -294,7 +295,8 @@ export default function HybridAIConsole({ currentStormData }: HybridAIConsolePro
           <div className="space-y-1.5">
             {/* Firebase badge */}
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-gradient-to-r from-orange-500/20 to-amber-500/10 border border-orange-500/30 text-orange-300">
-              🔥 Powered by Firebase AI Logic
+              <FlameIcon size={14} className="text-amber-400 shrink-0" />
+              <span>Powered by Firebase AI Logic</span>
             </div>
 
             <h2 className="text-xl font-extrabold tracking-tight text-white leading-tight">
@@ -384,19 +386,20 @@ export default function HybridAIConsole({ currentStormData }: HybridAIConsolePro
             <div className="inline-flex rounded-lg bg-slate-900/80 p-0.5 border border-slate-700/60">
               {(
                 [
-                  { val: "auto", label: "⚡ Auto", activeClass: "bg-amber-500 text-slate-950" },
-                  { val: "prefer-device", label: "💻 On-Device", activeClass: "bg-emerald-500 text-slate-950" },
-                  { val: "prefer-cloud", label: "☁️ Cloud", activeClass: "bg-cyan-500 text-slate-950" },
+                  { val: "auto", label: "Auto", icon: Zap, activeClass: "bg-amber-500 text-slate-950" },
+                  { val: "prefer-device", label: "On-Device", icon: Cpu, activeClass: "bg-emerald-500 text-slate-950" },
+                  { val: "prefer-cloud", label: "Cloud", icon: Cloud, activeClass: "bg-cyan-500 text-slate-950" },
                 ] as const
-              ).map(({ val, label, activeClass }) => (
+              ).map(({ val, label, icon: BtnIcon, activeClass }) => (
                 <button
                   key={val}
                   onClick={() => setModePreference(val)}
-                  className={`px-3 py-1 rounded-md transition-all font-semibold ${
+                  className={`px-3 py-1 rounded-md transition-all font-semibold flex items-center gap-1 ${
                     modePreference === val ? activeClass : "text-slate-400 hover:text-white"
                   }`}
                 >
-                  {label}
+                  <BtnIcon className="w-3 h-3" />
+                  <span>{label}</span>
                 </button>
               ))}
             </div>
@@ -544,13 +547,13 @@ export default function HybridAIConsole({ currentStormData }: HybridAIConsolePro
           <div className="rounded-xl border border-dashed border-slate-700/60 bg-slate-900/30 p-8 flex flex-col items-center gap-3 text-center">
             <div className="relative">
               <div
-                className="w-14 h-14 rounded-full flex items-center justify-center text-2xl"
+                className="w-14 h-14 rounded-full flex items-center justify-center"
                 style={{
                   background: "radial-gradient(circle, rgba(247,135,8,0.15) 0%, transparent 70%)",
                   animation: "pulse 2s cubic-bezier(0.4,0,0.6,1) infinite",
                 }}
               >
-                ☀️
+                <SunIcon size={32} className="text-amber-400" />
               </div>
               <div
                 className="absolute inset-0 rounded-full border border-amber-500/20"
@@ -573,8 +576,9 @@ export default function HybridAIConsole({ currentStormData }: HybridAIConsolePro
 
         {/* ── FOOTER BADGE ── */}
         <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800/60 text-[10px] text-slate-500">
-          <span className="font-mono">
-            🔥 Firebase AI Logic SDK · #BuildHybridAI 2026 · Google Firebase Hackathon
+          <span className="font-mono flex items-center gap-1.5">
+            <FlameIcon size={12} className="text-amber-400 shrink-0" />
+            Firebase AI Logic SDK · #BuildHybridAI 2026 · Google Firebase Hackathon
           </span>
           <span className="text-slate-600" suppressHydrationWarning>
             {result

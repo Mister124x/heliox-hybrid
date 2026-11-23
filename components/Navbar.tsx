@@ -5,6 +5,21 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useI18n, LanguageSelector } from '../lib/i18n'
+import {
+  OrbitIcon,
+  SatelliteIcon,
+  FlareIcon,
+  MediaIcon,
+  BrainChipIcon,
+  SunIcon,
+  SparklesIcon,
+  GlobeGridIcon,
+  CrosshairIcon,
+  RadioTowerIcon,
+  WaveIcon,
+  FlameIcon,
+  ResetIcon,
+} from './ui/Icons'
 
 interface NavbarProps {
   countdown?: number
@@ -14,11 +29,11 @@ interface NavbarProps {
 }
 
 const NAV_ITEMS = [
-  { href: '/',          labelEs: 'Inicio',      labelEn: 'Home',        icon: '🪐' },
-  { href: '/dashboard', labelEs: 'Dashboard',   labelEn: 'Dashboard',   icon: '📡' },
-  { href: '/storms',    labelEs: 'Tormentas',   labelEn: 'Storms',      icon: '⚡' },
-  { href: '/reels',     labelEs: 'Media 4K',    labelEn: 'Media 4K',    icon: '🎬' },
-  { href: '/analysis',  labelEs: 'Análisis IA', labelEn: 'AI Analysis', icon: '🤖' },
+  { href: '/',          labelEs: 'Inicio',      labelEn: 'Home',        icon: OrbitIcon,      color: 'text-cyan-400' },
+  { href: '/dashboard', labelEs: 'Dashboard',   labelEn: 'Dashboard',   icon: SatelliteIcon,  color: 'text-blue-400' },
+  { href: '/storms',    labelEs: 'Tormentas',   labelEn: 'Storms',      icon: FlareIcon,      color: 'text-amber-400' },
+  { href: '/reels',     labelEs: 'Media 4K',    labelEn: 'Media 4K',    icon: MediaIcon,      color: 'text-purple-400' },
+  { href: '/analysis',  labelEs: 'Análisis IA', labelEn: 'AI Analysis', icon: BrainChipIcon,  color: 'text-emerald-400' },
 ]
 
 /* ─── Google 3x3 Apps Grid (Waffle Icon) ────────────────────────── */
@@ -35,15 +50,15 @@ function WaffleIcon() {
 
 /* ─── Apps satelitales y científicas del Waffle ──────────────────── */
 const GOOGLE_APPS = [
-  { label: 'Firebase', href: 'https://console.firebase.google.com', emoji: '🔥' },
-  { label: 'AI Studio', href: 'https://aistudio.google.com', emoji: '✨' },
-  { label: 'NASA SDO', href: 'https://sdo.gsfc.nasa.gov', emoji: '☀️' },
-  { label: 'NOAA SWPC', href: 'https://www.swpc.noaa.gov', emoji: '🌍' },
-  { label: 'NASA DONKI', href: 'https://kauai.ccmc.gsfc.nasa.gov/DONKI/', emoji: '🛰️' },
-  { label: 'SOHO LASCO', href: 'https://soho.nascom.nasa.gov', emoji: '🔭' },
-  { label: 'Dashboard', href: '/dashboard', emoji: '📡' },
-  { label: 'Tormentas', href: '/storms', emoji: '🌪️' },
-  { label: 'Análisis IA', href: '/analysis', emoji: '🧠' },
+  { label: 'Firebase', href: 'https://console.firebase.google.com', icon: FlameIcon, color: 'text-amber-500' },
+  { label: 'AI Studio', href: 'https://aistudio.google.com', icon: SparklesIcon, color: 'text-blue-400' },
+  { label: 'NASA SDO', href: 'https://sdo.gsfc.nasa.gov', icon: SunIcon, color: 'text-orange-400' },
+  { label: 'NOAA SWPC', href: 'https://www.swpc.noaa.gov', icon: GlobeGridIcon, color: 'text-emerald-400' },
+  { label: 'NASA DONKI', href: 'https://kauai.ccmc.gsfc.nasa.gov/DONKI/', icon: SatelliteIcon, color: 'text-cyan-400' },
+  { label: 'SOHO LASCO', href: 'https://soho.nascom.nasa.gov', icon: CrosshairIcon, color: 'text-indigo-400' },
+  { label: 'Dashboard', href: '/dashboard', icon: RadioTowerIcon, color: 'text-sky-400' },
+  { label: 'Tormentas', href: '/storms', icon: WaveIcon, color: 'text-red-400' },
+  { label: 'Análisis IA', href: '/analysis', icon: BrainChipIcon, color: 'text-purple-400' },
 ]
 
 export default function Navbar({
@@ -135,6 +150,7 @@ export default function Navbar({
           {NAV_ITEMS.map((item) => {
             const isActive = pathname === item.href || (item.href !== '/' && pathname?.startsWith(item.href))
             const label = mounted ? (isEn ? item.labelEn : item.labelEs) : item.labelEs
+            const Icon = item.icon
 
             return (
               <Link
@@ -145,13 +161,13 @@ export default function Navbar({
                   setWaffleOpen(false)
                   setMobileOpen(false)
                 }}
-                className={`relative px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full text-[12px] sm:text-[13px] font-bold transition-all duration-200 flex items-center gap-1 sm:gap-1.5 select-none cursor-pointer shrink-0 ${
+                className={`relative px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full text-[12px] sm:text-[13px] font-bold transition-all duration-200 flex items-center gap-1.5 sm:gap-2 select-none cursor-pointer shrink-0 ${
                   isActive
                     ? 'bg-white text-slate-950 shadow-lg shadow-white/30 scale-[1.02]'
                     : 'text-slate-200 hover:text-white hover:bg-white/15'
                 }`}
               >
-                <span className="text-xs">{item.icon}</span>
+                <Icon size={14} className={isActive ? 'text-slate-950' : item.color} />
                 <span suppressHydrationWarning>{label}</span>
               </Link>
             )
@@ -228,23 +244,26 @@ export default function Navbar({
                     </div>
 
                     <div className="grid grid-cols-3 gap-1.5">
-                      {GOOGLE_APPS.map((app) => (
-                        <a
-                          key={app.label}
-                          href={app.href}
-                          target={app.href.startsWith('http') ? '_blank' : undefined}
-                          rel="noopener noreferrer"
-                          onClick={() => setWaffleOpen(false)}
-                          className="flex flex-col items-center gap-1.5 p-2.5 rounded-xl hover:bg-white/[0.10] border border-transparent hover:border-white/10 transition-all group"
-                        >
-                          <span className="text-2xl group-hover:scale-115 transition-transform duration-200">
-                            {app.emoji}
-                          </span>
-                          <span className="text-[11px] text-white/70 group-hover:text-white font-medium text-center leading-tight">
-                            {app.label}
-                          </span>
-                        </a>
-                      ))}
+                      {GOOGLE_APPS.map((app) => {
+                        const AppIcon = app.icon
+                        return (
+                          <a
+                            key={app.label}
+                            href={app.href}
+                            target={app.href.startsWith('http') ? '_blank' : undefined}
+                            rel="noopener noreferrer"
+                            onClick={() => setWaffleOpen(false)}
+                            className="flex flex-col items-center gap-1.5 p-2.5 rounded-xl hover:bg-white/[0.10] border border-transparent hover:border-white/10 transition-all group"
+                          >
+                            <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover:scale-110 group-hover:border-white/20 transition-all">
+                              <AppIcon size={18} className={app.color} />
+                            </div>
+                            <span className="text-[11px] text-white/70 group-hover:text-white font-medium text-center leading-tight">
+                              {app.label}
+                            </span>
+                          </a>
+                        )
+                      })}
                     </div>
                   </motion.div>
                 </>
@@ -262,7 +281,7 @@ export default function Navbar({
               isStormy ? 'bg-[#EA4335] text-white' : 'bg-white text-black shadow-sm'
             }`}
           >
-            <span className={isSpinning ? 'animate-spin' : ''}>🔄</span>
+            <ResetIcon size={14} className={isSpinning ? 'animate-spin' : ''} />
           </button>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -292,6 +311,7 @@ export default function Navbar({
               {NAV_ITEMS.map((item) => {
                 const isActive = pathname === item.href || (item.href !== '/' && pathname?.startsWith(item.href))
                 const label = mounted ? (isEn ? item.labelEn : item.labelEs) : item.labelEs
+                const DrawerIcon = item.icon
 
                 return (
                   <Link
@@ -305,7 +325,7 @@ export default function Navbar({
                         : 'text-slate-200 hover:text-white hover:bg-white/10'
                     }`}
                   >
-                    <span>{item.icon}</span>
+                    <DrawerIcon size={16} className={isActive ? 'text-slate-950' : item.color} />
                     <span suppressHydrationWarning>{label}</span>
                     {isActive && <span className="ml-auto text-xs font-bold">●</span>}
                   </Link>

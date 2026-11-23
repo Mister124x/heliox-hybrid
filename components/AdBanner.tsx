@@ -11,31 +11,31 @@ interface AdBannerProps {
 
 const SPONSOR_OFFERS = [
   {
-    badge: '🛡️ PREPARACIÓN CICLO SOLAR 25',
+    badge: ' PREPARACIÓN CICLO SOLAR 25',
     title: 'Radio de Emergencia Solar NOAA & Manivela con Banco de Carga',
     desc: 'Mantente comunicado ante caídas de red y apagones geomagnéticos. Batería de 5000mAh y linterna LED.',
     tag: 'OFERTA DESTACADA',
     cta: 'Ver en Amazon (Descuento Exclusivo)',
     url: 'https://www.amazon.com/s?k=solar+crank+emergency+radio+noaa&tag=jesusbarrios2-20',
-    icon: '📻',
+    icon: '',
   },
   {
-    badge: '☀️ OBSERVACIÓN SOLAR SEGURA',
+    badge: ' OBSERVACIÓN SOLAR SEGURA',
     title: 'Lentes de Observación Solar Certificados ISO 12312-2',
     desc: 'Filtro polímero plateado de máxima densidad óptica para ver manchas solares y llamaradas sin riesgo ocular.',
     tag: 'CERTIFICADO NASA/ISO',
     cta: 'Comprar Pack Certificado en Amazon',
     url: 'https://www.amazon.com/s?k=solar+eclipse+glasses+iso+certified&tag=jesusbarrios2-20',
-    icon: '🕶️',
+    icon: '',
   },
   {
-    badge: '⚡ ENERGÍA DE RESPALDO SOLAR',
+    badge: ' ENERGÍA DE RESPALDO SOLAR',
     title: 'Batería Solar Portátil 30.000mAh con Carga Rápida',
     desc: 'Carga tus celulares, linternas y equipos de emergencia con energía solar limpia en cualquier lugar.',
     tag: 'ESENCIAL TORMENTAS',
     cta: 'Ver Disponibilidad en Amazon',
     url: 'https://www.amazon.com/s?k=portable+solar+power+bank+30000mah&tag=jesusbarrios2-20',
-    icon: '🔋',
+    icon: '',
   },
 ]
 
@@ -112,7 +112,7 @@ export default function AdBanner({
           rel="noopener noreferrer"
           className="px-5 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-black active:scale-95 transition-all shadow-lg shadow-orange-500/25 shrink-0 font-mono flex items-center gap-2"
         >
-          <span>🛒</span>
+          <span></span>
           <span>{currentOffer.cta}</span>
         </a>
       </div>

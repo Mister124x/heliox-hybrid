@@ -14,6 +14,7 @@ import HybridAIConsole from '../components/HybridAIConsole'
 import SolarPeakAlert from '../components/SolarPeakAlert'
 import { fetchLiveSolarData, SolarSummary } from '../lib/solarClient'
 import { useI18n } from '../lib/i18n'
+import { TrophyIcon, SatelliteIcon, BrainChipIcon, FlareIcon, GlobeGridIcon, SunIcon } from '../components/ui/Icons'
 
 export default function HomePage() {
   const { t, lang } = useI18n()
@@ -96,7 +97,8 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 text-blue-300 text-xs font-mono mb-4">
-              🏆 #BuildHybridAI 2026 · Google Firebase Hackathon Entry
+              <TrophyIcon size={13} className="text-yellow-400 shrink-0" />
+              #BuildHybridAI 2026 · Google Firebase Hackathon Entry
             </div>
           </motion.div>
 
@@ -148,15 +150,15 @@ export default function HomePage() {
             className="flex flex-wrap items-center justify-center gap-2 pt-1"
           >
             {[
-              { icon: '🛰️', label: '3 Satélites Activos: NASA SDO, GOES-18, DSCOVR' },
-              { icon: '🤖', label: 'Firebase AI: Hybrid Inference ACTIVO' },
-              { icon: '⚡', label: 'Gemini Nano: On-Device Ready' },
-            ].map(({ icon, label }) => (
+              { icon: SatelliteIcon, label: '3 Satélites Activos: NASA SDO, GOES-18, DSCOVR', color: 'text-cyan-400' },
+              { icon: BrainChipIcon, label: 'Firebase AI: Hybrid Inference ACTIVO', color: 'text-emerald-400' },
+              { icon: FlareIcon, label: 'Gemini Nano: On-Device Ready', color: 'text-amber-400' },
+            ].map(({ icon: BadgeIcon, label, color }) => (
               <span
                 key={label}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.10] text-white/70 text-[11px] font-mono animate-pulse"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.10] text-white/70 text-[11px] font-mono"
               >
-                <span>{icon}</span>
+                <BadgeIcon size={12} className={`${color} shrink-0`} />
                 <span>{label}</span>
               </span>
             ))}
@@ -173,7 +175,7 @@ export default function HomePage() {
               href="/dashboard"
               className="px-6 py-3 rounded-2xl font-bold text-xs sm:text-sm bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-400 text-black shadow-lg shadow-orange-500/20 hover:shadow-orange-500/40 hover:scale-[1.02] active:scale-95 transition-all font-mono flex items-center gap-2"
             >
-              <span>🛰️</span>
+              <SatelliteIcon size={15} className="text-black shrink-0" />
               <span>{isEn ? 'Open Mission Control' : 'Abrir Control de Misión'} →</span>
             </Link>
 
@@ -181,7 +183,7 @@ export default function HomePage() {
               href="/storms"
               className="px-5 py-3 rounded-2xl font-bold text-xs sm:text-sm bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/25 text-white active:scale-95 transition-all font-mono flex items-center gap-2"
             >
-              <span>⚡</span>
+              <FlareIcon size={15} className="text-amber-400 shrink-0" />
               <span>{isEn ? 'Storm Tracker' : 'Monitor de Tormentas'}</span>
             </Link>
 
@@ -189,8 +191,8 @@ export default function HomePage() {
               href="/reels"
               className="px-5 py-3 rounded-2xl font-bold text-xs sm:text-sm bg-pink-500/10 hover:bg-pink-500/20 border border-pink-500/30 text-pink-300 active:scale-95 transition-all font-mono flex items-center gap-2"
             >
-              <span>🎬</span>
-              <span>Reels & 4K Media</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 8h20M2 16h20M7 4v4M12 4v4M17 4v4M7 16v4M12 16v4M17 16v4"/><polygon points="10 10 15 12 10 14" fill="currentColor"/></svg>
+              <span>Reels &amp; 4K Media</span>
             </Link>
           </motion.div>
 
@@ -268,7 +270,7 @@ export default function HomePage() {
         {/* ─── DIVIDER ──────────────────────────────────────────────────────── */}
         <div className="flex items-center gap-4">
           <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/[0.10]" />
-          <span className="text-white/20 text-lg">🌐</span>
+          <GlobeGridIcon size={16} className="text-white/20" />
           <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/[0.10]" />
         </div>
 
@@ -277,7 +279,7 @@ export default function HomePage() {
           <div className="flex items-center justify-between border-b border-white/[0.08] pb-4">
             <div>
               <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2">
-                <span>🛰️</span>
+                <SatelliteIcon size={18} className="text-cyan-400" />
                 <span>{isEn ? 'Planetary Instrumentation & Solar Core' : 'Instrumentación Planetaria y Núcleo Solar'}</span>
               </h2>
               <p className="text-xs text-white/40 mt-0.5">
@@ -320,8 +322,8 @@ export default function HomePage() {
                 <div className="text-white/50 uppercase font-bold text-[10px]">Diagnóstico Planetario</div>
                 <p className="text-white/80 leading-relaxed">
                   {kp >= 5
-                    ? '⚠️ Tormenta geomagnética en curso. Se recomienda monitorear enlaces de radio HF y sistemas GNSS en altas latitudes.'
-                    : '✅ Magnetosfera en calma relativa. Sin perturbaciones severas en redes de energía eléctrica ni telecomunicaciones satelitales.'}
+                    ? '[ALERTA] Tormenta geomagnética en curso. Se recomienda monitorear enlaces de radio HF y sistemas GNSS en altas latitudes.'
+                    : '[OK] Magnetosfera en calma relativa. Sin perturbaciones severas en redes de energía eléctrica ni telecomunicaciones satelitales.'}
                 </p>
               </div>
 
@@ -338,7 +340,7 @@ export default function HomePage() {
         {/* ─── DIVIDER ──────────────────────────────────────────────────────── */}
         <div className="flex items-center gap-4">
           <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/[0.10]" />
-          <span className="text-white/20 text-lg">⚡</span>
+          <FlareIcon size={16} className="text-white/20" />
           <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/[0.10]" />
         </div>
 
@@ -346,7 +348,7 @@ export default function HomePage() {
         <section className="space-y-4">
           <div className="border-b border-white/[0.08] pb-4">
             <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2">
-              <span>⚡</span>
+              <FlareIcon size={18} className="text-amber-400" />
               <span>{isEn ? 'Geomagnetic Storm Impact Simulator' : 'Simulador de Impacto Geomagnético por Ciudad'}</span>
             </h2>
             <p className="text-xs text-white/40 mt-0.5">
@@ -362,7 +364,7 @@ export default function HomePage() {
         {/* ─── DIVIDER ──────────────────────────────────────────────────────── */}
         <div className="flex items-center gap-4">
           <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/[0.10]" />
-          <span className="text-white/20 text-lg">☀️</span>
+          <SunIcon size={16} className="text-white/20" />
           <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/[0.10]" />
         </div>
 
