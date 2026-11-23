@@ -19,7 +19,7 @@ const PATRONS_FEED: Patron[] = [
   {
     name: 'Carlos Mendoza',
     location: 'Bogotá, Colombia',
-    flag: '🇨🇴',
+    flag: '[CO]',
     amount: '$50.000 COP',
     method: 'nequi',
     message: '¡Excelente plataforma Jesús! Apoyando la ciencia y la física solar desde Colombia.',
@@ -28,7 +28,7 @@ const PATRONS_FEED: Patron[] = [
   {
     name: 'Dr. Alejandro Silva',
     location: 'CDMX, México',
-    flag: '🇲🇽',
+    flag: '[MX]',
     amount: '$25 USD',
     method: 'paypal',
     message: 'Financiando la investigación abierta y el radar de auroras de HELIOX.',
@@ -37,7 +37,7 @@ const PATRONS_FEED: Patron[] = [
   {
     name: 'Elena Romero',
     location: 'Madrid, España',
-    flag: '🇪🇸',
+    flag: '[ES]',
     amount: '$20 USD',
     method: 'paypal',
     message: 'Increíble el visor 3D del Sol y los datos del ciclo 25. ¡Saludos desde España!',
@@ -46,7 +46,7 @@ const PATRONS_FEED: Patron[] = [
   {
     name: 'Mateo Gómez',
     location: 'Medellín, Colombia',
-    flag: '🇨🇴',
+    flag: '[CO]',
     amount: '$30.000 COP',
     method: 'daviplata',
     message: 'Pendiente de las tormentas solares. Orgullo paisa este observatorio.',
@@ -55,7 +55,7 @@ const PATRONS_FEED: Patron[] = [
   {
     name: 'Valentina Paredes',
     location: 'Cali, Colombia',
-    flag: '🇨🇴',
+    flag: '[CO]',
     amount: '$100.000 COP',
     method: 'bancolombia',
     message: 'Aporte para mantener los servidores 24/7 y la telemetría en vivo. ¡Adelante Jesús!',
@@ -64,7 +64,7 @@ const PATRONS_FEED: Patron[] = [
   {
     name: 'Liam K. Roberts',
     location: 'Miami, USA',
-    flag: '🇺🇸',
+    flag: '[US]',
     amount: '$15 USD',
     method: 'paypal',
     message: 'Best real-time space weather observatory dashboard on the web. Keep it up!',
@@ -73,7 +73,7 @@ const PATRONS_FEED: Patron[] = [
   {
     name: 'Lucas Ferreira',
     location: 'São Paulo, Brasil',
-    flag: '🇧🇷',
+    flag: '[BR]',
     amount: '$10 USD',
     method: 'paypal',
     message: 'Apoiando a ciência aberta e o monitoramento solar para toda a América Latina.',
@@ -82,7 +82,7 @@ const PATRONS_FEED: Patron[] = [
   {
     name: 'Andrés Felipe R.',
     location: 'Barranquilla, Colombia',
-    flag: '🇨🇴',
+    flag: '[CO]',
     amount: '$20.000 COP',
     method: 'nequi',
     message: '¡Poderoso el análisis del ciclo solar 25! Transfiriendo por Nequi.',

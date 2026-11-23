@@ -386,7 +386,7 @@ export default function DonationWidget() {
             <div className="text-[11px] text-white/50">{t.live_data}</div>
           </div>
           <div className="p-2">
-            <div className="text-solar-400 font-bold text-sm">🇨🇴 100% Latino</div>
+            <div className="text-solar-400 font-bold text-sm">[CO] 100% Latino</div>
             <div className="text-[11px] text-white/50">{t.latin_science}</div>
           </div>
           <div className="p-2">

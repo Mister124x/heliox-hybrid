@@ -630,10 +630,10 @@ export default function AnalysisPage() {
 
                       <div className="grid sm:grid-cols-2 gap-4">
                         {[
-                          { flag: '🇨🇴', country: isEn ? 'Colombia' : 'Colombia', relevance: isEn ? 'Equatorial ionosphere studies, Latacunga Space Agency (FAC)' : 'Estudios ionosféricos en el ecuador, Agencia Espacial FAC' },
-                          { flag: '🇧🇷', country: isEn ? 'Brazil' : 'Brasil', relevance: isEn ? 'INPE solar monitoring, Amazon deforestation radar (SIRIUS)' : 'INPE monitoreo solar, radar Amazónico (SIRIUS)' },
+                          { flag: '[CO]', country: isEn ? 'Colombia' : 'Colombia', relevance: isEn ? 'Equatorial ionosphere studies, Latacunga Space Agency (FAC)' : 'Estudios ionosféricos en el ecuador, Agencia Espacial FAC' },
+                          { flag: '[BR]', country: isEn ? 'Brazil' : 'Brasil', relevance: isEn ? 'INPE solar monitoring, Amazon deforestation radar (SIRIUS)' : 'INPE monitoreo solar, radar Amazónico (SIRIUS)' },
                           { flag: '', country: isEn ? 'Latin America' : 'Latinoamérica', relevance: isEn ? '12 active observatories with limited solar weather access' : '12 observatorios activos con acceso limitado al clima espacial' },
-                          { flag: '🇺🇳', country: 'UN / UNOOSA', relevance: isEn ? 'Space weather international treaty framework (Sendai)' : 'Marco de tratado internacional de clima espacial (Sendai)' },
+                          { flag: '[UN]', country: 'UN / UNOOSA', relevance: isEn ? 'Space weather international treaty framework (Sendai)' : 'Marco de tratado internacional de clima espacial (Sendai)' },
                         ].map(c => (
                           <div key={c.country} className="flex items-start gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/10">
                             <span className="text-3xl shrink-0">{c.flag}</span>

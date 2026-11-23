@@ -216,10 +216,10 @@ function generateOfflineAssessment(data: any): string {
   const xray = data?.xRayClass ?? "C2.0";
 
   const threat =
-    kp >= 8 ? "🔴 RED — SEVERE (G4–G5)" :
-    kp >= 6 ? "🟠 ORANGE — STRONG (G2–G3)" :
-    kp >= 5 ? "🟡 YELLOW — MODERATE (G1–G2)" :
-    "🟢 GREEN — QUIET (Nominal)";
+    kp >= 8 ? "[CRITICO] RED — SEVERE (G4–G5)" :
+    kp >= 6 ? "[ALERTA] ORANGE — STRONG (G2–G3)" :
+    kp >= 5 ? "[MODERADO] YELLOW — MODERATE (G1–G2)" :
+    "[NORMAL] GREEN — QUIET (Nominal)";
 
   const aurora =
     kp >= 7 ? "High probability at mid-latitudes (45°N+). Visible in Northern US, Central Europe." :

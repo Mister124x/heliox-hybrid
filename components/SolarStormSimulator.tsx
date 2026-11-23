@@ -260,7 +260,7 @@ export default function SolarStormSimulator() {
             className="py-2.5 px-4 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 active:scale-95 text-white border border-white/20 transition-all flex items-center gap-1.5 font-mono"
             title="Compartir en X / Twitter"
           >
-            <span className="font-bold">𝕏</span>
+            <span className="font-bold">X</span>
             <span>Post en X</span>
           </a>
 
