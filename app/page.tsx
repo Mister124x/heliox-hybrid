@@ -12,6 +12,7 @@ import KpGauge from '../components/KpGauge'
 import StormAlert from '../components/StormAlert'
 import HybridAIConsole from '../components/HybridAIConsole'
 import SolarPeakAlert from '../components/SolarPeakAlert'
+import { Spatial3DCard, Spatial3DLayer } from '../components/ui/Spatial3DCard'
 import { fetchLiveSolarData, SolarSummary } from '../lib/solarClient'
 import { useI18n } from '../lib/i18n'
 import { TrophyIcon, SatelliteIcon, BrainChipIcon, FlareIcon, GlobeGridIcon, SunIcon } from '../components/ui/Icons'
@@ -244,7 +245,7 @@ export default function HomePage() {
           </motion.div>
         </section>
 
-        {/* ─── METRICS BAR ──────────────────────────────────────────────────── */}
+        {/* ─── METRICS BAR (SPATIAL 3D PERSPECTIVE) ────────────────────────── */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -252,18 +253,20 @@ export default function HomePage() {
           className="grid grid-cols-2 sm:grid-cols-4 gap-4"
         >
           {[
-            { value: '1,247+', label: isEn ? 'Storms Monitored' : 'Tormentas Monitoreadas', color: 'text-orange-400' },
-            { value: '24/7',   label: isEn ? 'Uptime'           : 'Tiempo Activo',          color: 'text-emerald-400' },
-            { value: '6 APIs', label: isEn ? 'Data Sources'     : 'Fuentes de Datos',       color: 'text-sky-400' },
-            { value: '<100ms', label: isEn ? 'On-Device Latency': 'Latencia On-Device',     color: 'text-purple-400' },
-          ].map(({ value, label, color }) => (
-            <div
+            { value: '1,247+', label: isEn ? 'Storms Monitored' : 'Tormentas Monitoreadas', color: 'text-orange-400', glow: 'rgba(249,115,22,0.15)' },
+            { value: '24/7',   label: isEn ? 'Uptime'           : 'Tiempo Activo',          color: 'text-emerald-400', glow: 'rgba(16,185,129,0.15)' },
+            { value: '6 APIs', label: isEn ? 'Data Sources'     : 'Fuentes de Datos',       color: 'text-sky-400', glow: 'rgba(56,189,248,0.15)' },
+            { value: '<100ms', label: isEn ? 'On-Device Latency': 'Latencia On-Device',     color: 'text-purple-400', glow: 'rgba(168,85,247,0.15)' },
+          ].map(({ value, label, color, glow }) => (
+            <Spatial3DCard
               key={label}
-              className="flex flex-col items-center justify-center py-5 px-3 rounded-2xl bg-white/[0.02] border border-white/[0.08] backdrop-blur-md"
+              className="flex flex-col items-center justify-center py-5 px-3 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-md transition-all hover:border-cyan-400/40"
             >
-              <span className={`text-3xl sm:text-4xl font-black font-mono ${color}`}>{value}</span>
-              <span className="text-[11px] text-white/40 font-mono mt-1 text-center">{label}</span>
-            </div>
+              <Spatial3DLayer depth={24} className="text-center">
+                <span className={`text-3xl sm:text-4xl font-black font-mono ${color}`}>{value}</span>
+                <span className="text-[11px] text-white/50 font-mono mt-1 block text-center">{label}</span>
+              </Spatial3DLayer>
+            </Spatial3DCard>
           ))}
         </motion.section>
 
@@ -304,36 +307,41 @@ export default function HomePage() {
               <SolarGlobe3D />
             </div>
 
-            {/* Gauge de Tormenta y Resumen Magnetosférico */}
-            <div className="lg:col-span-4 flex flex-col justify-between p-6 rounded-3xl bg-white/[0.02] border border-white/[0.08] space-y-6">
-              <div>
-                <div className="flex items-center justify-between text-xs font-mono text-white/50 mb-3">
-                  <span className="uppercase">Estado Geomagnético Actual</span>
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            {/* Gauge de Tormenta y Resumen Magnetosférico (3D Spatial Perspective) */}
+            <Spatial3DCard
+              containerClassName="lg:col-span-4"
+              className="h-full flex flex-col justify-between p-6 rounded-3xl bg-gradient-to-b from-[#060e28] to-[#030614] border border-cyan-500/30 shadow-[0_0_30px_rgba(6,182,212,0.15)] space-y-6"
+            >
+              <Spatial3DLayer depth={20} className="space-y-6">
+                <div>
+                  <div className="flex items-center justify-between text-xs font-mono text-cyan-300 mb-3">
+                    <span className="uppercase font-bold tracking-wider">Estado Geomagnético Actual</span>
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                  </div>
+                  <KpGauge
+                    kp={kp}
+                    severity={summary?.kp_index?.severity || 'Tranquilo'}
+                    color={summary?.kp_index?.color || '#22c55e'}
+                  />
                 </div>
-                <KpGauge
-                  kp={kp}
-                  severity={summary?.kp_index?.severity || 'Tranquilo'}
-                  color={summary?.kp_index?.color || '#22c55e'}
-                />
-              </div>
 
-              <div className="p-4 rounded-2xl bg-black/50 border border-white/5 space-y-2 text-xs font-mono">
-                <div className="text-white/50 uppercase font-bold text-[10px]">Diagnóstico Planetario</div>
-                <p className="text-white/80 leading-relaxed">
-                  {kp >= 5
-                    ? '[ALERTA] Tormenta geomagnética en curso. Se recomienda monitorear enlaces de radio HF y sistemas GNSS en altas latitudes.'
-                    : '[OK] Magnetosfera en calma relativa. Sin perturbaciones severas en redes de energía eléctrica ni telecomunicaciones satelitales.'}
-                </p>
-              </div>
+                <div className="p-4 rounded-2xl bg-black/60 border border-white/10 space-y-2 text-xs font-mono">
+                  <div className="text-cyan-400 uppercase font-bold text-[10px]">Diagnóstico Planetario</div>
+                  <p className="text-white/80 leading-relaxed">
+                    {kp >= 5
+                      ? '[ALERTA] Tormenta geomagnética en curso. Se recomienda monitorear enlaces de radio HF y sistemas GNSS en altas latitudes.'
+                      : '[OK] Magnetosfera en calma relativa. Sin perturbaciones severas en redes de energía eléctrica ni telecomunicaciones satelitales.'}
+                  </p>
+                </div>
 
-              <Link
-                href="/storms"
-                className="w-full py-3 rounded-xl text-xs font-bold font-mono bg-white/5 hover:bg-white/10 border border-white/10 text-white text-center transition-all block"
-              >
-                {isEn ? 'View Detailed Storm Logs →' : 'Ver Registro de Eventos Históricos →'}
-              </Link>
-            </div>
+                <Link
+                  href="/storms"
+                  className="w-full py-3 rounded-xl text-xs font-bold font-mono bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-400/30 hover:border-cyan-400/60 text-cyan-300 text-center transition-all block cursor-pointer"
+                >
+                  {isEn ? 'View Detailed Storm Logs →' : 'Ver Registro de Eventos Históricos →'}
+                </Link>
+              </Spatial3DLayer>
+            </Spatial3DCard>
           </div>
         </section>
 

@@ -111,7 +111,7 @@ export default function Navbar({
   const isSpinning = refreshing || spinning
 
   return (
-    <header className="fixed top-3 left-0 right-0 z-50 flex justify-center px-3 sm:px-6 pointer-events-none transition-all duration-300">
+    <header className="fixed top-3 left-0 right-0 z-50 flex flex-col items-center px-3 sm:px-6 pointer-events-none transition-all duration-300">
       {/* ── FLOATING SPATIAL DYNAMIC ISLAND (ACETERNITY / GITHUB 50K+ STARS) ── */}
       <div
         className={`pointer-events-auto max-w-6xl w-full rounded-full transition-all duration-300 flex items-center justify-between gap-2 sm:gap-4 px-3 sm:px-5 py-2 relative overflow-hidden ${
@@ -143,10 +143,10 @@ export default function Navbar({
           </div>
         </Link>
 
-        {/* ── NAVEGACIÓN CENTRAL: CÁPSULA ESPACIAL TRIDIMENSIONAL ─────── */}
+        {/* ── NAVEGACIÓN CENTRAL ESCRITORIO (OCULTA EN MÓVIL PARA EVITAR DESBORDAMIENTOS) ─── */}
         <nav
           aria-label="Main Navigation"
-          className="flex items-center gap-1 bg-white/[0.04] border border-white/10 p-1 rounded-full backdrop-blur-md overflow-x-auto max-w-[calc(100vw-170px)] sm:max-w-none no-scrollbar shrink"
+          className="hidden lg:flex items-center gap-1 bg-white/[0.04] border border-white/10 p-1 rounded-full backdrop-blur-md shrink"
         >
           {NAV_ITEMS.map((item) => {
             const isActive = pathname === item.href || (item.href !== '/' && pathname?.startsWith(item.href))
@@ -162,7 +162,7 @@ export default function Navbar({
                   setWaffleOpen(false)
                   setMobileOpen(false)
                 }}
-                className={`relative px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-[12px] font-mono font-bold transition-all duration-200 flex items-center gap-1.5 select-none cursor-pointer shrink-0 ${
+                className={`relative px-3 py-1.5 rounded-full text-[12px] font-mono font-bold transition-all duration-200 flex items-center gap-1.5 select-none cursor-pointer shrink-0 ${
                   isActive
                     ? 'bg-gradient-to-r from-cyan-400 to-sky-400 text-black shadow-[0_0_15px_rgba(6,182,212,0.5)] font-extrabold scale-[1.03]'
                     : 'text-slate-300 hover:text-white hover:bg-white/10'
@@ -175,8 +175,8 @@ export default function Navbar({
           })}
         </nav>
 
-        {/* ── ACCIONES DERECHA: Idioma, Botón LIVE, Waffle ───────────── */}
-        <div className="hidden md:flex items-center gap-2 shrink-0">
+        {/* ── ACCIONES DERECHA ESCRITORIO (>= lg) ───────────── */}
+        <div className="hidden lg:flex items-center gap-2 shrink-0">
           {/* Selector de idioma estilizado */}
           <div className="text-white">
             <LanguageSelector />
@@ -272,42 +272,60 @@ export default function Navbar({
           </div>
         </div>
 
-        {/* ── CONTROLES MÓVIL ────────────────────────────────────────── */}
-        <div className="flex md:hidden items-center gap-1.5 ml-auto">
-          <LanguageSelector />
+        {/* ── CONTROLES MÓVIL Y TABLET (< lg) ────────────────────────── */}
+        <div className="flex lg:hidden items-center gap-1.5 ml-auto">
+          {/* Badge EN VIVO compacto en móvil */}
           <button
             onClick={handleRefresh}
-            className={`w-8 h-8 rounded-full flex items-center justify-center text-xs transition-all ${
-              isStormy ? 'bg-[#EA4335] text-white' : 'bg-white text-black shadow-sm'
+            title={mounted && isEn ? 'Refresh' : 'Actualizar'}
+            className={`flex items-center gap-1 h-7 px-2.5 rounded-full text-[10px] font-mono font-bold transition-all cursor-pointer ${
+              isStormy
+                ? 'bg-[#EA4335] text-white shadow-md'
+                : 'bg-cyan-500/20 text-cyan-300 border border-cyan-400/40'
             }`}
           >
-            <ResetIcon size={14} className={isSpinning ? 'animate-spin' : ''} />
+            <span className={`w-1.5 h-1.5 rounded-full ${isStormy ? 'bg-white animate-ping' : 'bg-emerald-400 animate-pulse'}`} />
+            <span>{isStormy ? 'ALERTA' : 'VIVO'}</span>
+            {typeof countdown === 'number' && (
+              <span className={`text-[9px] text-cyan-200 ${isSpinning ? 'animate-spin' : ''}`}>
+                {countdown}s
+              </span>
+            )}
           </button>
+
+          <LanguageSelector />
+
+          {/* Botón Hamburger / Toggle de 3 líneas */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="w-9 h-9 flex items-center justify-center rounded-full text-white/80 hover:text-white bg-white/[0.06] border border-white/10 active:scale-95 transition-all"
-            aria-label="Abrir Menú"
+            className="w-8 h-8 flex items-center justify-center rounded-full text-white/80 hover:text-white bg-white/[0.08] hover:bg-white/[0.15] border border-white/10 active:scale-95 transition-all cursor-pointer"
+            aria-label={mobileOpen ? 'Cerrar Menú' : 'Abrir Menú'}
           >
             {mobileOpen ? (
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 1L15 15M15 1L1 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M1 1L15 15M15 1L1 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
             ) : (
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 4H15M1 8H15M1 12H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M1 4H15M1 8H15M1 12H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
             )}
           </button>
         </div>
       </div>
 
-      {/* ── MENÚ MÓVIL (DRAWER) ─────────────────────────────────────── */}
+      {/* ── MENÚ MÓVIL DESPLEGABLE CENTRADO DEBAJO DE LA ISLA DINÁMICA ─────── */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-            className="pointer-events-auto md:hidden overflow-hidden bg-[#04081c]/98 border border-white/20 rounded-3xl mt-2 mx-4 p-3 backdrop-blur-2xl shadow-2xl"
+            initial={{ opacity: 0, y: -8, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.98 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className="pointer-events-auto lg:hidden w-full max-w-md overflow-hidden bg-[#04081c]/98 border border-cyan-400/50 rounded-3xl mt-2 p-3 backdrop-blur-2xl shadow-[0_16px_40px_rgba(0,0,0,0.95),0_0_30px_rgba(6,182,212,0.3)]"
           >
-            <div className="px-4 py-3 space-y-1.5">
+            <div className="px-2 py-1 mb-2 border-b border-white/10 flex items-center justify-between text-xs font-mono text-cyan-300">
+              <span className="font-bold tracking-wider uppercase">Navegación Espacial</span>
+              <span className="text-[10px] text-slate-400">HELIOX v2.0</span>
+            </div>
+
+            <div className="space-y-1.5">
               {NAV_ITEMS.map((item) => {
                 const isActive = pathname === item.href || (item.href !== '/' && pathname?.startsWith(item.href))
                 const label = mounted ? (isEn ? item.labelEn : item.labelEs) : item.labelEs
@@ -319,15 +337,17 @@ export default function Navbar({
                     href={item.href}
                     prefetch={true}
                     onClick={() => setMobileOpen(false)}
-                    className={`flex items-center gap-2.5 px-4 py-3 rounded-full text-[14px] font-bold transition-all cursor-pointer ${
+                    className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-[13px] font-mono font-bold transition-all cursor-pointer ${
                       isActive
-                        ? 'bg-white text-slate-950 shadow-md shadow-white/30'
-                        : 'text-slate-200 hover:text-white hover:bg-white/10'
+                        ? 'bg-gradient-to-r from-cyan-400 to-sky-400 text-black shadow-lg shadow-cyan-500/30'
+                        : 'text-slate-300 hover:text-white hover:bg-white/10 border border-transparent hover:border-white/10'
                     }`}
                   >
-                    <DrawerIcon size={16} className={isActive ? 'text-slate-950' : item.color} />
+                    <DrawerIcon size={16} className={isActive ? 'text-black' : item.color} />
                     <span suppressHydrationWarning>{label}</span>
-                    {isActive && <span className="ml-auto text-xs font-bold">●</span>}
+                    {isActive && (
+                      <span className="ml-auto w-2 h-2 rounded-full bg-black shadow-[0_0_8px_rgba(0,0,0,0.8)]" />
+                    )}
                   </Link>
                 )
               })}
