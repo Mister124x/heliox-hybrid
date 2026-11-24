@@ -232,14 +232,14 @@ function generateOfflineAssessment(data: any): string {
 **1. Threat Level:** ${threat}
 
 **2. Immediate Impact Assessment:**
-- **GPS/GNSS:** ${kp >= 6 ? "⚠️ Degraded precision expected. Differential GPS errors 2–8m." : "✅ Nominal positioning accuracy."}
-- **HF Radio:** ${xray.startsWith("X") || xray.startsWith("M") ? "⚠️ Radio blackout possible on sunlit hemisphere." : "✅ Clear HF propagation conditions."}
-- **Power Grids:** ${kp >= 7 ? "⚠️ GIC risk elevated. Monitor harmonic distortions on transmission lines." : "✅ Grid stability within normal parameters."}
-- **Satellites:** ${speed > 600 ? "⚠️ Elevated LEO atmospheric drag. Orbit adjustments may be needed." : "✅ Orbital environment nominal."}
+- **GPS/GNSS:** ${kp >= 6 ? "[ALERTA] Degraded precision expected. Differential GPS errors 2–8m." : "[OK] Nominal positioning accuracy."}
+- **HF Radio:** ${xray.startsWith("X") || xray.startsWith("M") ? "[ALERTA] Radio blackout possible on sunlit hemisphere." : "[OK] Clear HF propagation conditions."}
+- **Power Grids:** ${kp >= 7 ? "[ALERTA] GIC risk elevated. Monitor harmonic distortions on transmission lines." : "[OK] Grid stability within normal parameters."}
+- **Satellites:** ${speed > 600 ? "[ALERTA] Elevated LEO atmospheric drag. Orbit adjustments may be needed." : "[OK] Orbital environment nominal."}
 
 **3. Aurora Forecast:** ${aurora}
 
 **4. Tactical Directive:** ${kp >= 6 ? "Alert relevant grid operators and satellite teams. Consider polar aviation route adjustments." : "Continue standard monitoring. No immediate action required."}
 
-**5. Confidence:** ⚡ Medium — Offline heuristic model based on Kp=${kp.toFixed(1)}, V_sw=${speed} km/s, X-ray Class=${xray}`;
+**5. Confidence:** [ON-DEVICE] Medium — Offline heuristic model based on Kp=${kp.toFixed(1)}, V_sw=${speed} km/s, X-ray Class=${xray}`;
 }

@@ -67,11 +67,11 @@ export default function VIPAlertBar() {
             </button>
             <button
               onClick={() => setIsDismissed(true)}
-              className="p-1.5 rounded-lg text-white/40 hover:text-white hover:bg-white/10 text-xs transition-colors"
+              className="p-1.5 rounded-lg text-white/40 hover:text-white hover:bg-white/10 text-xs font-mono transition-colors"
               title="Cerrar barra"
               aria-label="Cerrar barra"
             >
-              ✕
+              [X]
             </button>
           </div>
         </div>
@@ -90,9 +90,9 @@ export default function VIPAlertBar() {
               {/* Botón cerrar */}
               <button
                 onClick={() => setIsOpen(false)}
-                className="absolute top-4 right-4 text-white/50 hover:text-white p-1 rounded-lg text-sm"
+                className="absolute top-4 right-4 text-white/50 hover:text-white p-1 rounded-lg text-xs font-mono"
               >
-                ✕
+                [X]
               </button>
 
               <div className="text-center space-y-2">

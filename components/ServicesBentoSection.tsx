@@ -131,7 +131,7 @@ export default function ServicesBentoSection() {
               <ul className="space-y-1.5 pt-2 text-xs font-mono text-white/60">
                 {svc.features.map((feat, i) => (
                   <li key={i} className="flex items-center gap-2">
-                    <span className="text-orange-400 text-[10px]">✓</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
                     <span>{feat}</span>
                   </li>
                 ))}

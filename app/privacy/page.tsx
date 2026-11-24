@@ -129,7 +129,7 @@ export default function PrivacyPage() {
                 'No vendemos, alquilamos ni compartimos datos personales con terceros con fines comerciales propios.',
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2 text-white/70">
-                  <span className="text-emerald-400 mt-0.5 flex-shrink-0">✓</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 flex-shrink-0" />
                   {item}
                 </li>
               ))}

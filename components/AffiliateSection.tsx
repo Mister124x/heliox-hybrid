@@ -144,7 +144,7 @@ export default function AffiliateSection() {
                 <div className="space-y-2 mt-2">
                   <div className="text-[11px] text-solar-400/80 mb-2 bg-solar-500/5 p-2 rounded-lg border border-solar-500/10 flex items-center justify-between">
                     <span> Afiliado: <strong className="text-white">jesusbarrios2-20</strong></span>
-                    <span className="text-emerald-400 font-mono">Activo ✓</span>
+                    <span className="text-emerald-400 font-mono">Activo [OK]</span>
                   </div>
 
                   {/* Botón 1: Comprar en Amazon con Tag Oficial */}

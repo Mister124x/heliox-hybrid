@@ -9,6 +9,7 @@ import SolarGlobe3D from '../../components/SolarGlobe3D'
 import HackerPolymathMatrix from '../../components/HackerPolymathMatrix'
 import DeclassifiedDossier from '../../components/DeclassifiedDossier'
 import HybridAIConsole from '../../components/HybridAIConsole'
+import { Spatial3DCard, Spatial3DLayer } from '../../components/ui/Spatial3DCard'
 import { useI18n } from '../../lib/i18n'
 import { fetchLiveSolarData, SolarSummary } from '../../lib/solarClient'
 import {
@@ -445,98 +446,135 @@ export default function AnalysisPage() {
           </div>
         </section>
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* SIDEBAR DE NAVEGACIÓN CIENTÍFICA */}
-          <aside className="lg:w-80 shrink-0 space-y-3">
-            <div className="flex items-center justify-between px-1 mb-2">
+        {/* ─── NAVEGADOR ESPACIAL 3D: HORIZONTE DE DOSSIERS CIENTÍFICOS (GitHub 50k+ Stars Style) ─── */}
+        <section className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
               <span className="text-xs font-bold uppercase tracking-widest text-cyan-400 font-mono">
-                {isEn ? 'Research Dossiers' : 'Dossiers de Investigación'}
-              </span>
-              <span className="text-[10px] font-mono bg-white/5 border border-white/10 text-white/50 px-2 py-0.5 rounded-full">
-                6 Capítulos
+                {isEn ? 'Spatial Research Dossiers · 3D Horizon Deck' : 'Dossiers de Investigación Heliofísica · Plataforma 3D'}
               </span>
             </div>
-
-            <div className="space-y-1.5">
-              {CHAPTERS.map((ch) => {
-                const isActive = activeTab === ch.id
-                const IconComp = ch.IconComponent
-                return (
-                  <button
-                    key={ch.id}
-                    onClick={() => setActiveTab(ch.id)}
-                    className={`w-full p-3.5 rounded-2xl text-left text-xs font-semibold transition-all flex items-center gap-3 border relative cursor-pointer ${
-                      isActive
-                        ? 'border-cyan-400/80 bg-gradient-to-r from-cyan-950/50 to-blue-950/40 text-cyan-300 shadow-[0_0_20px_rgba(6,182,212,0.15)] font-bold'
-                        : 'border-white/[0.08] bg-white/[0.02] text-slate-400 hover:text-white hover:border-white/20 hover:bg-white/[0.04]'
-                    }`}
-                  >
-                    <IconComp size={16} className={isActive ? 'text-cyan-400' : 'text-slate-500'} />
-                    <span className="flex-1 leading-snug">{ch.label}</span>
-                    <span className="text-[10px] font-mono text-slate-500">{ch.readTime}</span>
-                  </button>
-                )
-              })}
+            <div className="flex items-center gap-3 text-[11px] font-mono text-slate-400">
+              <span className="text-white/40">Navegación espacial interactiva</span>
+              <span className="px-2.5 py-0.5 rounded-full bg-cyan-950/40 border border-cyan-500/30 text-cyan-300 font-bold">
+                6 Capítulos Especializados
+              </span>
             </div>
+          </div>
 
-            {/* Widget de Feeds Gubernamentales Conectados */}
-            <div className="mt-6 p-4 rounded-2xl border border-emerald-500/20 bg-emerald-950/10 space-y-3">
-              <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs font-mono">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span>{isEn ? 'Active Agency Feeds' : 'Feeds Satelitales Activos'}</span>
-              </div>
-              <ul className="space-y-1.5 text-[11px] font-mono text-slate-300">
-                {['NASA DONKI Space Weather', 'NOAA SWPC Satellite Bus', 'USGS Geomagnetic Array', 'ESA Helioviewer SDO'].map((feed) => (
-                  <li key={feed} className="flex items-center gap-2">
-                    <CheckCircleIcon size={12} className="text-emerald-400 shrink-0" />
-                    <span>{feed}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Tarjetas de Métricas Resumen */}
-            <div className="grid grid-cols-2 gap-2 mt-4">
-              {[
-                { label: isEn ? 'Solar Cycle' : 'Ciclo Solar', value: 'SC 25', color: 'text-cyan-400' },
-                { label: isEn ? 'Phase' : 'Fase', value: isEn ? 'Max Peak' : 'Máximo', color: 'text-rose-400' },
-                { label: 'NASA APIs', value: '5+', color: 'text-emerald-400' },
-                { label: isEn ? 'Languages' : 'Idiomas', value: '12+', color: 'text-purple-400' },
-              ].map((s) => (
-                <div key={s.label} className="p-3 rounded-2xl bg-white/[0.02] border border-white/10 text-center">
-                  <div className={`text-lg font-black font-mono ${s.color}`}>{s.value}</div>
-                  <div className="text-[10px] text-slate-400 mt-0.5 font-mono">{s.label}</div>
-                </div>
-              ))}
-            </div>
-          </aside>
-
-          {/* PANEL DE LECTURA DEL DOSSIER ACTIVO */}
-          <div className="flex-1 min-w-0">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTab}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2 }}
-                className="space-y-6"
-              >
-                {/* Header del Capítulo */}
-                <div className="rounded-3xl p-6 border border-white/10 bg-gradient-to-r from-[#070e28] to-[#040714] flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <activeChapter.IconComponent size={24} className="text-cyan-400" />
-                    <div>
-                      <div className="text-xs font-mono text-cyan-400 font-bold uppercase">
-                        Capítulo {CHAPTERS.indexOf(activeChapter) + 1} de {CHAPTERS.length} · {activeChapter.readTime} de lectura
-                      </div>
-                      <h2 className="text-xl sm:text-2xl font-black text-white">{activeChapter.label}</h2>
+          {/* Horizontal 3D Spatial Deck Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            {CHAPTERS.map((ch, idx) => {
+              const isActive = activeTab === ch.id
+              const IconComp = ch.IconComponent
+              return (
+                <Spatial3DCard
+                  key={ch.id}
+                  onClick={() => setActiveTab(ch.id)}
+                  containerClassName="cursor-pointer"
+                  className={`h-full rounded-2xl p-3.5 transition-all flex flex-col justify-between border relative overflow-hidden ${
+                    isActive
+                      ? 'border-cyan-400 bg-gradient-to-b from-[#081836] to-[#040a18] shadow-[0_0_30px_rgba(6,182,212,0.3)] ring-1 ring-cyan-400/50'
+                      : 'border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/20'
+                  }`}
+                >
+                  <Spatial3DLayer depth={isActive ? 28 : 12}>
+                    <div className="flex items-center justify-between mb-3">
+                      <span
+                        className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${
+                          isActive
+                            ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
+                            : 'bg-white/5 text-slate-500'
+                        }`}
+                      >
+                        0{idx + 1}
+                      </span>
+                      <IconComp
+                        size={18}
+                        className={
+                          isActive
+                            ? 'text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]'
+                            : 'text-slate-500'
+                        }
+                      />
                     </div>
+                    <div className="space-y-1">
+                      <div
+                        className={`text-xs font-bold leading-tight ${
+                          isActive ? 'text-white' : 'text-slate-300'
+                        }`}
+                      >
+                        {ch.label}
+                      </div>
+                      <div className="text-[10px] font-mono text-slate-500">
+                        {ch.readTime}
+                      </div>
+                    </div>
+                  </Spatial3DLayer>
+
+                  {isActive && (
+                    <motion.div
+                      layoutId="active-chapter-indicator"
+                      className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 via-sky-400 to-indigo-500"
+                    />
+                  )}
+                </Spatial3DCard>
+              )
+            })}
+          </div>
+
+          {/* Telemetry & Compliance Ribbon */}
+          <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-2xl bg-white/[0.02] border border-white/[0.08] text-xs font-mono">
+            <div className="flex flex-wrap items-center gap-4 text-slate-300">
+              <span className="flex items-center gap-2 text-emerald-400 font-bold">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                NASA / NOAA Telemetry Bus Active
+              </span>
+              <span className="text-white/20">│</span>
+              <span className="text-slate-400">
+                Ciclo Solar 25: <strong className="text-rose-400">Máximo Pico</strong>
+              </span>
+              <span className="text-white/20">│</span>
+              <span className="text-slate-400">
+                Estándar: <strong className="text-cyan-300">IEEE 1547 / NERC GIC</strong>
+              </span>
+            </div>
+            <div className="flex items-center gap-2 text-[11px] text-slate-500">
+              <span>Modo Inferencia:</span>
+              <span className="px-2 py-0.5 rounded bg-cyan-950/40 border border-cyan-500/30 text-cyan-300 font-bold">
+                Dual On-Device & Cloud
+              </span>
+            </div>
+          </div>
+        </section>
+
+        {/* ─── CANVAS EXPANDIDO DEL DOSSIER DE INVESTIGACIÓN (Full-Width Spatial 3D Canvas) ─── */}
+        <div className="w-full">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="space-y-6"
+            >
+              {/* Header del Capítulo */}
+              <div className="rounded-3xl p-6 border border-white/10 bg-gradient-to-r from-[#070e28] to-[#040714] flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <activeChapter.IconComponent size={24} className="text-cyan-400" />
+                  <div>
+                    <div className="text-xs font-mono text-cyan-400 font-bold uppercase">
+                      Capítulo {CHAPTERS.indexOf(activeChapter) + 1} de {CHAPTERS.length} · {activeChapter.readTime} de lectura
+                    </div>
+                    <h2 className="text-xl sm:text-2xl font-black text-white">{activeChapter.label}</h2>
                   </div>
                 </div>
+              </div>
 
-                {/* Contenido del Capítulo */}
-                <div className="rounded-3xl border border-white/10 p-6 sm:p-8 space-y-6 text-sm sm:text-base leading-relaxed text-slate-300 bg-white/[0.015]">
+              {/* Contenido del Capítulo */}
+              <div className="rounded-3xl border border-white/10 p-6 sm:p-8 space-y-6 text-sm sm:text-base leading-relaxed text-slate-300 bg-white/[0.015]">
                   {/* CAPÍTULO 1 */}
                   {activeTab === 'fundacional' && (
                     <div className="space-y-6">
@@ -736,7 +774,6 @@ export default function AnalysisPage() {
                 </div>
               </motion.div>
             </AnimatePresence>
-          </div>
         </div>
 
         {/* ─── FIREBASE AI LOGIC: CONSOLA DE INFERENCIA HÍBRIDA ────────────── */}

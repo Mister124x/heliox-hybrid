@@ -366,7 +366,7 @@ export default function SocialVideoFeed({
                     className="absolute top-3 right-3 z-30 px-3 py-1.5 rounded-xl bg-black/80 hover:bg-black text-white text-xs font-mono border border-white/20 backdrop-blur-md flex items-center gap-1.5 transition-all shadow-lg hover:scale-105"
                     title="Cerrar video y volver al carrusel"
                   >
-                    <span>✕</span>
+                    <span>[X]</span>
                     <span className="hidden sm:inline">Cerrar Video</span>
                   </button>
                 </div>

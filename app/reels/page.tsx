@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Navbar from '../../components/Navbar'
+import { Spatial3DCard } from '../../components/ui/Spatial3DCard'
 import { useI18n } from '../../lib/i18n'
 import {
   SpeakerIcon,
@@ -214,9 +215,9 @@ const INITIAL_INTEL_FEED: NewsItem[] = [
     initialEndorsements: 284,
     scientificNotes: [
       {
-        author: 'Dr. Marcus Sterling',
-        org: 'Devpost Senior Jury',
-        note: 'La integración de misiones espaciales de vanguardia amplía la relevancia civil del software.',
+        author: 'Dr. Marcus Vance',
+        org: 'AIAA Aerospace Systems',
+        note: 'La telemetría orbital de Parker alimenta los modelos de densidad coronal para corrección de trayectorias satelitales en LEO/GEO.',
       },
     ],
   },
@@ -686,13 +687,14 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
                 const isBookmarked = bookmarked[item.id]
 
                 return (
-                  <article
+                  <Spatial3DCard
                     key={item.id}
                     onClick={() => setSelectedNews(item)}
+                    containerClassName="w-full"
                     className={`rounded-3xl border transition-all duration-300 overflow-hidden cursor-pointer ${
                       isSelected
-                        ? 'bg-[#050a1c] border-cyan-400 shadow-[0_0_35px_rgba(6,182,212,0.18)]'
-                        : 'bg-white/[0.015] hover:bg-white/[0.035] border-white/[0.08] hover:border-white/20'
+                        ? 'bg-[#050a1c] border-cyan-400 shadow-[0_0_40px_rgba(6,182,212,0.25)]'
+                        : 'bg-white/[0.015] hover:bg-white/[0.04] border-white/[0.08] hover:border-white/20'
                     }`}
                   >
                     {/* Header del Despacho: Perfil y Metadatos */}
@@ -894,7 +896,7 @@ Verificación Oficial: Observatorio Solar HELIOX (https://heliox-observatory.ver
                         </motion.div>
                       )}
                     </AnimatePresence>
-                  </article>
+                  </Spatial3DCard>
                 )
               })}
             </div>

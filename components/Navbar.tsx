@@ -111,25 +111,25 @@ export default function Navbar({
   const isSpinning = refreshing || spinning
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-[#0d122e]/92 backdrop-blur-2xl border-b border-white/20 shadow-2xl shadow-black/60'
-          : 'bg-[#0a0e26]/85 backdrop-blur-xl border-b border-white/15'
-      }`}
-    >
-      {/* Sutil línea de brillo blanco superior estilo Google / Antigravity */}
-      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-[64px] flex items-center justify-between gap-3">
+    <header className="fixed top-3 left-0 right-0 z-50 flex justify-center px-3 sm:px-6 pointer-events-none transition-all duration-300">
+      {/* ── FLOATING SPATIAL DYNAMIC ISLAND (ACETERNITY / GITHUB 50K+ STARS) ── */}
+      <div
+        className={`pointer-events-auto max-w-6xl w-full rounded-full transition-all duration-300 flex items-center justify-between gap-2 sm:gap-4 px-3 sm:px-5 py-2 relative overflow-hidden ${
+          scrolled
+            ? 'bg-[#04081c]/95 border border-cyan-400/50 shadow-[0_12px_40px_rgba(0,0,0,0.85),0_0_30px_rgba(6,182,212,0.25)] backdrop-blur-2xl'
+            : 'bg-[#060b24]/85 border border-cyan-500/30 shadow-[0_8px_30px_rgba(0,0,0,0.7),0_0_20px_rgba(6,182,212,0.15)] backdrop-blur-xl'
+        }`}
+      >
+        {/* Haz de luz superior estilo border-beam */}
+        <div className="absolute top-0 left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent pointer-events-none" />
 
         {/* ── LOGO GOOGLE + HELIOX A LA IZQUIERDA ─────────────────────── */}
-        <Link href="/" prefetch={true} className="flex items-center gap-2.5 group select-none shrink-0 cursor-pointer">
-          <div className="relative w-8 h-8 rounded-lg overflow-hidden border border-white/30 bg-white/10 p-0.5 group-hover:border-white/70 group-hover:scale-105 transition-all duration-200 shadow-md shadow-white/10">
+        <Link href="/" prefetch={true} className="flex items-center gap-2 group select-none shrink-0 cursor-pointer">
+          <div className="relative w-7 h-7 sm:w-8 sm:h-8 rounded-full overflow-hidden border border-cyan-400/50 bg-black/40 p-0.5 group-hover:border-cyan-300 group-hover:scale-105 transition-all duration-200 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
             <img src="/favicon.svg" alt="HELIOX" className="w-full h-full object-contain" />
           </div>
-          <div className="flex flex-col leading-tight">
-            <span className="text-[20px] font-black tracking-tight select-none">
+          <div className="flex flex-col leading-none">
+            <span className="text-[17px] sm:text-[19px] font-black tracking-tight select-none">
               <span style={{ color: '#4285F4' }}>H</span>
               <span style={{ color: '#EA4335' }}>E</span>
               <span style={{ color: '#FBBC05' }}>L</span>
@@ -137,16 +137,16 @@ export default function Navbar({
               <span style={{ color: '#34A853' }}>O</span>
               <span style={{ color: '#EA4335' }}>X</span>
             </span>
-            <span className="text-[9px] font-mono tracking-widest text-white/60 uppercase group-hover:text-white transition-colors">
+            <span className="text-[8px] font-mono tracking-widest text-cyan-300 uppercase group-hover:text-white transition-colors">
               Observatory
             </span>
           </div>
         </Link>
 
-        {/* ── NAVEGACIÓN CENTRAL: CÁPSULA BLANCA MODERNA (Google Style) ─ */}
+        {/* ── NAVEGACIÓN CENTRAL: CÁPSULA ESPACIAL TRIDIMENSIONAL ─────── */}
         <nav
           aria-label="Main Navigation"
-          className="flex items-center gap-1 bg-white/10 border border-white/20 p-1 sm:p-1.5 rounded-full backdrop-blur-md shadow-md overflow-x-auto max-w-[calc(100vw-180px)] sm:max-w-none no-scrollbar shrink"
+          className="flex items-center gap-1 bg-white/[0.04] border border-white/10 p-1 rounded-full backdrop-blur-md overflow-x-auto max-w-[calc(100vw-170px)] sm:max-w-none no-scrollbar shrink"
         >
           {NAV_ITEMS.map((item) => {
             const isActive = pathname === item.href || (item.href !== '/' && pathname?.startsWith(item.href))
@@ -162,13 +162,13 @@ export default function Navbar({
                   setWaffleOpen(false)
                   setMobileOpen(false)
                 }}
-                className={`relative px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full text-[12px] sm:text-[13px] font-bold transition-all duration-200 flex items-center gap-1.5 sm:gap-2 select-none cursor-pointer shrink-0 ${
+                className={`relative px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-[12px] font-mono font-bold transition-all duration-200 flex items-center gap-1.5 select-none cursor-pointer shrink-0 ${
                   isActive
-                    ? 'bg-white text-slate-950 shadow-lg shadow-white/30 scale-[1.02]'
-                    : 'text-slate-200 hover:text-white hover:bg-white/15'
+                    ? 'bg-gradient-to-r from-cyan-400 to-sky-400 text-black shadow-[0_0_15px_rgba(6,182,212,0.5)] font-extrabold scale-[1.03]'
+                    : 'text-slate-300 hover:text-white hover:bg-white/10'
                 }`}
               >
-                <Icon size={14} className={isActive ? 'text-slate-950' : item.color} />
+                <Icon size={13} className={isActive ? 'text-black' : item.color} />
                 <span suppressHydrationWarning>{label}</span>
               </Link>
             )
@@ -177,25 +177,24 @@ export default function Navbar({
 
         {/* ── ACCIONES DERECHA: Idioma, Botón LIVE, Waffle ───────────── */}
         <div className="hidden md:flex items-center gap-2 shrink-0">
-
           {/* Selector de idioma estilizado */}
           <div className="text-white">
             <LanguageSelector />
           </div>
 
-          {/* Botón de Telemetría EN VIVO con estética Google */}
+          {/* Botón de Telemetría EN VIVO con estética orbital */}
           <button
             onClick={handleRefresh}
             title={mounted && isEn ? 'Refresh satellite telemetry' : 'Actualizar telemetría satelital'}
-            className={`flex items-center gap-2 h-9 px-4 rounded-full text-[13px] font-bold transition-all duration-200 cursor-pointer ${
+            className={`flex items-center gap-1.5 h-8 px-3 rounded-full text-[11px] font-mono font-bold transition-all duration-200 cursor-pointer ${
               isStormy
                 ? 'bg-[#EA4335] hover:bg-[#D33828] text-white shadow-lg shadow-red-600/30 border border-red-400/40'
-                : 'bg-white text-black hover:bg-zinc-100 shadow-md shadow-white/20 border border-white/60 active:scale-95'
+                : 'bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-400/40 shadow-[0_0_15px_rgba(6,182,212,0.2)] active:scale-95'
             }`}
           >
             <span
-              className={`w-2 h-2 rounded-full ${
-                isStormy ? 'bg-white animate-ping' : 'bg-emerald-500 animate-pulse'
+              className={`w-1.5 h-1.5 rounded-full ${
+                isStormy ? 'bg-white animate-ping' : 'bg-emerald-400 animate-pulse'
               }`}
             />
             <span suppressHydrationWarning>
@@ -206,7 +205,7 @@ export default function Navbar({
             {typeof countdown === 'number' && (
               <span
                 suppressHydrationWarning
-                className={`text-[11px] font-mono ${isStormy ? 'text-white/80' : 'text-zinc-600'} ${
+                className={`text-[10px] font-mono text-cyan-200 ${
                   isSpinning ? 'animate-spin' : ''
                 }`}
               >
@@ -306,7 +305,7 @@ export default function Navbar({
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden overflow-hidden bg-[#0a0e26]/98 border-b border-white/20 backdrop-blur-2xl"
+            className="pointer-events-auto md:hidden overflow-hidden bg-[#04081c]/98 border border-white/20 rounded-3xl mt-2 mx-4 p-3 backdrop-blur-2xl shadow-2xl"
           >
             <div className="px-4 py-3 space-y-1.5">
               {NAV_ITEMS.map((item) => {

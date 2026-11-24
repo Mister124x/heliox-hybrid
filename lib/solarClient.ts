@@ -137,7 +137,7 @@ export async function fetchLiveSolarData(): Promise<SolarSummary> {
     if (formattedAlerts.length === 0) {
       formattedAlerts.push({
         product_id: 'NOAA_SWPC_LIVE',
-        message: `☀️ HELIOX — Sincronizado con Satélites NOAA & NASA · Kp: ${kpVal.toFixed(1)} · Viento: ${windSpeed} km/s · por JESÚS BARRIOS`,
+        message: `[TELEMETRY] HELIOX — Sincronizado con Satélites NOAA & NASA · Kp: ${kpVal.toFixed(1)} · Viento: ${windSpeed} km/s · por JESÚS BARRIOS`,
       })
     }
 
@@ -202,7 +202,7 @@ export async function fetchLiveSolarData(): Promise<SolarSummary> {
       alertas_noaa: [
         {
           product_id: 'NOAA_FALLBACK',
-          message: '☀️ HELIOX Solar Observatory · Monitoreo Satelital 24/7 en Español por JESÚS BARRIOS',
+          message: '[TELEMETRY] HELIOX Solar Observatory · Monitoreo Satelital 24/7 en Español por JESÚS BARRIOS',
         },
       ],
     }

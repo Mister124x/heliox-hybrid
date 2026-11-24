@@ -208,7 +208,7 @@ export default function SolarViewer({ compact = false }: SolarViewerProps) {
             {/* Badge de Telemetría Táctica en Esquina Superior Derecha */}
             <div className="hud-corner-badge top-14 right-3 text-[10px]">
               <div>FOV: <span className="text-orange-400 font-bold">41.5 arcmin</span></div>
-              <div>RES: <span className="text-white font-bold">0.6&quot;/px</span> · CAL: <span className="text-emerald-400 font-bold">1.0 R☉</span></div>
+              <div>RES: <span className="text-white font-bold">0.6&quot;/px</span> · CAL: <span className="text-emerald-400 font-bold">1.0 R_sun</span></div>
             </div>
 
             {/* Overlay superior: Estado y Refresco */}

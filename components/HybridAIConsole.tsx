@@ -355,7 +355,7 @@ export default function HybridAIConsole({ currentStormData }: HybridAIConsolePro
                     {onDeviceSupported === null
                       ? "Detecting…"
                       : onDeviceSupported
-                      ? "Gemini Nano ✓"
+                      ? "Gemini Nano [ON-DEVICE]"
                       : "Simulated"}
                   </span>
                   <Info className="w-3 h-3 text-slate-500 ml-0.5" />
